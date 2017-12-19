@@ -1,0 +1,5 @@
+src/backend/api/venv
+src/backend/api/__pycache__
+src/frontend/build
+src/frontend/node_modules
+src/frontend/yarn.lock
