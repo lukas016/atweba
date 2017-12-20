@@ -1,6 +1,10 @@
-const processor = (event) => (
-  console.log(event)
-)
+const processor = (event) => {
+  console.log(event);
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "http://127.0.0.1:5900/api/jobs", true);
+  xhttp.setRequestHeader("Content-Type", "application/json");
+  xhttp.send(JSON.stringify(event));
+}
 
 const DOM_EVENTS = [
     [MouseEvent, ["click", "move"]],

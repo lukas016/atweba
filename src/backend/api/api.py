@@ -10,7 +10,8 @@ def apiVersion():
 @app.route('/api/jobs', methods=['GET', 'POST'])
 def routeJobs():
     if request.method == 'POST':
-        app.logger.debug(request.values)
-        return jsonify(request.files)
+        app.logger.debug(request.json)
+        app.logger.debug(request.data)
+        return jsonify(request.json)
     if request.method == 'GET':
         return jsonify()
