@@ -1,21 +1,23 @@
-import processor from './processors.js';
-
-const DOM_EVENTS = [
-    [MouseEvent, ["click", "move"]],
-    [KeyboardEvent, ["keypress"]],
-];
+import FactoryProcessors from './processors.js';
 
 class EventRegistrator {
   constructor(eventsList) {
+    this.factory = new FactoryProcessors();
     this.db = openDatabase('handler', '1.0', 'TestDB', 2048);
     this.recentlyLogged = {};
-    eventsList.map(element => element[1].map(event => this.register(event)));
+    this.factory.events.map(event => this.register(event));
   }
   register(event) {
+    var processor = this.factory.getProcessor(event);
+    if (processor == undefined) {
+        console.error('Invalid processor');
+        return;
+    }
+
     document.addEventListener(event, function(e) {
-      processor(e);
+        processor.run(e);
     });
   }
 }
 
-export {EventRegistrator, DOM_EVENTS};
+export default EventRegistrator;
