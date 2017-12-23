@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Test page</title>
-  <script src="eventHandler/registrator.js" type="application/javascript"></script>
 </head>
 <body>
   <h1>TEST</h1>
-  <script type="application/javascript">
-     var registrator = new EventRegistrator(DOM_EVENTS);
+  <script type="module">
+    import {EventRegistrator, DOM_EVENTS} from './eventHandler/registrator.js';
+    var registrator = new EventRegistrator(DOM_EVENTS);
   </script>
 </body>
