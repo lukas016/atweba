@@ -1,4 +1,4 @@
-import FactoryProcessors from './processors.js';
+import FactoryProcessors from './factory-processors.js';
 
 class EventRegistrator {
   constructor(eventsList) {
