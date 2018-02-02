@@ -8,6 +8,8 @@ class EventRegistrator {
     this.recentlyLogged = {};
     this.factory.events.map(event => this.register(event));
     this.api = new Api();
+
+    this.loadOptimalSelect();
   }
 
   register(event) {
@@ -22,6 +24,12 @@ class EventRegistrator {
         let msg = processor.parse(e);
         new Api(43).send(msg);
     });
+  }
+
+  loadOptimalSelect() {
+    let imported = document.createElement('script');
+    imported.src = './eventHandler/optimal-select.min.js';
+    document.head.appendChild(imported);
   }
 }
 
