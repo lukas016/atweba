@@ -1,5 +1,4 @@
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
-from aggregator import AggregatorZmg
 
 class Event(ObjectType):
     scenarioId = ID(required=True, description="Scenario identifier")
@@ -19,10 +18,9 @@ class createEvent(Mutation):
     ok = Boolean()
 
     def mutate(self, info, **argv):
-        aggClient = AggregatorZmg(5901, 'api')
-        agg = AggregatorZmg(5901, 'api2')
-        if aggClient.sendMsg(argv):
+        if info.context['aggClient'].sendMsg(argv):
             ok = True
         else:
             ok = False
+        ok = True
         return createEvent(ok=ok)

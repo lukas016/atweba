@@ -2,13 +2,14 @@ from flask import Flask, send_from_directory
 
 from flask_graphql import GraphQLView
 from .schema import schema
+from aggregator import AggregatorZmq
 
 apiServer = Flask(__name__)
 
 #GraphQL
 apiServer.add_url_rule('/graphql',
         view_func=GraphQLView.as_view('graphql',
-            schema=schema, graphiql=True))
+            schema=schema, graphiql=True, context={'aggClient': AggregatorZmq('api')}))
 
 @apiServer.route('/ui/<path:path>')
 def root(path):
