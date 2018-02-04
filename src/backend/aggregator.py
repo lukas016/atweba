@@ -1,45 +1,62 @@
 from threading import Thread
 import zmq
 import time
-from json import dumps
+from json import dumps, loads
+from pprint import pprint
 
 class Aggregator(Thread):
     def initZeroMQ(self):
-        self.name = bytes('aggregator', 'utf-8')
-        self.context = zmq.Context()
+        self.__name = 'aggregator'
+        self.context = zmq.Context().instance()
         self.socket = self.context.socket(zmq.REP)
-        self.socket.bind("tcp://127.0.0.1:%s" % self.port)
+        self.socket.bind('inproc://aggregator')
+        self.modules = {}
 
     def run(self):
         self.initZeroMQ()
         while True:
-            print(self.socket.recv_multipart())
-            self.sendMsg(dumps({'result': 'ok'}))
+            print("AGGREGATOR LISTEN")
+            msgObject = self.socket.recv_pyobj()
+            pprint(msgObject)
+            if msgObject['msg']['type'] == 'register':
+                self.registerModule(msgObject['sender'])
+
+            self.sendMsg({'result': 'ok'})
+
+    def registerModule(self, module):
+        if not(module in self.modules):
+            self.modules[module] = zmq.Context().socket(zmq.PAIR)
+            self.modules[module].connect("inproc://%s" % module)
+            self.modules[module].send_pyobj({'sender': self.__name})
+            self.modules[module].send_pyobj({'sender': self.__name})
 
     def readMsg(self):
         self.socket_recv
 
     def sendMsg(self, msg):
-        self.socket.send_multipart([self.name, bytes(msg, 'utf-8')])
+        msgObject = {'msg': msg}
+        self.socket.send_pyobj(msgObject)
 
-    def setPort(self, port):
-        self.port = port
 
-class AggregatorZmg:
-    def __init__(self, port, name):
-        self.aggregatorAddr = "tcp://127.0.0.1:%s" % port
-        self.name = bytes(name, 'utf-8')
+class AggregatorZmq:
+    def __init__(self, name):
+        self.aggregatorAddr = "inproc://aggregator"
+        self.__name = name
         self.register()
 
     def register(self):
-        context = zmq.Context()
+        context = zmq.Context().instance()
         self.socket = context.socket(zmq.REQ)
+        print(self.__name + ": CONNECT")
         self.socket.connect(self.aggregatorAddr)
-        self.sendMsg(dumps({'type': 'register'}))
+        print(self.__name + ": CONNECTED")
+        print(self.socket)
+        self.sendMsg({'type': 'register'})
 
     def sendMsg(self, msg):
-        self.socket.send_multipart([self.name, bytes(msg, 'utf-8')])
-        ident, result = self.socket.recv_multipart()
+        msgObject = {'sender': self.__name, 'msg': msg}
+        self.socket.send_pyobj(msgObject)
+        result = self.socket.recv_pyobj()
         if result == {'result': 'ok'}:
             return False
 

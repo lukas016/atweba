@@ -3,13 +3,16 @@
 from aggregator import Aggregator
 import time
 from sys import exit
-from api.server import apiServer
+from manager.manager import TestManager
 
 if __name__ == '__main__':
     aggregator = Aggregator()
-    aggregator.setPort(5901)
     aggregator.start()
 
+    manager = TestManager()
+    manager.start()
+
+    from api.server import apiServer
 
     apiServer.run(port=5900, threaded=True)
     exit(0)
