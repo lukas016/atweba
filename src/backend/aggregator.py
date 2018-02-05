@@ -3,6 +3,7 @@ import zmq
 import time
 from json import dumps, loads
 from pprint import pprint
+import logging
 
 class Aggregator(Thread):
     def initZeroMQ(self):
@@ -10,14 +11,14 @@ class Aggregator(Thread):
         self.context = zmq.Context().instance()
         self.socket = self.context.socket(zmq.REP)
         self.socket.bind('inproc://aggregator')
+        self.logger = logging.getLogger(self.__name)
         self.modules = {}
 
     def run(self):
         self.initZeroMQ()
         while True:
-            print("AGGREGATOR LISTEN")
             msgObject = self.socket.recv_pyobj()
-            pprint(msgObject)
+            self.logger.debug(msgObject)
             if msgObject['msg']['type'] == 'register':
                 self.registerModule(msgObject['sender'])
 
@@ -47,9 +48,7 @@ class AggregatorZmq:
     def register(self):
         context = zmq.Context().instance()
         self.socket = context.socket(zmq.REQ)
-        print(self.__name + ": CONNECT")
         self.socket.connect(self.aggregatorAddr)
-        print(self.__name + ": CONNECTED")
         print(self.socket)
         self.sendMsg({'type': 'register'})
 
