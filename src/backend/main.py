@@ -19,7 +19,7 @@ if __name__ == '__main__':
     manager = TestManager()
     manager.start()
 
-    from api.server import apiServer
+#    from api.server import apiServer
 
-    apiServer.run(port=5900, threaded=True)
+ #   apiServer.run(port=5900, threaded=True)
     exit(0)

@@ -1,19 +1,24 @@
 from threading import Thread
-from aggregator import AggregatorZmq
-import zmq
 import time
 from pprint import pprint
+from zeromq import ZeroClient, ZeroServer
+
 class TestManager(Thread):
+    def initZeroServer(self):
+        self.server = ZeroServer(self.__name)
+
+    def initZeroClient(self):
+        self.aggClient = ZeroClient(name=self.__name)
+
     def init(self):
         self.__name = 'manager'
-        self.__context = zmq.Context().instance()
-        self.__socket = self.__context.socket(zmq.PAIR)
-        self.__socket.bind("inproc://%s" % self.__name)
-        self.__aggClient = AggregatorZmq(self.__name)
+        self.initZeroServer()
+        self.initZeroClient()
 
     def run(self):
         self.init()
-        msgObject = self.__socket.recv_pyobj()
-        print(self.__name + ":")
-        pprint(msgObject)
-        time.sleep(120)
+        self.aggClient.registerMsg()
+        self.server.checkConnection()
+        self.aggClient.checkRegister()
+        while True:
+            self.server.recvMsg()
