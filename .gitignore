@@ -1,5 +1,9 @@
 src/backend/api/venv
 src/backend/api/__pycache__
+src/backend/bin
+src/backend/lib
+src/backend/pip-selfcheck.json
+**/__pacache__
 src/frontend/build
 src/frontend/node_modules
 src/frontend/yarn.lock
