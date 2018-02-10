@@ -9,7 +9,7 @@ apiServer = Flask(__name__)
 #GraphQL
 apiServer.add_url_rule('/graphql',
         view_func=GraphQLView.as_view('graphql',
-            schema=schema, graphiql=True, context={'aggClient': ZeroClient()}))
+            schema=schema, graphiql=True, context={'aggClient': ZeroClient('apiServer')}))
 
 @apiServer.route('/ui/<path:path>')
 def root(path):

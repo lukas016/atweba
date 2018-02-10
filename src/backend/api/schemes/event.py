@@ -18,7 +18,7 @@ class createEvent(Mutation):
     ok = Boolean()
 
     def mutate(self, info, **argv):
-        if info.context['aggClient'].sendMsg(argv):
+        if info.context['aggClient'].sendCommand('createEvent', argv):
             ok = True
         else:
             ok = False

@@ -63,6 +63,10 @@ class ZeroClient():
         if not msg['msg']['status']:
             raise Exception('communication', 'Cannot register module')
 
+    def sendCommand(self, type, msg):
+        self.sendMsg(type, msg)
+        return self.recvMsg()['msg']['status']
+
     def sendMsg(self, type, msg):
         msgObject = {
                 'from': self.__name,
