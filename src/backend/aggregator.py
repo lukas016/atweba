@@ -4,7 +4,7 @@ from json import dumps, loads
 from pprint import pprint
 import logging
 from zeromq import ZeroServer, ZeroClient
-from database.manager import DataManager
+from database.manager import createDataManager, getDatabasesType
 
 class Aggregator(Thread):
     def initZeroServer(self):
@@ -13,7 +13,7 @@ class Aggregator(Thread):
         self.modules = {}
 
     def initDataManager(self):
-        self.db = DataManager(host="192.168.10.40")
+        self.db = createDataManager(getDatabasesType('elasticsearch'), host="192.168.10.40")
 
     def init(self):
         self.__name = 'aggregator'
@@ -33,11 +33,8 @@ class Aggregator(Thread):
         self.logger.info('REGISTER MODULE: ' + module + ', Status: ' + str(result))
 
     def action_createEvent(self, msg):
-        result = True
         msgObject = msg['msg']
-        self.db.insert(msg['type'], msg)
-        if res['_shards']['failed'] != 0:
-            result = False
+        result = self.db.insert(msg['type'], msg)
         self.server.sendMsg(msg['type'], {'status': result})
 
     def run(self):
