@@ -4,7 +4,7 @@ from json import dumps, loads
 from pprint import pprint
 import logging
 from zeromq import ZeroServer, ZeroClient
-from elasticsearch import Elasticsearch
+from database.manager import DataManager
 
 class Aggregator(Thread):
     def initZeroServer(self):
@@ -12,10 +12,13 @@ class Aggregator(Thread):
         self.logger = logging.getLogger(self.__name)
         self.modules = {}
 
+    def initDataManager(self):
+        self.db = DataManager(host="192.168.10.40")
 
     def init(self):
         self.__name = 'aggregator'
         self.initZeroServer()
+        self.initDataManager()
         self.logger = logging.getLogger(self.__name)
 
     def selectAction(self, msg):
@@ -32,10 +35,7 @@ class Aggregator(Thread):
     def action_createEvent(self, msg):
         result = True
         msgObject = msg['msg']
-        es = Elasticsearch(
-                ['192.168.10.40:9200'],
-                use_ssl=False)
-        res = es.index(index=msgObject['scenarioId'], doc_type='tweet', body=msgObject)
+        self.db.insert(msg['type'], msg)
         if res['_shards']['failed'] != 0:
             result = False
         self.server.sendMsg(msg['type'], {'status': result})
