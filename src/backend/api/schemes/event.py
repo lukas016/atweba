@@ -14,6 +14,7 @@ class createEvent(Mutation):
         path = List(String, required=True)
         timestamp = Float(required=True, description="Timestampt of event")
         locator = String(required=True)
+        content = String(required=False)
 
     ok = Boolean()
 
