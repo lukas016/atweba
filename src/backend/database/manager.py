@@ -1,5 +1,6 @@
 from database.elasticsearch import ElasticsearchClient
 from pprint import pprint
+from abc import ABC, abstractmethod
 
 def getDatabasesType(type='elasticsearch'):
     databases = {'elasticsearch': ElasticsearchClient}
@@ -7,14 +8,23 @@ def getDatabasesType(type='elasticsearch'):
 
 
 def createDataManager(instance, **argv):
-    class DataManager(instance): pass
+    class DataManager(instance, DataManagerInterface): pass
 
     return DataManager(**argv)
 
-# class DataManager():
-    # def __init__(self, databaseType='ElasticsearchClient', **argv):
-        # super(eval(databaseType), self).__init__(argv)
+class DataManagerInterface(ABC):
+    @abstractmethod
+    def delete(self, type, msg):
+        raise NotImplementedError('subclasses must override delete()!')
 
-    # def insert(self, tdype, values):
-        # print(self.type())
-        # pprint(values)
+    @abstractmethod
+    def insert(self, type, msg):
+        raise NotImplementedError('subclasses must override insert()!')
+
+    @abstractmethod
+    def select(self, type, msg):
+        raise NotImplementedError('subclasses must override select()!')
+
+    @abstractmethod
+    def update(self, type, msg):
+        raise NotImplementedError('subclasses must override update()!')

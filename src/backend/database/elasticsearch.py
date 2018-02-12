@@ -12,3 +12,8 @@ class ElasticsearchClient():
     def insert(self, type, msg):
         result = self.db.index(index=msg['msg']['scenarioId'], doc_type='tweet', body=msg['msg'])
         return result['_shards']['failed'] != 0
+
+    def delete(self, type, msg): pass
+    def update(self, type, msg): pass
+    def select(self, type, msg): pass
+
