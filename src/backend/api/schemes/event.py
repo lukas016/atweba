@@ -6,6 +6,8 @@ class Event(ObjectType):
     path = List(String, required=True)
     timestamp = Float(required=True, description="Timestampt of event")
     locator = String(required=True)
+    url = String(required=True)
+    content = String(required=False)
 
 class createEvent(Mutation):
     class Arguments:
@@ -14,6 +16,7 @@ class createEvent(Mutation):
         path = List(String, required=True)
         timestamp = Float(required=True, description="Timestampt of event")
         locator = String(required=True)
+        url = String(required=True)
         content = String(required=False)
 
     ok = Boolean()
