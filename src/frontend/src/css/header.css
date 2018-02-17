@@ -1,3 +1,13 @@
-.header {
+.main .header {
     background: rgba(19, 18, 24, 1);
+    display: block;
+    height: 47px;
+}
+
+.main .body {
+    display: block;
+    position: relative;
+    right: 0;
+    top: 50;
+    left: 0;
 }

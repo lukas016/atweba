@@ -2,14 +2,14 @@ import React from 'react';
 import { Menu } from 'semantic-ui-react';
 import '../css/header.css';
 
-const Header = state => (
+const Header = ({rightBar}) => (
     <div className='header'>
-    <Menu color='white' inverted size='large' icon fixed='top' >
+    <Menu inverted size='large' icon fixed='top' >
         <Menu.Item
             link
             icon='content'
             position='left'
-            color='black'
+            onClick={rightBar}
         ></Menu.Item>
         <Menu.Item
             link
