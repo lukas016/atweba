@@ -1,0 +1,29 @@
+.createScenario {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 190px;
+    margin-top: -95px;
+    padding: 1px;
+    margin-left: -150px;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0px 0px 10px 2px #000;
+    background-color: #000;
+}
+
+.createScenario .header {
+    background: #000 !important;
+    border: none !important;
+    color: #fff;
+    border-bottom: 2px solid #fff !important;
+}
+
+.createScenario .form {
+    padding: 5px 5px 5px 5px;
+}
+
+.createScenario .form label {
+    width: 54px !important;
+}
