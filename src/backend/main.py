@@ -14,8 +14,6 @@ def initLogger():
 
 def initApiServer():
     from api.server import apiServer
-    apiServer.debug = True
-    apiServer.use_reloader = True
     apiServer.run(port=5900, threaded=True)
 
 def startThreads(threads):
