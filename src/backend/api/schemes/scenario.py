@@ -1,14 +1,16 @@
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
+from graphene.types.datetime import Date
 
 class Scenario(ObjectType):
-    id = ID(required=True, description="Scenario identifier")
+    id = String(required=True, description="Scenario identifier")
     domain = String(required=True)
     created = Int(required=True, description="Timestampt of event")
 
 class createScenario(Mutation):
     class Arguments:
+        id = String(required=True)
         domain = String(required=True)
-        created = Int(String, required=True)
+        created = String(required=True)
 
     ok = Boolean()
 
