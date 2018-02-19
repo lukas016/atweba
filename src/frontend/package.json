@@ -9,6 +9,7 @@
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
     "react-scripts": "^1.1.1",
+    "react-toastify": "^3.3.4",
     "semantic-ui-css": "^2.2.14",
     "semantic-ui-react": "^0.78.2"
   },
@@ -17,5 +18,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "proxy": {
+    "/graphql": {
+      "target": "http://localhost:5900/",
+      "secure": false,
+      "changeOrigin": true
+    }
   }
 }

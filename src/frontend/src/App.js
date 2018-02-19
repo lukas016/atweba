@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Header from './components/header';
 //import RightBar from './components/right-bar';
 import { CreateScenario } from './components/form.js';
-
+import { ToastContainer } from 'react-toastify';
 class App extends Component {
     constructor(props) {
         super(props);
@@ -29,12 +29,13 @@ class App extends Component {
     render() {
         let createScenario = null;
         if (this.state.createScenario)
-            createScenario = <CreateScenario />;
-        console.log(createScenario)
+            createScenario = <CreateScenario changeFormState={this.changeCreateScenario}/>;
+
         return (
             <div className='main'>
                 <Header rightBar={this.changeRightBar} createScenario={this.changeCreateScenario} />
                 {createScenario}
+                <ToastContainer autoclose={20000} />
             </div>
         );
     }
