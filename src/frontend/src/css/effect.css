@@ -1,0 +1,26 @@
+.effect-enter {
+  opacity: 0.01;
+}
+
+.effect-enter.effect-enter-active {
+  opacity: 1;
+  transition: opacity 500ms linear;
+}
+
+.effect-leave {
+  opacity: 1;
+}
+
+.effect-leave.effect-leave-active {
+  opacity: 0;
+  transition: opacity 300ms linear;
+}
+
+.effect-appear {
+  opacity: 0;
+}
+
+.effect-appear.effect-appear-active {
+  opacity: 1;
+  transition: opacity 500ms linear;
+}

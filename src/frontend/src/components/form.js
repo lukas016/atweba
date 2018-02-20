@@ -4,6 +4,7 @@ import '../css/form.css';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
 const submitRepository = gql`
     mutation createScenario($id: String!, $domain: String!, $created: String!) {
@@ -48,7 +49,13 @@ class createScenario extends Component {
 
     render() {
         return(
-        <div className='createScenario'>
+        <ReactCSSTransitionGroup
+                transitionName='effect'
+                transitionAppear={true}
+                transitionAppearTimeout={500}
+                transitionEnterTimeout={700}
+                transitionLeaveTimeout={500}
+                component="div" className='createScenario'>
             <Header as='h2' size='large' textAlign='center' attached='top'>
                 Create scenario
             </Header>
@@ -75,7 +82,7 @@ class createScenario extends Component {
                     </Button>
                 </Form>
             </div>
-        </div>)
+            </ReactCSSTransitionGroup>)
     }
 };
 

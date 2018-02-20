@@ -4,6 +4,7 @@ import './css/main.css';
 import 'semantic-ui-css/semantic.css';
 //import './css/semantic-cyborg-min.css';
 import App from './App';
+import './css/effect.css';
 import registerServiceWorker from './registerServiceWorker';
 
 import { ApolloProvider } from 'react-apollo'
