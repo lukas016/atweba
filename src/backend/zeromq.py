@@ -65,7 +65,7 @@ class ZeroClient():
 
     def sendCommand(self, type, msg):
         self.sendMsg(type, msg)
-        return self.recvMsg()['msg']['status']
+        return self.recvMsg()['msg']
 
     def sendMsg(self, type, msg):
         msgObject = {
