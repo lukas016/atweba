@@ -22,7 +22,11 @@ class Aggregator(Thread):
         self.logger = logging.getLogger(self.__name)
 
     def selectAction(self, msg):
-        getattr(self, 'action_%s' % msg['type'])(msg)
+        try:
+            getattr(self, 'action_%s' % msg['type'])(msg)
+        except Exception as e:
+            pprint(e)
+            self.server.sendMsg(['type'], {'status': False, 'error': str(e)})
 
     def action_registerModule(self, msg):
         module = msg['from']
@@ -35,6 +39,11 @@ class Aggregator(Thread):
     def action_createEvent(self, msg):
         msgObject = msg['msg']
         result = self.db.insert(msg['type'], msg)
+        self.server.sendMsg(msg['type'], {'status': result})
+
+    def action_createScenario(self, msg):
+        msgObject = msg['msg']
+        result = self.db.createScenario(msgObject)
         self.server.sendMsg(msg['type'], {'status': result})
 
     def run(self):
