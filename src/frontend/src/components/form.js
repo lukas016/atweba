@@ -39,12 +39,13 @@ class createScenario extends Component {
                                 this.state.domain + "\nwas successful created", {
                                     className: {
                                         'background': '#2ba04d',
-                                        'font-weight': 'bold',
+                                        'fontWeight': 'bold',
                                         'color': 'white',
                                     }
                                 });
                     }
-                });
+                })
+                .catch(() => { this.setState({ loading: false }) })
     };
 
     render() {
@@ -72,7 +73,7 @@ class createScenario extends Component {
                                 value={this.state.domain}
                                 onChange={this.handleChange}/>
                     </Form.Field>
-                    <Button compact positive floated='right' loading={this.state.loading}>
+                    <Button compact positive floated='right' loading={this.state.loading} disabled={this.state.loading}>
                         <Icon name='save' />
                         Save
                     </Button>
@@ -82,7 +83,7 @@ class createScenario extends Component {
                     </Button>
                 </Form>
             </div>
-            </ReactCSSTransitionGroup>)
+        </ReactCSSTransitionGroup>)
     }
 };
 
