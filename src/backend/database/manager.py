@@ -28,3 +28,7 @@ class DataManagerInterface(ABC):
     @abstractmethod
     def update(self, type, msg):
         raise NotImplementedError('subclasses must override update()!')
+
+    @abstractmethod
+    def createScenario(self, msg):
+        raise NotImplementedError('subclasses must override createScenario()!')

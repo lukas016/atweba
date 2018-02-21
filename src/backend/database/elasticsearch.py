@@ -13,6 +13,17 @@ class ElasticsearchClient():
         result = self.db.index(index=msg['msg']['scenarioId'], doc_type='tweet', body=msg['msg'])
         return result['_shards']['failed'] != 0
 
+    def createScenario(self, msg):
+        manageIndex='manage'
+        docType = '_doc'
+        id = msg['id']
+        if self.db.exists(index=manageIndex, doc_type=docType, id=id):
+            raise Exception('Invalid name ' + id + ': name exist')
+
+        del msg['id']
+        result = self.db.index(index=manageIndex, doc_type=docType, id=id, body=msg);
+        return result['_shards']['failed'] == 0
+
     def delete(self, type, msg): pass
     def update(self, type, msg): pass
     def select(self, type, msg): pass
