@@ -5,6 +5,7 @@ Flask-GraphQL==1.4.1
 graphene==2.0.1
 graphql-core==2.0
 graphql-relay==0.4.5
+iso8601==0.1.12
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
