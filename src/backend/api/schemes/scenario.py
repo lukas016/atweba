@@ -1,5 +1,6 @@
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
 from graphene.types.datetime import Date
+from graphql import GraphQLError
 
 class Scenario(ObjectType):
     id = String(required=True, description="Scenario identifier")
@@ -15,9 +16,9 @@ class createScenario(Mutation):
     ok = Boolean()
 
     def mutate(self, info, **argv):
-        if info.context['aggClient'].sendCommand('createScenario', argv):
+        response = info.context['aggClient'].sendCommand('createScenario', argv)
+        if response['status']:
             ok = True
         else:
-            ok = False
-        ok = True
+            raise GraphQLError(response['error'])
         return createScenario(ok=ok)
