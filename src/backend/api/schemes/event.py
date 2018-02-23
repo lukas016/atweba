@@ -1,4 +1,5 @@
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
+from graphql import GraphQLError
 
 class Event(ObjectType):
     scenarioId = ID(required=True, description="Scenario identifier")
@@ -22,9 +23,9 @@ class createEvent(Mutation):
     ok = Boolean()
 
     def mutate(self, info, **argv):
-        if info.context['aggClient'].sendCommand('createEvent', argv):
+        response = info.context['aggClient'].sendCommand('createEvent', argv)
+        if response['status']:
             ok = True
         else:
-            ok = False
-        ok = True
+            raise GraphQLError(response['error'])
         return createEvent(ok=ok)
