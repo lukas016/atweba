@@ -37,12 +37,17 @@ class Aggregator(Thread):
 
     def action_createEvent(self, msg):
         msgObject = msg['msg']
-        result = self.db.insert(msg['type'], msg)
+        result = self.db.createEvent(msgObject)
         self.server.sendMsg(msg['type'], {'status': result})
 
     def action_createScenario(self, msg):
         msgObject = msg['msg']
         result = self.db.createScenario(msgObject)
+        self.server.sendMsg(msg['type'], {'status': result})
+
+    def action_getScenario(self, msg):
+        msgObject = msg['msg']
+        result = self.db.getScenario(msgObject)
         self.server.sendMsg(msg['type'], {'status': result})
 
     def run(self):

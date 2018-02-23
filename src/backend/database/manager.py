@@ -18,12 +18,8 @@ class DataManagerInterface(ABC):
         raise NotImplementedError('subclasses must override delete()!')
 
     @abstractmethod
-    def insert(self, type, msg):
+    def createEvent(self, type, msg):
         raise NotImplementedError('subclasses must override insert()!')
-
-    @abstractmethod
-    def select(self, type, msg):
-        raise NotImplementedError('subclasses must override select()!')
 
     @abstractmethod
     def update(self, type, msg):
@@ -31,4 +27,8 @@ class DataManagerInterface(ABC):
 
     @abstractmethod
     def createScenario(self, msg):
+        raise NotImplementedError('subclasses must override createScenario()!')
+
+    @abstractmethod
+    def getScenario(self, msg):
         raise NotImplementedError('subclasses must override createScenario()!')
