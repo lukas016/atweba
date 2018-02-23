@@ -1,11 +1,27 @@
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
 from graphene.types.datetime import Date
 from graphql import GraphQLError
+from pprint import pprint
+import json
+
 
 class Scenario(ObjectType):
     id = String(required=True, description="Scenario identifier")
-    domain = String(required=True)
-    created = Int(required=True, description="Timestampt of event")
+    domain = String()
+    created = String(description="Timestampt of event")
+
+    def get(self, aggClient, argv):
+        response = aggClient.sendCommand('getScenario', argv)
+        pprint(response)
+        if response['status']:
+            return self.generateScenarios(response['data'])
+
+    def generateScenarios(self, data):
+        result = []
+        for it in data:
+            result.append(Scenario(it['id'], it['domain'], it['created']))
+
+        return result
 
 class createScenario(Mutation):
     class Arguments:

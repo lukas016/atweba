@@ -1,22 +1,16 @@
-import graphene
+from graphene import Field, List, ObjectType, Schema, String
 from .schemes.event import Event, createEvent
 from .schemes.scenario import Scenario, createScenario
+from pprint import pprint
+class Query(ObjectType):
+    event = List(Event)
+    scenario = List(Scenario, id=String())
 
-class Query(graphene.ObjectType):
-    hello = graphene.String(description='A typical hello worl')
-    hi = graphene.String(description='A typical',
-            name=graphene.String(default_value=""),
-            praca=graphene.String(default_value=""))
-    event = graphene.Field(Event)
-    scenario = graphene.Field(Scenario)
-    def resolve_hello(self, info):
-        return 'TEST';
+    def resolve_scenario(self, info, **argv):
+        return Scenario().get(info.context['aggClient'], argv)
 
-    def resolve_hi(self, info, name, praca):
-        return 'HI %s' % (name or praca);
-
-class Mutation(graphene.ObjectType):
+class Mutation(ObjectType):
     create_event = createEvent.Field()
     create_scenario = createScenario.Field()
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = Schema(query=Query, mutation=Mutation)

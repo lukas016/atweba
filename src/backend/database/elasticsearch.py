@@ -33,13 +33,18 @@ class ElasticsearchClient():
     def delete(self, type, msg): pass
     def update(self, type, msg): pass
     def getScenario(self, msg):
-        if 'id' in msg:
-            query = {'terms': {'_id': [msg['id']]} }
+        answer = []
+        filter=['hits.hits', 'error']
+        if msg:
+            query = {'query': {'terms': {'_id': [msg['id']] }}}
         else:
-            query = {'match_all': {}}
+            query = {'query': {'match_all': {}}}
 
-        result = self.db.search(index=self.manageIndex, body=query)
+        result = self.db.search(index=self.manageIndex, body=query, filter_path=filter)
         if 'error' in result:
-            raise Exception(result['error']['reason'])
+            raise RuntimeError(result['error']['reason'])
 
-        return result['hits']
+        for item in result['hits']['hits']:
+            answer.append({'id': item['_id'], 'domain': item['_source']['domain'],
+                    'created': item['_source']['created']})
+        return answer
