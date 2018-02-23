@@ -25,7 +25,7 @@ class Aggregator(Thread):
             getattr(self, 'action_%s' % msg['type'])(msg)
         except Exception as e:
             pprint(e)
-            self.server.sendMsg(['type'], {'status': False, 'error': str(e)})
+            self.server.sendMsg(msg['type'], {'status': False, 'error': str(e)})
 
     def action_registerModule(self, msg):
         module = msg['from']
