@@ -11,7 +11,6 @@ class ZeroServer():
         self.logger = logging.getLogger(self.__name)
         self.socket.bind('inproc://%s' % self.__name)
         self.poller = zmq.Poller()
-        self.socket.RCVTIMEO = 1000
         self.poller.register(self.socket, zmq.POLLIN)
 
     def sendMsg(self, type, msg):
@@ -23,7 +22,7 @@ class ZeroServer():
         self.socket.send_pyobj(msgObject)
 
     def recvMsg(self):
-        event = self.poller.poll(1000)
+        event = self.poller.poll(2000) #timeout 2s
         if isinstance(event, list):
             if not event:
                 raise UserWarning('No messages')
