@@ -18,16 +18,37 @@ def initApiServer():
 
 def startThreads(threads):
     for thread in threads:
+        thread.daemon = True
         thread.start()
+        thread.run = True
+
+def stopThreads(threads):
+    for thread in threads:
+        if thread.isAlive():
+            thread.run = False
+
+def restartThread(thread):
+    thread.start()
+    time.sleep(5)
+    return thread.isAlive()
 
 def joinThreads(threads):
     for thread in threads:
-        thread.join()
-        threads.remove(thread)
+        try:
+            thread.join()
+            threads.remove(thread)
+        except KeyboardInterrupt:
+            stopThreads(threads)
+
+        except RuntimeError as e:
+            if not thread.isAlive():
+                print(e)
+                if not restartThread(thread):
+                    stopThreads(threads)
+                    return 1
 
 if __name__ == '__main__':
     initLogger()
-    threads = [Aggregator(), TestManager(), Thread(target=initApiServer)]
+    threads = [Aggregator(name="aggregator"), TestManager(name="testmanager"), Thread(target=initApiServer, name="api")]
     startThreads(threads)
-    joinThreads(threads)
-    exit(0)
+    exit(joinThreads(threads))

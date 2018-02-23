@@ -8,18 +8,17 @@ from database.manager import createDataManager, getDatabasesType
 
 class Aggregator(Thread):
     def initZeroServer(self):
-        self.server = ZeroServer(self.__name)
-        self.logger = logging.getLogger(self.__name)
+        self.server = ZeroServer(self.name)
         self.modules = {}
 
     def initDataManager(self):
         self.db = createDataManager(getDatabasesType('elasticsearch'), host="192.168.10.40")
 
     def init(self):
-        self.__name = 'aggregator'
         self.initZeroServer()
         self.initDataManager()
-        self.logger = logging.getLogger(self.__name)
+        self.logger = logging.getLogger(self.name)
+        self.logger.info('Initialized')
 
     def selectAction(self, msg):
         try:
@@ -31,7 +30,7 @@ class Aggregator(Thread):
     def action_registerModule(self, msg):
         module = msg['from']
         self.logger.info('REGISTER MODULE: ' + module)
-        self.modules[module] = ZeroClient(self.__name, module)
+        self.modules[module] = ZeroClient(self.name, module)
         result = self.modules[module].checkConnection()
         self.server.sendMsg('registerModule', {'status': result})
         self.logger.info('REGISTER MODULE: ' + module + ', Status: ' + str(result))
@@ -48,8 +47,11 @@ class Aggregator(Thread):
 
     def run(self):
         self.init()
-        self.logger.info('Initialized')
-        while True:
-            msgObject = self.server.recvMsg()
-            self.selectAction(msgObject)
+        while self.run:
+            try:
+                msgObject = self.server.recvMsg()
+                self.selectAction(msgObject)
+            except UserWarning:
+                pass
+        self.logger.info('Stopped (run: %s)' % self.run)
 

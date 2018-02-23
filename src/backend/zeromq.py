@@ -10,6 +10,9 @@ class ZeroServer():
         self.socket = self.context.socket(zmq.REP)
         self.logger = logging.getLogger(self.__name)
         self.socket.bind('inproc://%s' % self.__name)
+        self.poller = zmq.Poller()
+        self.socket.RCVTIMEO = 1000
+        self.poller.register(self.socket, zmq.POLLIN)
 
     def sendMsg(self, type, msg):
         msgObject = {
@@ -20,7 +23,16 @@ class ZeroServer():
         self.socket.send_pyobj(msgObject)
 
     def recvMsg(self):
-        msgObject = self.socket.recv_pyobj()
+        event = self.poller.poll(1000)
+        if isinstance(event, list):
+            if not event:
+                raise UserWarning('No messages')
+
+            (fd, _) = event[0]
+        else:
+            fd = event
+
+        msgObject = fd.recv_pyobj()
         self.logger.debug('RECEIVE: ' + dumps(msgObject))
         if msgObject['to'] != self.__name:
             raise Exception('communication', 'Invalid receiver',  msgObject)
