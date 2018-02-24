@@ -7,7 +7,6 @@ class EventRegistrator {
     this.db = openDatabase('handler', '1.0', 'TestDB', 2048);
     this.recentlyLogged = {};
     this.factory.events.map(event => this.register(event));
-    this.api = new Api();
 
     this.loadOptimalSelect();
   }
@@ -22,7 +21,7 @@ class EventRegistrator {
 
     document.addEventListener(event, function(e) {
         let msg = processor.parse(e);
-        new Api(43).send(msg);
+        new Api('replace-with-scenario-id').send(msg);
     });
   }
 
@@ -33,4 +32,6 @@ class EventRegistrator {
   }
 }
 
-export default EventRegistrator;
+var registrator = new EventRegistrator()
+
+export { registrator };

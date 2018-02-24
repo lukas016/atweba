@@ -7,7 +7,9 @@ module.exports = {
     entry: "./registrator.js",
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: "client.js"
+        filename: "client.js",
+        libraryTarget: 'var',
+        library: 'registrator'
     },
     module: {
         rules: [{
@@ -20,7 +22,5 @@ module.exports = {
                 }
             }
     }]},
-    plugins: [
-        new MinifyPlugin()
-    ]
+    plugins: [ new MinifyPlugin() ]
 }
