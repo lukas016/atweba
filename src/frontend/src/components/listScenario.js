@@ -31,7 +31,9 @@ class scenarioList extends Component {
                 let B = b.domain.toLowerCase();
                 if (A < B) return -1;
                 if (A > B) return 1;
-                return 0;
+                let idA = a.id.toLowerCase();
+                let idB = b.id.toLowerCase();
+                return (idA < idB) ? -1 : (idA > idB) ? 1 : 0
             })
         }
         return(
