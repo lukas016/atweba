@@ -38,3 +38,17 @@ class createScenario(Mutation):
         else:
             raise GraphQLError(response['error'])
         return createScenario(ok=ok)
+
+def generateClientScript(argv):
+    id = argv['id']
+    pathStart = '..'
+    urlPart =  '/client/eventHandler/build/client'
+    fileFormat = '.js'
+    pathBase = pathStart + urlPart
+    with open(pathBase + fileFormat, 'r') as file:
+        data = file.read()
+
+        with open(pathBase + '-' + id + fileFormat, 'w') as output:
+            output.write(data.replace('replace-with-scenario-id', id))
+
+    return urlPart + '-' + id + fileFormat
