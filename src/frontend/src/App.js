@@ -3,6 +3,8 @@ import Header from './components/header';
 //import RightBar from './components/right-bar';
 import { CreateScenario } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
+import { ListScenario } from './components/listScenario.js';
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -35,6 +37,7 @@ class App extends Component {
             <div className='main'>
                 <Header rightBar={this.changeRightBar} createScenario={this.changeCreateScenario} />
                 {createScenario}
+                <ListScenario />
                 <ToastContainer autoclose={20000} />
             </div>
         );
