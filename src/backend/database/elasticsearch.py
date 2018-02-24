@@ -40,7 +40,7 @@ class ElasticsearchClient():
         else:
             query = {'query': {'match_all': {}}}
 
-        result = self.db.search(index=self.manageIndex, body=query, filter_path=filter)
+        result = self.db.search(index=self.manageIndex, body=query, filter_path=filter, request_cache=False, size=100)
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
