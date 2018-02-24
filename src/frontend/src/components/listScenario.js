@@ -75,4 +75,4 @@ class scenarioList extends Component {
 };
 
 export const
-        ListScenario = graphql(getScenario, { name: 'getAllScenario' })(scenarioList);
+        ListScenario = graphql(getScenario, { name: 'getAllScenario', options: { pollInterval: 5000 }})(scenarioList);
