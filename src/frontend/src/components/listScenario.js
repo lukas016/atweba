@@ -37,42 +37,40 @@ class scenarioList extends Component {
             })
         }
         return(
-        <ReactCSSTransitionGroup
-                transitionName='effect'
-                transitionAppear={true}
-                transitionAppearTimeout={500}
-                transitionEnterTimeout={700}
-                transitionLeaveTimeout={500}
-                component="div">
-                <Table basic='very' celled striped inverted>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Domain</Table.HeaderCell>
-                            <Table.HeaderCell>Name</Table.HeaderCell>
-                            <Table.HeaderCell>Created</Table.HeaderCell>
-                            <Table.HeaderCell>Action</Table.HeaderCell>
+            <Table basic='very' celled striped inverted>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell>Domain</Table.HeaderCell>
+                        <Table.HeaderCell>Name</Table.HeaderCell>
+                        <Table.HeaderCell>Created</Table.HeaderCell>
+                        <Table.HeaderCell>Action</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <ReactCSSTransitionGroup
+                    transitionName='effect'
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnterTimeout={700}
+                    transitionLeaveTimeout={500}
+                    component={Table.Body}>
+                    {Rows.sort().map(({id, domain, created}) => (
+                        <Table.Row key={id}>
+                            <Table.Cell className='domain' >
+                                <Icon name='world' />
+                                {domain}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {id}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {this.formatDate(created)}
+                            </Table.Cell>
+                            <Table.Cell>
+                            </Table.Cell>
                         </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {Rows.sort().map(({id, domain, created}) => (
-                            <Table.Row key={id}>
-                                <Table.Cell className='domain' >
-                                    <Icon name='world' />
-                                    {domain}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {id}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {this.formatDate(created)}
-                                </Table.Cell>
-                                <Table.Cell>
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table>
-        </ReactCSSTransitionGroup>)
+                    ))}
+                </ReactCSSTransitionGroup>
+            </Table>)
     }
 };
 
