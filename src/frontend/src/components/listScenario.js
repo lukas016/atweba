@@ -16,6 +16,12 @@ const getScenario = gql`
 class scenarioList extends Component {
     state = { name: '', domain: 'http://' , loading: false};
 
+    formatDate(seconds) {
+        let date = new Date(0);
+        date.setSeconds(seconds)
+        return String(date);
+    };
+
     render() {
         let Rows = []
         if (!this.props.getAllScenario.loading) {
@@ -56,7 +62,7 @@ class scenarioList extends Component {
                                     {id}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {created}
+                                    {this.formatDate(created)}
                                 </Table.Cell>
                                 <Table.Cell>
                                 </Table.Cell>

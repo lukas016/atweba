@@ -29,7 +29,7 @@ class createScenario extends Component {
                 variables: {
                     id: this.state.name,
                     domain: this.state.domain,
-                    created: (new Date()).getTime()
+                    created: (new Date()).getTime() / 1000
                 }})
                 .then(({data}) => {
                     if (data.createScenario.ok) {
