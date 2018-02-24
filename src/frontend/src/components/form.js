@@ -77,7 +77,7 @@ class createScenario extends Component {
                         <Icon name='save' />
                         Save
                     </Button>
-                    <Button compact negative floated='left' onClick={this.props.changeFormState}>
+                    <Button type='button' compact negative floated='left' onClick={this.props.changeFormState}>
                         <Icon name='cancel' />
                         Cancel
                     </Button>
