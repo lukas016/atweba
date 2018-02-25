@@ -2,6 +2,7 @@ from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolea
 from graphene.types.datetime import Date
 from graphql import GraphQLError
 from pprint import pprint
+import os.path
 import json
 
 
@@ -45,10 +46,12 @@ def generateClientScript(argv):
     urlPart =  '/client/eventHandler/build/client'
     fileFormat = '.js'
     pathBase = pathStart + urlPart
-    with open(pathBase + fileFormat, 'r') as file:
-        data = file.read()
+    pathTarget = pathBase + '-' + id + fileFormat
+    if not os.path.isfile(pathTarget):
+        with open(pathBase + fileFormat, 'r') as file:
+            data = file.read()
 
-        with open(pathBase + '-' + id + fileFormat, 'w') as output:
-            output.write(data.replace('replace-with-scenario-id', id))
+            with open(pathTarget, 'w') as output:
+                output.write(data.replace('replace-with-scenario-id', id))
 
     return urlPart + '-' + id + fileFormat
