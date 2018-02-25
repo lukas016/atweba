@@ -16,6 +16,8 @@ class Scenario(ObjectType):
         pprint(response)
         if response['status']:
             return self.generateScenarios(response['data'])
+        else:
+            raise GraphQLError(response['error'])
 
     def generateScenarios(self, data):
         result = []

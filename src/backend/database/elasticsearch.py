@@ -9,7 +9,8 @@ class ElasticsearchClient():
 
     def connect(self, host, port, ssl):
         return Elasticsearch(['{}:{}'.format(host, port)],
-                use_ssl=ssl)
+                use_ssl=ssl,
+                max_retries=0)
 
     def createEvent(self, msg):
         if not self.existScenario(msg['scenarioId']):

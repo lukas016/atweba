@@ -50,7 +50,8 @@ class scenarioList extends Component {
 
     render() {
         let Rows = []
-        if (!this.props.getAllScenario.loading) {
+        if (!this.props.getAllScenario.loading &&
+                Array.isArray(this.props.getAllScenario.scenario)) {
             Rows = this.props.getAllScenario.scenario.slice();
             Rows.sort(function(a, b) {
                 let A = a.domain.toLowerCase();
