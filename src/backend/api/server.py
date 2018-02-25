@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, make_response, send_file
 
 from flask_graphql import GraphQLView
 from .schema import schema
@@ -18,3 +18,9 @@ def root(path):
 @apiServer.route('/client/<path:path>')
 def clientTesting(path):
     return send_from_directory('../../client/', path)
+
+@apiServer.route('/client/eventHandler/build/<file>')
+def clientScript(file):
+    response = make_response(send_file('../../client/eventHandler/build/' + file))
+    response.headers['Content-Disposition'] = 'attachment; filename="client.js"'
+    return response
