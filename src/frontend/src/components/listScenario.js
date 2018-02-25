@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
-import { Button, Icon, Table } from 'semantic-ui-react';
-import { graphql } from 'react-apollo';
+import { Button, Icon, Table, Popup } from 'semantic-ui-react';
+import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import '../css/list.css';
 
-const getScenario = gql`
-    query scenario {
-        scenario {
-            id
-            domain
-            created
-}}`;
+const queries = {
+    getAllScenario: gql`
+        query scenario {
+            scenario {
+                id
+                domain
+                created
+        }}`,
+    generateClientUrl: gql`
+        query generateClientUrl($id: String!) { generateClientUrl(id: $id) }
+    `};
 
 class scenarioList extends Component {
-    state = { name: '', domain: 'http://' , loading: false};
+    state = { id: [] }
 
     formatDate(seconds) {
         let date = new Date(0);
         date.setSeconds(seconds)
-        return String(date);
-    };
+        return (<FormattedDate value={date} day='numeric' month='numeric' year='numeric'/>);
+    }
+
+    disableLoading(id) {
+        let stateId = this.state.id;
+        let index = stateId.indexOf(id)
+        stateId.splice(index, 1)
+        this.setState({ id: stateId })
+    }
+
+    generateClientUrl = (id) => {
+        let stateId = this.state.id
+        stateId.push(id)
+        this.setState({ id: stateId })
+        console.log(this.state)
+        const client = this.props.client.query
+        client({ query: queries.generateClientUrl, variables: { id: id }})
+                .then(({data}) => {
+                    window.location.href = "http://127.0.0.1:5900" + data.generateClientUrl
+                    this.disableLoading(id)
+                })
+                .catch(() => { this.disableLoading(id) })
+    }
 
     render() {
         let Rows = []
@@ -67,6 +92,39 @@ class scenarioList extends Component {
                                 {this.formatDate(created)}
                             </Table.Cell>
                             <Table.Cell>
+                                <Popup inverted
+                                    trigger={
+                                        <Button icon compact inverted circular
+                                                color='green' loading={this.state.id.indexOf(id) !== -1}
+                                                onClick={() => this.generateClientUrl(id)}>
+                                            <Icon name='file code outline' />
+                                        </Button>}
+                                    content='Generate script into testing page'
+                                />
+                                <Popup inverted
+                                    trigger={
+                                        <Button icon compact inverted circular color='yellow'
+                                                onClick={() => this.generateClientUrl(id)}>
+                                            <Icon name='edit' />
+                                        </Button>}
+                                    content='Editor'
+                                />
+                                <Popup inverted
+                                    trigger={
+                                        <Button icon compact inverted circular color='violet'
+                                                onClick={() => this.generateClientUrl(id)}>
+                                            <Icon name='file text' />
+                                        </Button>}
+                                    content='Report'
+                                />
+                                <Popup inverted
+                                    trigger={
+                                        <Button icon compact color='red' floated='right'
+                                                onClick={() => this.generateClientUrl(id)}>
+                                            Delete
+                                        </Button>}
+                                    content='Delete scenario'
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -76,4 +134,7 @@ class scenarioList extends Component {
 };
 
 export const
-        ListScenario = graphql(getScenario, { name: 'getAllScenario', options: { pollInterval: 5000 }})(scenarioList);
+        ListScenario = compose(
+                withApollo,
+                graphql(queries.getAllScenario, { name: 'getAllScenario', options: { pollInterval: 5000 }})
+                )(scenarioList);
