@@ -7,7 +7,7 @@ import App from './App'
 import './css/effect.css'
 import registerServiceWorker from './registerServiceWorker'
 import { toast } from 'react-toastify'
-
+import { IntlProvider } from 'react-intl'
 import { ApolloProvider } from 'react-apollo'
 import { ApolloLink } from 'apollo-link'
 import { ApolloClient } from 'apollo-client'
@@ -43,7 +43,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
     <ApolloProvider client={client}>
-        <App />
+        <IntlProvider locale='en'>
+            <App />
+        </IntlProvider>
     </ApolloProvider>,
     document.getElementById('root'))
 registerServiceWorker();

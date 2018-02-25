@@ -10,6 +10,7 @@
     "react-addons-transition-group": "^15.6.2",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
+    "react-intl": "^2.4.0",
     "react-scripts": "^1.1.1",
     "react-toastify": "^3.3.4",
     "semantic-ui-css": "^2.2.14",
