@@ -80,7 +80,7 @@ class scenarioList extends Component {
                     transitionEnterTimeout={700}
                     transitionLeaveTimeout={500}
                     component={Table.Body}>
-                    {Rows.sort().map(({id, domain, created}) => (
+                    {Rows.map(({id, domain, created}) => (
                         <Table.Row key={id}>
                             <Table.Cell className='domain' >
                                 <Icon name='world' />
