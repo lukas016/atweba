@@ -37,7 +37,9 @@ class App extends Component {
             <div className='main'>
                 <Header rightBar={this.changeRightBar} createScenario={this.changeCreateScenario} />
                 {createScenario}
-                <ListScenario />
+                <div className='body'>
+                   <ListScenario />
+                </div>
                 <ToastContainer autoclose={20000} />
             </div>
         );
