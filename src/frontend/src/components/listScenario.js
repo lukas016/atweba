@@ -95,10 +95,10 @@ class scenarioList extends Component {
                             <Table.Cell>
                                 <Popup inverted
                                     trigger={
-                                        <Button icon compact inverted circular
-                                                color='green' loading={this.state.id.indexOf(id) !== -1}
-                                                onClick={() => this.generateClientUrl(id)}>
-                                            <Icon name='file code outline' />
+                                        <Button icon inverted compact circular inverted
+                                            color='green' loading={this.state.id.indexOf(id) !== -1}
+                                        onClick={() => this.generateClientUrl(id)}>
+                                            <Icon name='file code outline' size='large' />
                                         </Button>}
                                     content='Generate script into testing page'
                                 />
@@ -106,7 +106,7 @@ class scenarioList extends Component {
                                     trigger={
                                         <Button icon compact inverted circular color='yellow'
                                                 onClick={() => this.generateClientUrl(id)}>
-                                            <Icon name='edit' />
+                                            <Icon name='edit' size='large' />
                                         </Button>}
                                     content='Editor'
                                 />
@@ -114,13 +114,13 @@ class scenarioList extends Component {
                                     trigger={
                                         <Button icon compact inverted circular color='violet'
                                                 onClick={() => this.generateClientUrl(id)}>
-                                            <Icon name='file text' />
+                                            <Icon name='file text' size='large' />
                                         </Button>}
                                     content='Report'
                                 />
                                 <Popup inverted
                                     trigger={
-                                        <Button icon compact color='red' floated='right'
+                                        <Button icon compact color='red' floated='right' size='large'
                                                 onClick={() => this.generateClientUrl(id)}>
                                             Delete
                                         </Button>}
