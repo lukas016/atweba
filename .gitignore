@@ -3,6 +3,7 @@ src/backend/api/__pycache__
 src/backend/bin
 src/backend/lib
 src/backend/pip-selfcheck.json
+src/backend/selenium
 **/__pycache__
 src/frontend/build
 src/client/eventHandler/build
