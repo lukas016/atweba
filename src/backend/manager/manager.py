@@ -3,6 +3,7 @@ import time
 from pprint import pprint
 from zeromq import ZeroClient, ZeroServer
 import logging
+from manager.selenium import seleniumClient
 
 class TestManager(Thread):
     def initZeroServer(self):
@@ -17,6 +18,16 @@ class TestManager(Thread):
         self.logger = logging.getLogger(self.name)
         self.logger.info('Initialized')
 
+    def selectAction(self, msg):
+        try:
+            getattr(self, 'action_%s' % msg['type'])(msg)
+        except Exception as e:
+            self.server.sendMsg(msg['type'], {'status': False, 'error': str(e)})
+
+    def action_runTest(self, msg):
+        pprint(msg)
+        self.server.sendMsg(msg['type'], {'status': True, 'data': 'running'})
+
     def run(self):
         self.init()
         self.aggClient.registerMsg()
@@ -24,7 +35,8 @@ class TestManager(Thread):
         self.aggClient.checkRegister()
         while self.run:
             try:
-                self.server.recvMsg()
+                msg = self.server.recvMsg()
+                self.selectAction(msg)
             except UserWarning:
                 pass
         self.logger.info('Stopped (run: %s)' % self.run)

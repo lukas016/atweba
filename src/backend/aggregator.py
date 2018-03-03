@@ -50,6 +50,13 @@ class Aggregator(Thread):
         result = self.db.getScenario(msgObject)
         self.server.sendMsg(msg['type'], {'status': True, 'data': result})
 
+    def action_runTest(self, msg):
+        scenario = self.db.getTest(msg)
+        msg['msg']['scenario'] = scenario
+        result = self.modules['testmanager'].sendCommand(msg['type'], msg['msg'])
+        pprint(result)
+        self.server.sendMsg(msg['type'], result)
+
     def run(self):
         self.init()
         while self.run:
