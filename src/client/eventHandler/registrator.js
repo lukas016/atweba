@@ -6,14 +6,14 @@ class EventRegistrator {
     this.factory = new FactoryProcessors();
     this.db = openDatabase('handler', '1.0', 'TestDB', 2048);
     this.recentlyLogged = {};
-    this.factory.events.map(event => this.register(event));
-
+    this.api = new Api('replace-with-scenario-id');
     this.loadOptimalSelect();
+    this.factory.events.map(event => this.register(event));
   }
 
   register(event) {
     var processor = this.factory.getProcessor(event);
-
+    var api = this.api;
     if (processor == undefined) {
         console.error('Invalid processor');
         return;
@@ -21,7 +21,7 @@ class EventRegistrator {
 
     document.addEventListener(event, function(e) {
         let msg = processor.parse(e);
-        new Api('replace-with-scenario-id').send(msg);
+        api.send(msg);
     });
   }
 
