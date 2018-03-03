@@ -12,6 +12,7 @@ class Event(ObjectType):
 
 class createEvent(Mutation):
     class Arguments:
+        appId = ID(required=True, description="Scenario identifier")
         scenarioId = ID(required=True, description="Scenario identifier")
         type = String(required=True)
         path = List(String, required=True)

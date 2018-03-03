@@ -13,10 +13,11 @@ class ElasticsearchClient():
                 max_retries=0)
 
     def createEvent(self, msg):
-        if not self.existScenario(msg['scenarioId']):
-            raise Exception('Invalid scenario name '+ msg['scenarioId'])
+        appId = msg['appId']
+        if not self.existScenario(appId):
+            raise Exception('Invalid scenario name '+ appId)
 
-        result = self.db.index(index=msg['scenarioId'], doc_type='tweet', body=msg)
+        result = self.db.index(index=appId, doc_type='tweet', body=msg)
         return result['_shards']['failed'] != 0
 
     def existScenario(self, scenario):
