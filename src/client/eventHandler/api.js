@@ -48,6 +48,7 @@ class Api {
         this.socket.setRequestHeader("Content-Type", "application/json")
         msg.appId = this.appId
         msg.scenarioId = this.scenarioId()
+        msg.timestamp = new Date().getTime() / 1000
         msg.url = window.location.href
         let msgString = JSON.stringify(msg)
                 .replace(/\"([^(\")"]+)\":/g,"$1:")

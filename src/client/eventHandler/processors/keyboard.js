@@ -7,7 +7,6 @@ class processorKeyboard {
         }
         return {
             type: event.type,
-            timestamp: event.timeStamp,
             path: path,
             locator: OptimalSelect.select(event.target),
             content: event.key
