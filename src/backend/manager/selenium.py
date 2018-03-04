@@ -4,7 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep
 from pyvirtualdisplay import Display
 from os import environ
-
+from pprint import pprint
 class seleniumClient():
     def __init__(self, scenario):
         self.scenario = scenario
@@ -22,6 +22,7 @@ class seleniumClient():
 
     def initDriver(self):
         self.driver = webdriver.Chrome()
+        self.driver.get(self.scenario[0]['url'])
 
     def endTest(self):
         self.driver.close()
@@ -33,7 +34,28 @@ class seleniumClient():
         self.processScenario()
         self.endTest()
 
+    def getElementSelector(self, selector):
+        return self.driver.find_element_by_css_selector(selector)
+
+    def selectAction(self, event):
+        return getattr(self, 'action_%s' % event['type'])(event)
+
+    def action_click(self, event):
+        action = ActionChains(self.driver)
+        elem = self.getElementSelector(event['locator'])
+        action.move_to_element(elem)
+        action.click(elem)
+        print(action)
+        return action
+
+    def action_keypress(self, event):
+        action = ActionChains(self.driver)
+        return action
+
     def processScenario(self):
         for event in self.scenario:
-            print(event)
-
+            action = self.selectAction(event)
+            if not action is None:
+                action.perform()
+            sleep(5)
+            self.driver.get_screenshot_as_file('{}_{}.png'.format(event['scenarioId'], event['timestamp']))

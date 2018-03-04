@@ -25,8 +25,10 @@ class TestManager(Thread):
             self.server.sendMsg(msg['type'], {'status': False, 'error': str(e)})
 
     def action_runTest(self, msg):
-        pprint(msg)
         self.server.sendMsg(msg['type'], {'status': True, 'data': 'running'})
+        pprint(msg)
+        test = seleniumClient(msg['msg']['scenario'])
+        test.run()
 
     def run(self):
         self.init()
