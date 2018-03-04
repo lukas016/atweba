@@ -7,7 +7,7 @@ class Query(ObjectType):
     event = List(Event)
     app = List(App, id=String())
     generateClientUrl = String(required=True, id=String(required=True))
-    runTest = String(id=ID(required=True))
+    runTest = String(appId=ID(required=True), scenarioId=ID(required=True))
 
     def resolve_app(self, info, **argv):
         return App().get(info.context['aggClient'], argv)
@@ -16,7 +16,6 @@ class Query(ObjectType):
         return generateClientScript(argv)
 
     def resolve_runTest(self, info, **argv):
-        print('TU')
         return info.context['aggClient'].sendCommand('runTest', argv)
 
 class Mutation(ObjectType):

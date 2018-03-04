@@ -10,6 +10,7 @@ class App(ObjectType):
     id = String(required=True, description="App identifier")
     domain = String()
     created = String(description="Timestampt of event")
+    lastTest = Int()
 
     def get(self, aggClient, argv):
         response = aggClient.sendCommand('getApp', argv)

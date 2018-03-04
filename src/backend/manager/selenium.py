@@ -31,7 +31,10 @@ class seleniumClient():
     def run(self):
         self.initDisplay()
         self.initDriver()
-        self.processScenario()
+        try:
+            self.processScenario()
+        except:
+            pass
         self.endTest()
 
     def getElementSelector(self, selector):
@@ -56,6 +59,9 @@ class seleniumClient():
         for event in self.scenario:
             action = self.selectAction(event)
             if not action is None:
-                action.perform()
+                try:
+                    action.perform()
+                except: pass
             sleep(5)
-            self.driver.get_screenshot_as_file('{}_{}.png'.format(event['scenarioId'], event['timestamp']))
+            self.driver.get_screenshot_as_file(
+                    '{}_{}_{}.png'.format(event['appId'], event['scenarioId'], event['timestamp']))

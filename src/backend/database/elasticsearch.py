@@ -38,9 +38,9 @@ class ElasticsearchClient():
     def getTest(self, msg):
         answer = []
         filter=['hits.hits', 'error']
-        query = {'query': {'match_all': {}}}
+        query = {'query': {'term': {'scenarioId': msg['msg']['scenarioId']}}}
 
-        result = self.db.search(index=msg['msg']['id'], body=query, sort='timestamp', filter_path=filter, request_cache=False, size=1000)
+        result = self.db.search(index=msg['msg']['appId'], body=query, sort='timestamp', filter_path=filter, request_cache=False, size=1000)
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
