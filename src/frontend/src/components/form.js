@@ -6,15 +6,15 @@ import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
-const submitRepository = gql`
-    mutation createScenario($id: String!, $domain: String!, $created: String!) {
-        createScenario(id: $id, domain: $domain, created: $created) {
+const createAppRequest = gql`
+    mutation createApp($id: String!, $domain: String!, $created: String!) {
+        createApp(id: $id, domain: $domain, created: $created) {
             ok
         }
     }
 `;
 
-class createScenario extends Component {
+class createApp extends Component {
     state = { name: '', domain: 'http://' , loading: false};
 
     handleChange = (e) => {
@@ -25,17 +25,17 @@ class createScenario extends Component {
     handleSubmit = () => {
         this.setState({ loading: true });
         console.log(this.state);
-        this.props.postScenario({
+        this.props.postApp({
                 variables: {
                     id: this.state.name,
                     domain: this.state.domain,
                     created: (new Date()).getTime() / 1000
                 }})
                 .then(({data}) => {
-                    if (data.createScenario.ok) {
+                    if (data.createApp.ok) {
                         this.setState({ loading: false });
                         setTimeout(this.props.changeFormState, 1000);
-                        toast.success("Scenario " + this.state.name + " for domain " +
+                        toast.success("Application " + this.state.name + " for domain " +
                                 this.state.domain + "\nwas successful created", {
                                     className: {
                                         'background': '#2ba04d',
@@ -58,7 +58,7 @@ class createScenario extends Component {
                 transitionLeaveTimeout={500}
                 component="div" className='createScenario'>
             <Header as='h2' size='large' textAlign='center' attached='top'>
-                Create scenario
+                Create application
             </Header>
             <div className='form'>
                 <Form size='small' widths='equal' inverted
@@ -88,4 +88,4 @@ class createScenario extends Component {
 };
 
 export const
-        CreateScenario = graphql(submitRepository, { name: 'postScenario' })(createScenario);
+        CreateApp = graphql(createAppRequest, { name: 'postApp' })(createApp);

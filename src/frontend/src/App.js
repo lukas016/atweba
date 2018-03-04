@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import Header from './components/header';
 //import RightBar from './components/right-bar';
-import { CreateScenario } from './components/form.js';
+import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
-import { ListScenario } from './components/listScenario.js';
+import { ListApp } from './components/listApp.js';
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.changeRightBar = this.rightBarChange.bind(this);
-        this.changeCreateScenario = this.createScenarioChange.bind(this);
+        this.changeCreateApp = this.createAppChange.bind(this);
         this.state = {
             rightBar: false,
             createScenario: false
@@ -22,23 +22,23 @@ class App extends Component {
         });
     }
 
-    createScenarioChange() {
+    createAppChange() {
         this.setState({
-            createScenario: !this.state.createScenario
+            createApp: !this.state.createApp
         });
     }
 
     render() {
-        let createScenario = null;
-        if (this.state.createScenario)
-            createScenario = <CreateScenario changeFormState={this.changeCreateScenario}/>;
+        let createApp = null;
+        if (this.state.createApp)
+            createApp = <CreateApp changeFormState={this.changeCreateApp}/>;
 
         return (
             <div className='main'>
-                <Header rightBar={this.changeRightBar} createScenario={this.changeCreateScenario} />
-                {createScenario}
+                <Header rightBar={this.changeRightBar} createApp={this.changeCreateApp} />
+                {createApp}
                 <div className='body'>
-                   <ListScenario />
+                   <ListApp />
                 </div>
                 <ToastContainer autoclose={20000} />
             </div>

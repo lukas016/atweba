@@ -7,9 +7,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import '../css/list.css';
 
 const queries = {
-    getAllScenario: gql`
-        query scenario {
-            scenario {
+    getAllApp: gql`
+        query app {
+            app {
                 id
                 domain
                 created
@@ -18,7 +18,7 @@ const queries = {
         query generateClientUrl($id: String!) { generateClientUrl(id: $id) }
     `};
 
-class scenarioList extends Component {
+class appList extends Component {
     state = { id: [] }
 
     formatDate(seconds) {
@@ -50,9 +50,9 @@ class scenarioList extends Component {
 
     render() {
         let Rows = []
-        if (!this.props.getAllScenario.loading &&
-                Array.isArray(this.props.getAllScenario.scenario)) {
-            Rows = this.props.getAllScenario.scenario.slice();
+        if (!this.props.getAllApp.loading &&
+                Array.isArray(this.props.getAllApp.app)) {
+            Rows = this.props.getAllApp.app.slice();
             Rows.sort(function(a, b) {
                 let A = a.domain.toLowerCase();
                 let B = b.domain.toLowerCase();
@@ -135,7 +135,7 @@ class scenarioList extends Component {
 };
 
 export const
-        ListScenario = compose(
+        ListApp = compose(
                 withApollo,
-                graphql(queries.getAllScenario, { name: 'getAllScenario', options: { pollInterval: 5000 }})
-                )(scenarioList);
+                graphql(queries.getAllApp, { name: 'getAllApp', options: { pollInterval: 5000 }})
+                )(appList);

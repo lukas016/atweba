@@ -24,7 +24,6 @@ class Aggregator(Thread):
         try:
             getattr(self, 'action_%s' % msg['type'])(msg)
         except Exception as e:
-            pprint(e)
             self.server.sendMsg(msg['type'], {'status': False, 'error': str(e)})
 
     def action_registerModule(self, msg):
@@ -40,21 +39,21 @@ class Aggregator(Thread):
         result = self.db.createEvent(msgObject)
         self.server.sendMsg(msg['type'], {'status': result})
 
-    def action_createScenario(self, msg):
+    def action_createApp(self, msg):
         msgObject = msg['msg']
-        result = self.db.createScenario(msgObject)
+        msgObject['lastTest'] = 0
+        result = self.db.createApp(msgObject)
         self.server.sendMsg(msg['type'], {'status': True})
 
-    def action_getScenario(self, msg):
+    def action_getApp(self, msg):
         msgObject = msg['msg']
-        result = self.db.getScenario(msgObject)
+        result = self.db.getApp(msgObject)
         self.server.sendMsg(msg['type'], {'status': True, 'data': result})
 
     def action_runTest(self, msg):
         scenario = self.db.getTest(msg)
         msg['msg']['scenario'] = scenario
         result = self.modules['testmanager'].sendCommand(msg['type'], msg['msg'])
-        pprint(result)
         self.server.sendMsg(msg['type'], result)
 
     def run(self):

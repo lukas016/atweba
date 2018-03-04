@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Popup } from 'semantic-ui-react';
 import '../css/header.css';
 
-const Header = ({rightBar, createScenario}) => (
+const Header = ({rightBar, createApp}) => (
     <div className='header'>
     <Menu inverted size='large' icon fixed='top' >
         <Popup
@@ -19,7 +19,7 @@ const Header = ({rightBar, createScenario}) => (
                     link
                     icon='add'
                     position='right'
-                    onClick={createScenario}
+                    onClick={createApp}
                     ></Menu.Item>}
             content='Create scenario'
             size='mini' inverted />

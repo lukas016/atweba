@@ -6,27 +6,27 @@ import os.path
 import json
 
 
-class Scenario(ObjectType):
-    id = String(required=True, description="Scenario identifier")
+class App(ObjectType):
+    id = String(required=True, description="App identifier")
     domain = String()
     created = String(description="Timestampt of event")
 
     def get(self, aggClient, argv):
-        response = aggClient.sendCommand('getScenario', argv)
+        response = aggClient.sendCommand('getApp', argv)
         pprint(response)
         if response['status']:
-            return self.generateScenarios(response['data'])
+            return self.generateApp(response['data'])
         else:
             raise GraphQLError(response['error'])
 
-    def generateScenarios(self, data):
+    def generateApp(self, data):
         result = []
         for it in data:
-            result.append(Scenario(it['id'], it['domain'], it['created']))
+            result.append(App(it['id'], it['domain'], it['created']))
 
         return result
 
-class createScenario(Mutation):
+class createApp(Mutation):
     class Arguments:
         id = String(required=True)
         domain = String(required=True)
@@ -35,12 +35,12 @@ class createScenario(Mutation):
     ok = Boolean()
 
     def mutate(self, info, **argv):
-        response = info.context['aggClient'].sendCommand('createScenario', argv)
+        response = info.context['aggClient'].sendCommand('createApp', argv)
         if response['status']:
             ok = True
         else:
             raise GraphQLError(response['error'])
-        return createScenario(ok=ok)
+        return createApp(ok=ok)
 
 def generateClientScript(argv):
     id = argv['id']

@@ -14,18 +14,18 @@ class ElasticsearchClient():
 
     def createEvent(self, msg):
         appId = msg['appId']
-        if not self.existScenario(appId):
+        if not self.existApp(appId):
             raise Exception('Invalid scenario name '+ appId)
 
         result = self.db.index(index=appId, doc_type='tweet', body=msg)
-        return result['_shards']['failed'] != 0
+        return result['_shards']['failed'] == 0
 
-    def existScenario(self, scenario):
-        return self.db.exists(index=self.manageIndex, id=scenario, doc_type=self.manageDocType)
+    def existApp(self, appId):
+        return self.db.exists(index=self.manageIndex, id=appId, doc_type=self.manageDocType)
 
-    def createScenario(self, msg):
+    def createApp(self, msg):
         id = msg['id']
-        if self.existScenario(id):
+        if self.existApp(id):
             raise Exception('Invalid name ' + id + ': name exist')
 
         del msg['id']
@@ -49,7 +49,7 @@ class ElasticsearchClient():
 
         return answer
 
-    def getScenario(self, msg):
+    def getApp(self, msg):
         answer = []
         filter=['hits.hits', 'error']
         if msg:
