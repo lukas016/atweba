@@ -24,9 +24,8 @@ class Api {
             return
         }
 
-        if (!this.scenarioId()) {
-            localStorage.setItem('scenarioId', this.uuid())
-        }
+        if (!this.scenarioId())
+            localStorage.setItem('scenarioId', this.uuid().split('-').join(''))
 
         var obj = this
         document.addEventListener('keydown', function(e) { obj.endLogging(e, obj) })
