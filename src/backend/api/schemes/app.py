@@ -27,6 +27,14 @@ class App(ObjectType):
 
         return result
 
+    def deleteApp(self, aggClient, argv):
+        response = aggClient.sendCommand('deleteApp', argv)
+        pprint(response)
+        if response['status']:
+            return response
+        else:
+            raise GraphQLError(response['error'])
+
 class createApp(Mutation):
     class Arguments:
         id = String(required=True)

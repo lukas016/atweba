@@ -22,6 +22,11 @@ class DataManagerInterface(ABC):
         raise NotImplementedError('subclasses must override insert()!')
 
     @abstractmethod
+    def deleteApp(self, type, msg):
+        raise NotImplementedError('subclasses must override insert()!')
+
+
+    @abstractmethod
     def update(self, type, msg):
         raise NotImplementedError('subclasses must override update()!')
 

@@ -8,9 +8,13 @@ class Query(ObjectType):
     app = List(App, id=String())
     generateClientUrl = String(required=True, id=String(required=True))
     runTest = String(appId=ID(required=True), scenarioId=ID(required=True))
+    deleteApp = String(required=True, id=ID(required=True))
 
     def resolve_app(self, info, **argv):
         return App().get(info.context['aggClient'], argv)
+
+    def resolve_deleteApp(self, info, **argv):
+        return App().deleteApp(info.context['aggClient'], argv)
 
     def resolve_generateClientUrl(self, info, **argv):
         return generateClientScript(argv)

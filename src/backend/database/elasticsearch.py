@@ -14,23 +14,34 @@ class ElasticsearchClient():
 
     def createEvent(self, msg):
         appId = msg['appId']
-        if not self.existApp(appId):
-            raise Exception('Invalid scenario name '+ appId)
+        self.existApp(appId)
 
         result = self.db.index(index=appId, doc_type='tweet', body=msg)
         return result['_shards']['failed'] == 0
 
-    def existApp(self, appId):
-        return self.db.exists(index=self.manageIndex, id=appId, doc_type=self.manageDocType)
+    def existApp(self, appId, noexist=True):
+        result = self.db.exists(index=self.manageIndex, id=appId, doc_type=self.manageDocType)
+        if noexist and result:
+            raise Exception('Application ' + appId + ' exist')
+        if (not noexist) and (not result):
+            raise Exception('Invalid application name '+ appId)
 
     def createApp(self, msg):
         id = msg['id']
-        if self.existApp(id):
-            raise Exception('Invalid name ' + id + ': name exist')
+        self.existApp(id)
 
         del msg['id']
         result = self.db.index(index=self.manageIndex, doc_type=self.manageDocType, id=id, body=msg);
         return result['_shards']['failed'] == 0
+
+    def deleteApp(self, msg):
+        id = msg['id']
+        self.existApp(id, False)
+
+        self.db.indices.delete(index=id, ignore=[400, 404])
+        self.db.delete(index=self.manageIndex, doc_type=self.manageDocType, id=id);
+
+        return True
 
     def delete(self, type, msg): pass
     def update(self, type, msg): pass

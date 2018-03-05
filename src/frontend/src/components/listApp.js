@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Icon, Table, Popup } from 'semantic-ui-react';
+import { Button, Icon, Loader, Table, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
+import { toast } from 'react-toastify';
 import '../css/list.css';
 
 const queries = {
@@ -16,10 +17,13 @@ const queries = {
         }}`,
     generateClientUrl: gql`
         query generateClientUrl($id: String!) { generateClientUrl(id: $id) }
+    `,
+    deleteApp: gql`
+        query deleleApp($id: ID!) { deleteApp(id: $id) }
     `};
 
 class appList extends Component {
-    state = { id: [] }
+    state = { }
 
     formatDate(seconds) {
         let date = new Date(0);
@@ -27,25 +31,44 @@ class appList extends Component {
         return (<FormattedDate value={date} day='numeric' month='numeric' year='numeric'/>);
     }
 
-    disableLoading(id) {
-        let stateId = this.state.id;
-        let index = stateId.indexOf(id)
-        stateId.splice(index, 1)
-        this.setState({ id: stateId })
+    disableLoading(id, operation) {
+        let stateId = this.state.applications
+        let index = stateId[id].indexOf(operation)
+        stateId[id].splice(index, 1)
+        this.setState({ applications: {...stateId} })
     }
 
-    generateClientUrl = (id) => {
-        let stateId = this.state.id
-        stateId.push(id)
-        this.setState({ id: stateId })
-        console.log(this.state)
+    generateClientUrl(id) {
+        let stateId = this.state.applications
+        stateId[id].push('client')
+        this.setState({ applications: {...stateId} })
         const client = this.props.client.query
         client({query: queries.generateClientUrl, variables: { id: id }})
                 .then(({data}) => {
                     window.location.href = "http://127.0.0.1:5900" + data.generateClientUrl
-                    this.disableLoading(id)
+                    this.disableLoading(id, 'client')
                 })
-                .catch(() => { this.disableLoading(id) })
+                .catch(() => { this.disableLoading(id, 'client') })
+    }
+
+    deleteApp(id) {
+        let stateId = this.state.applications
+        stateId[id].push('delete')
+        this.setState({ applications: stateId })
+        const client = this.props.client.query
+        client({query: queries.deleteApp, variables: { id: id }})
+                .then(({data}) => {
+                    toast.success("Application " + id + "\nwas successful deleted", {
+                                className: {
+                                'background': '#2ba04d',
+                                'fontWeight': 'bold',
+                                'color': 'white',
+                                }
+                            });
+
+                    this.disableLoading(id, 'delete')
+                })
+                .catch(() => { this.disableLoading(id, 'delete') })
     }
 
     render() {
@@ -62,8 +85,19 @@ class appList extends Component {
                 let idB = b.id.toLowerCase();
                 return (idA < idB) ? -1 : (idA > idB) ? 1 : 0
             })
+            if (!('applications' in this.state)) {
+                let applications = {}
+                Rows.map(({id}) => (
+                    applications[id] = []
+                ))
+                this.state.applications = applications
+            }
         }
         return(
+            <div>
+            <Loader active={this.props.getAllApp.loading} inverted>
+                Loading list of applications
+            </Loader>
             <Table basic='very' celled striped inverted>
                 <Table.Header>
                     <Table.Row>
@@ -95,25 +129,23 @@ class appList extends Component {
                             <Table.Cell>
                                 <Popup inverted
                                     trigger={
-                                        <Button icon inverted compact circular inverted
-                                            color='green' loading={this.state.id.indexOf(id) !== -1}
-                                        onClick={() => this.generateClientUrl(id)}>
+                                        <Button icon inverted compact circular color='green'
+                                                loading={this.state.applications[id].indexOf('client') !== -1}
+                                                onClick={() => this.generateClientUrl(id)}>
                                             <Icon name='file code outline' size='large' />
                                         </Button>}
                                     content='Generate script into testing page'
                                 />
                                 <Popup inverted
                                     trigger={
-                                        <Button icon compact inverted circular color='yellow'
-                                                onClick={() => this.generateClientUrl(id)}>
+                                        <Button icon compact inverted circular color='yellow'>
                                             <Icon name='edit' size='large' />
                                         </Button>}
                                     content='Editor'
                                 />
                                 <Popup inverted
                                     trigger={
-                                        <Button icon compact inverted circular color='violet'
-                                                onClick={() => this.generateClientUrl(id)}>
+                                        <Button icon compact inverted circular color='violet'>
                                             <Icon name='file text' size='large' />
                                         </Button>}
                                     content='Report'
@@ -121,16 +153,17 @@ class appList extends Component {
                                 <Popup inverted
                                     trigger={
                                         <Button icon compact color='red' floated='right' size='large'
-                                                onClick={() => this.generateClientUrl(id)}>
+                                                loading={this.state.applications[id].indexOf('delete') !== -1}
+                                                onClick={() => this.deleteApp(id)}>
                                             Delete
                                         </Button>}
-                                    content='Delete scenario'
+                                    content='Delete application'
                                 />
                             </Table.Cell>
                         </Table.Row>
                     ))}
                 </ReactCSSTransitionGroup>
-            </Table>)
+            </Table></div>)
     }
 };
 

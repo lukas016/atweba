@@ -45,6 +45,9 @@ class Aggregator(Thread):
         result = self.db.createApp(msgObject)
         self.server.sendMsg(msg['type'], {'status': True})
 
+    def action_deleteApp(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.deleteApp(msg['msg'])})
+
     def action_getApp(self, msg):
         msgObject = msg['msg']
         result = self.db.getApp(msgObject)
