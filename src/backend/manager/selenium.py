@@ -31,6 +31,7 @@ class seleniumClient():
     def run(self):
         self.initDisplay()
         self.initDriver()
+        self.scenario.sort(key=lambda x: x['timestamp'])
         try:
             self.processScenario()
         except:
@@ -50,6 +51,14 @@ class seleniumClient():
         action.click(elem)
         print(action)
         return action
+
+    def action_focusout(self, event):
+        action = ActionChains(self.driver)
+        elem = self.getElementSelector(event['locator'])
+        action.move_to_element(elem)
+        action.send_keys(event['content'])
+        return action
+
 
     def action_keypress(self, event):
         action = ActionChains(self.driver)

@@ -14,7 +14,7 @@ class ElasticsearchClient():
 
     def createEvent(self, msg):
         appId = msg['appId']
-        self.existApp(appId)
+        self.existApp(appId, False)
 
         result = self.db.index(index=appId, doc_type='tweet', body=msg)
         return result['_shards']['failed'] == 0
