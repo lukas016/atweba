@@ -21,7 +21,7 @@ const Header = ({rightBar, createApp}) => (
                     position='right'
                     onClick={createApp}
                     ></Menu.Item>}
-            content='Create scenario'
+            content='Create application'
             size='mini' inverted />
     </Menu>
     </div>
