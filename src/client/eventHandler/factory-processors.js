@@ -1,10 +1,11 @@
 import processorMouse from './processors/mouse.js';
-import processorKeyboard from './processors/keyboard.js';
+//import processorKeyboard from './processors/keyboard.js';
+import processorInput from './processors/input.js';
 
 const PROCESSORS =
 [
     processorMouse,
-    processorKeyboard
+    processorInput
 ];
 
 class FactoryProcessors {
