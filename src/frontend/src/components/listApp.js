@@ -138,17 +138,10 @@ class appList extends Component {
                                 />
                                 <Popup inverted
                                     trigger={
-                                        <Button icon compact inverted circular color='yellow'>
-                                            <Icon name='edit' size='large' />
-                                        </Button>}
-                                    content='Editor'
-                                />
-                                <Popup inverted
-                                    trigger={
                                         <Button icon compact inverted circular color='violet'>
                                             <Icon name='file text' size='large' />
                                         </Button>}
-                                    content='Report'
+                                    content='Tests'
                                 />
                                 <Popup inverted
                                     trigger={
