@@ -94,15 +94,16 @@ class appList extends Component {
             }
         }
         return(
-            <div>
+            <div style={{padding: '10px'}}>
             <Loader active={this.props.getAllApp.loading} inverted>
                 Loading list of applications
             </Loader>
-            <Table basic='very' celled striped inverted>
+            <Table basic='very' celled inverted selectable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Domain</Table.HeaderCell>
                         <Table.HeaderCell>Name</Table.HeaderCell>
+                        <Table.HeaderCell>State</Table.HeaderCell>
                         <Table.HeaderCell>Created</Table.HeaderCell>
                         <Table.HeaderCell>Action</Table.HeaderCell>
                     </Table.Row>
@@ -122,6 +123,9 @@ class appList extends Component {
                             </Table.Cell>
                             <Table.Cell>
                                 {id}
+                            </Table.Cell>
+                            <Table.Cell textAlign='center'>
+                                <Icon name='checkmark' color='green' circular inverted />
                             </Table.Cell>
                             <Table.Cell>
                                 {this.formatDate(created)}
