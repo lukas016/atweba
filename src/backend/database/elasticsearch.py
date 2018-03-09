@@ -15,6 +15,7 @@ class ElasticsearchClient():
     def createEvent(self, msg):
         appId = msg['appId']
         self.existApp(appId, False)
+        msg['image'] = ''
 
         result = self.db.index(index=appId, doc_type='tweet', body=msg)
         return result['_shards']['failed'] == 0
@@ -76,3 +77,13 @@ class ElasticsearchClient():
             answer.append({'id': item['_id'], 'domain': item['_source']['domain'],
                     'created': item['_source']['created']})
         return answer
+
+    def getScenarios(self, msg):
+        filter=['aggs.scenarios', 'error']
+        query = {'aggs': {'scenarios': {'terms': {'field': 'scenarioId.keyword'}}}}
+
+        result = self.db.search(index=self.msg['id'], body=query, filter_path=filter, request_cache=False, size=100)
+        if 'error' in result:
+            raise RuntimeError(result['error']['reason'])
+
+        return result['aggregations']['scenarios']['buckets']
