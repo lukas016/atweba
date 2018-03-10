@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch
 from pprint import pprint
+from time import time
 
 class ElasticsearchClient():
     def __init__(self, host="127.0.0.1", port=9200, ssl=False):
@@ -15,7 +16,6 @@ class ElasticsearchClient():
     def createEvent(self, msg):
         appId = msg['appId']
         self.existApp(appId, False)
-        msg['image'] = ''
 
         result = self.db.index(index=appId, doc_type='tweet', body=msg)
         return result['_shards']['failed'] == 0
@@ -47,6 +47,25 @@ class ElasticsearchClient():
     def delete(self, type, msg): pass
     def update(self, type, msg): pass
 
+    def setLastResultId(self, msg):
+        index = msg['appId']
+        id = msg['_id']
+        del msg['appId']
+        del msg['_id']
+        query = {'doc': msg}
+
+        result = self.db.update(index=index, doc_type='tweet', id=id, body=query)
+
+        return result['_shards']['failed'] == 0
+
+    def createResult(self, msg):
+        id = 'result-' + msg['appId'] + '-' + msg['scenarioId']
+        del msg['appId']
+        del msg['scenarioId']
+        result = self.db.create(index=id, doc_type='result', id=time(), body=msg)
+
+        return result['_shards']['failed'] == 0
+
     def getTest(self, msg):
         answer = []
         filter=['hits.hits', 'error']
@@ -57,6 +76,7 @@ class ElasticsearchClient():
             raise RuntimeError(result['error']['reason'])
 
         for item in result['hits']['hits']:
+            item['_source']['_id'] = item['_id']
             answer.append(item['_source'])
 
         return answer

@@ -45,6 +45,12 @@ class Aggregator(Thread):
         result = self.db.createApp(msgObject)
         self.server.sendMsg(msg['type'], {'status': True})
 
+    def action_setResultId(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.setLastResultId(msg['msg'])})
+
+    def action_createResult(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.createResult(msg['msg'])})
+
     def action_deleteApp(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.deleteApp(msg['msg'])})
 
@@ -62,6 +68,9 @@ class Aggregator(Thread):
         msg['msg']['scenario'] = scenario
         result = self.modules['testmanager'].sendCommand(msg['type'], msg['msg'])
         self.server.sendMsg(msg['type'], result)
+
+    def action_updateTest(self, msg):
+        self.server.sendMsg(msg['type'], self.db.updateTest(msg['msg']))
 
     def run(self):
         self.init()

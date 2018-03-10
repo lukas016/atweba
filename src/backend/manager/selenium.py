@@ -6,8 +6,9 @@ from pyvirtualdisplay import Display
 from os import environ
 from pprint import pprint
 class seleniumClient():
-    def __init__(self, scenario):
+    def __init__(self, agg, scenario):
         self.scenario = scenario
+        self.aggClient = agg
 
     def initDisplay(self):
         if (environ['DISPLAY'] == ''):
@@ -28,10 +29,25 @@ class seleniumClient():
         self.driver.close()
         self.stopDisplay()
 
+    def setResultId(self):
+        lastResultId = 0
+        appId = self.scenario[0]['appId']
+        _id = self.scenario[0]['_id']
+        if 'lastResultId' in self.scenario[0]:
+            lastResultId = self.scenario[0]['lastResultId'] + 1;
+
+        response = self.aggClient.sendCommand('setResultId',
+                {'appId': appId, '_id': _id, 'lastResultId': lastResultId})
+        if not response['status']:
+            raise Exception(response['error'])
+
+        self.resultId = lastResultId
+
     def run(self):
         self.initDisplay()
         self.initDriver()
         self.scenario.sort(key=lambda x: x['timestamp'])
+        self.setResultId()
         try:
             self.processScenario()
         except:
@@ -71,6 +87,12 @@ class seleniumClient():
                 try:
                     action.perform()
                 except: pass
-            sleep(5)
             self.driver.get_screenshot_as_file(
                     '{}_{}_{}.png'.format(event['appId'], event['scenarioId'], event['timestamp']))
+            self.aggClient.sendCommand('createResult', {'appId': event['appId'],
+                'scenarioId': event['scenarioId'],
+                'image': '{}_{}_{}.png'.format(event['appId'], event['scenarioId'], event['timestamp']),
+                'resultId': self.resultId
+            })
+            sleep(5)
+
