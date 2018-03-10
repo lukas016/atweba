@@ -4,15 +4,19 @@ import Header from './components/header';
 import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
 import { ListApp } from './components/listApp.js';
+import { ListScenario } from './components/listScenario.js';
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.changeRightBar = this.rightBarChange.bind(this);
         this.changeCreateApp = this.createAppChange.bind(this);
+        this.showScenarios = this.changeScenarioId.bind(this);
+        this.scenarioId = null
         this.state = {
             rightBar: false,
-            createScenario: false
+            createScenario: false,
+            bodyContent: ListApp
         }
     }
 
@@ -28,17 +32,40 @@ class App extends Component {
         });
     }
 
+    changeScenarioId(id) {
+        this.scenarioId = id
+        this.changeBody(ListScenario)
+    }
+
+    changeBody(name) {
+        this.setState({
+            bodyContent: name
+        })
+    }
+
+    getBody() {
+        switch (this.state.bodyContent) {
+            case ListApp:
+            default:
+                return <ListApp showScenarios={this.showScenarios}/>
+            case ListScenario:
+                return <ListScenario id={this.scenarioId} />
+        }
+    }
+
     render() {
         let createApp = null;
         if (this.state.createApp)
             createApp = <CreateApp changeFormState={this.changeCreateApp}/>;
+
+        let body = this.getBody();
 
         return (
             <div className='main'>
                 <Header rightBar={this.changeRightBar} createApp={this.changeCreateApp} />
                 {createApp}
                 <div className='body'>
-                   <ListApp />
+                    {body}
                 </div>
                 <ToastContainer autoclose={20000} />
             </div>

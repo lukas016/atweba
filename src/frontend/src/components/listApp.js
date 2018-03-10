@@ -142,7 +142,8 @@ class appList extends Component {
                                 />
                                 <Popup inverted
                                     trigger={
-                                        <Button icon compact inverted circular color='violet'>
+                                        <Button icon compact inverted circular color='violet'
+                                            onClick={() => this.props.showScenarios(id)}>
                                             <Icon name='file text' size='large' />
                                         </Button>}
                                     content='Tests'
