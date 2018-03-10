@@ -1,11 +1,13 @@
 from graphene import Field, List, ObjectType, Schema, String, ID
 from .schemes.event import Event, createEvent
 from .schemes.app import App, createApp, generateClientScript
+from .schemes.scenario import Scenario
 from pprint import pprint
 
 class Query(ObjectType):
     event = List(Event)
     app = List(App, id=String())
+    scenario = List(Scenario, scenarioId=ID(required=True))
     generateClientUrl = String(required=True, id=String(required=True))
     runTest = String(appId=ID(required=True), scenarioId=ID(required=True))
     deleteApp = String(required=True, id=ID(required=True))
@@ -21,6 +23,9 @@ class Query(ObjectType):
 
     def resolve_runTest(self, info, **argv):
         return info.context['aggClient'].sendCommand('runTest', argv)
+
+    def resolve_scenario(self, info, **argv):
+        return Scenario().get(info.context['aggClient'], argv)
 
 class Mutation(ObjectType):
     create_event = createEvent.Field()

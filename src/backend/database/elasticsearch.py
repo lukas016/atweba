@@ -79,11 +79,15 @@ class ElasticsearchClient():
         return answer
 
     def getScenarios(self, msg):
-        filter=['aggs.scenarios', 'error']
-        query = {'aggs': {'scenarios': {'terms': {'field': 'scenarioId.keyword'}}}}
+        answer = []
+        filter=['aggregations.scenarios', 'error']
+        query = {'size': 0, 'aggs': {'scenarios': {'terms': {'field': 'scenarioId.keyword'}}}}
 
-        result = self.db.search(index=self.msg['id'], body=query, filter_path=filter, request_cache=False, size=100)
+        result = self.db.search(index=msg['scenarioId'], body=query, filter_path=filter, request_cache=False, size=100)
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
-        return result['aggregations']['scenarios']['buckets']
+        for item in result['aggregations']['scenarios']['buckets']:
+            answer.append({'scenarioId': item['key'], 'events': item['doc_count']})
+
+        return answer
