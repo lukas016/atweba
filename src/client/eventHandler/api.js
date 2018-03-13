@@ -5,7 +5,7 @@ class Api {
         this.disabled = false
         this.appId = appId
         this.uuid = require('uuid/v4')
-        this.scenarioId = function() { return localStorage.getItem('scenarioId') }
+        this.scenarioId = function() { return sessionStorage.getItem('scenarioId') }
         this.socket = new XMLHttpRequest()
         this.socket.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -25,7 +25,7 @@ class Api {
         }
 
         if (!this.scenarioId())
-            localStorage.setItem('scenarioId', this.uuid().split('-').join(''))
+            sessionStorage.setItem('scenarioId', this.uuid().split('-').join(''))
 
         var obj = this
         document.addEventListener('keydown', function(e) { obj.endLogging(e, obj) })
@@ -34,7 +34,7 @@ class Api {
     endLogging(e, obj) {
         var evtobj = window.event ? event : e
         if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
-            localStorage.removeItem('scenarioId')
+            sessionStorage.removeItem('scenarioId')
             obj.uuid = function() { return null }
             obj.disabled = true
             alert('Record of test was ended')
