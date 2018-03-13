@@ -22,7 +22,7 @@ class EventRegistrator {
     document.addEventListener(event, function(e) {
         let msg = processor.parse(e);
         api.send(msg);
-    });
+    }, true);
   }
 
   loadOptimalSelect() {
