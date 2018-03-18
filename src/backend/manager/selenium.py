@@ -3,12 +3,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep
 from pyvirtualdisplay import Display
-from os import environ
+from os import environ, makedirs, path
+import errno
 from pprint import pprint
 class seleniumClient():
     def __init__(self, agg, scenario):
         self.scenario = scenario
         self.aggClient = agg
+        self.baseImgDir = './screenshot'
 
     def initDisplay(self):
         if (environ['DISPLAY'] == ''):
@@ -24,6 +26,22 @@ class seleniumClient():
     def initDriver(self):
         self.driver = webdriver.Chrome()
         self.driver.get(self.scenario[0]['url'])
+
+    def initScreenShotDir(self):
+        path = self.baseImgDir + '/' + \
+                    self.scenario[0]['appId'] + '/' + \
+                    self.scenario[0]['scenarioId'] + '/' + \
+                    str(self.resultId)
+        try:
+            makedirs(path)
+        except OSError as exc:
+            if exc.errno == errno.EEXIST and path.isdir(path):
+                pass
+            else:
+                print("TU")
+                raise
+
+        self.screenshotDir = path
 
     def endTest(self):
         self.driver.close()
@@ -48,6 +66,7 @@ class seleniumClient():
         self.initDriver()
         self.scenario.sort(key=lambda x: x['timestamp'])
         self.setResultId()
+        self.initScreenShotDir()
         try:
             self.processScenario()
         except:
@@ -80,6 +99,14 @@ class seleniumClient():
         action = ActionChains(self.driver)
         return action
 
+    def saveScreenShot(self, event):
+        image = self.screenshotDir + '/' + str(event['timestamp'])
+        self.driver.get_screenshot_as_file(image)
+        self.aggClient.sendCommand('createResult', {'appId': event['appId'],
+                'scenarioId': event['scenarioId'],
+                'image': image,
+                'resultId': self.resultId})
+
     def processScenario(self):
         for event in self.scenario:
             action = self.selectAction(event)
@@ -87,12 +114,6 @@ class seleniumClient():
                 try:
                     action.perform()
                 except: pass
-            self.driver.get_screenshot_as_file(
-                    '{}_{}_{}.png'.format(event['appId'], event['scenarioId'], event['timestamp']))
-            self.aggClient.sendCommand('createResult', {'appId': event['appId'],
-                'scenarioId': event['scenarioId'],
-                'image': '{}_{}_{}.png'.format(event['appId'], event['scenarioId'], event['timestamp']),
-                'resultId': self.resultId
-            })
+            self.saveScreenShot(event)
             sleep(5)
 
