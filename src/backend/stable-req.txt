@@ -2,7 +2,10 @@ click==6.7
 EasyProcess==0.2.3
 elasticsearch==6.1.1
 Flask==0.12.2
+Flask-AutoIndex==0.6
 Flask-GraphQL==1.4.1
+Flask-Silk==0.2
+future==0.16.0
 graphene==2.0.1
 graphql-core==2.0
 graphql-relay==0.4.5

@@ -1,11 +1,11 @@
 from flask import Flask, send_from_directory, make_response, send_file
-
+from flask_autoindex import AutoIndex
 from flask_graphql import GraphQLView
 from .schema import schema
 from zeromq import ZeroClient
-
+from os import getcwd
 apiServer = Flask(__name__)
-
+AutoIndex(apiServer, getcwd() + '/screenshot')
 #GraphQL
 apiServer.add_url_rule('/graphql',
         view_func=GraphQLView.as_view('graphql',
