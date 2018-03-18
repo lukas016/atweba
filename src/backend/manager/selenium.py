@@ -47,12 +47,22 @@ class seleniumClient():
         self.driver.close()
         self.stopDisplay()
 
+    def setRegressTest(self):
+        response = self.aggClient.sendCommand('setRegressTest',
+                {'_id': self.scenario[0]['appId'],
+                 'regressId': {self.scenario[0]['scenarioId']: 0}})
+
+        if not response['status']:
+            raise Exception(response['error'])
+
     def setResultId(self):
         lastResultId = 0
         appId = self.scenario[0]['appId']
         _id = self.scenario[0]['_id']
         if 'lastResultId' in self.scenario[0]:
-            lastResultId = self.scenario[0]['lastResultId'] + 1;
+            lastResultId = self.scenario[0]['lastResultId'] + 1
+        else:
+            self.setRegressTest()
 
         response = self.aggClient.sendCommand('setResultId',
                 {'appId': appId, '_id': _id, 'lastResultId': lastResultId})
