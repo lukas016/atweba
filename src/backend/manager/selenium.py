@@ -6,6 +6,8 @@ from pyvirtualdisplay import Display
 from os import environ, makedirs, path
 import errno
 from pprint import pprint
+from skimage.measure import compare_ssim
+import cv2
 class seleniumClient():
     def __init__(self, agg, msg):
         self.scenario = msg['scenario']
@@ -83,6 +85,7 @@ class seleniumClient():
         except:
             pass
         self.endTest()
+        self.analyse()
 
     def getElementSelector(self, selector):
         return self.driver.find_element_by_css_selector(selector)
@@ -111,7 +114,7 @@ class seleniumClient():
         return action
 
     def saveScreenShot(self, event):
-        image = self.screenshotDir + '/' + str(event['timestamp'])
+        image = self.screenshotDir + '/' + str(event['timestamp']) + '.png'
         self.driver.get_screenshot_as_file(image)
         self.aggClient.sendCommand('createTest', {'appId': self.appId,
                 'scenarioId': self.scenarioId,
@@ -126,5 +129,27 @@ class seleniumClient():
                     action.perform()
                 except: pass
             self.saveScreenShot(event)
-            sleep(5)
+#            sleep(1)
 
+    def analyse(self):
+        if self.testId == self.manage['regressTestId']:
+           return
+
+        regressDir = self.baseImgDir + '/' + \
+                     self.appId + '/' + \
+                     self.scenarioId + '/' + \
+                     str(self.manage['regressTestId'])
+
+        for event in self.scenario:
+            self.analyseScreenshot(event['timestamp'], regressDir)
+
+    def loadImg(self, pathFile):
+        return cv2.cvtColor(cv2.imread(pathFile), cv2.COLOR_BGR2GRAY)
+
+    def analyseScreenshot(self, timestamp, regressDir):
+        file = str(timestamp) + '.png'
+        currentImg = self.loadImg(self.screenshotDir + '/' + file)
+        regressImg = self.loadImg(regressDir + '/' + file)
+
+        (score, diff) = compare_ssim(regressImg, currentImg, full=True)
+        print("SSIM: {}".format(score))
