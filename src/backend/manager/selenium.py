@@ -28,20 +28,19 @@ class seleniumClient():
         self.driver.get(self.scenario[0]['url'])
 
     def initScreenShotDir(self):
-        path = self.baseImgDir + '/' + \
+        imgDir = self.baseImgDir + '/' + \
                     self.scenario[0]['appId'] + '/' + \
                     self.scenario[0]['scenarioId'] + '/' + \
                     str(self.resultId)
         try:
-            makedirs(path)
+            makedirs(imgDir)
         except OSError as exc:
-            if exc.errno == errno.EEXIST and path.isdir(path):
+            if exc.errno == errno.EEXIST and path.isdir(imgDir):
                 pass
             else:
-                print("TU")
                 raise
 
-        self.screenshotDir = path
+        self.screenshotDir = imgDir
 
     def endTest(self):
         self.driver.close()
