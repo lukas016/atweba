@@ -53,7 +53,7 @@ class ElasticsearchClient():
     def delete(self, type, msg): pass
     def update(self, type, msg): pass
 
-    def setLastResultId(self, msg):
+    def setLastTestId(self, msg):
         query = {'doc': { 'scenarios': { msg['scenarioId']: { 'lastTestId': msg['testId']}}}}
 
         result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'], body=query)
@@ -67,7 +67,7 @@ class ElasticsearchClient():
 
         return result['_shards']['failed'] == 0
 
-    def createResult(self, msg):
+    def createTest(self, msg):
         id = 'result-' + msg['appId'] + '-' + msg['scenarioId']
         del msg['appId']
         del msg['scenarioId']
@@ -77,18 +77,24 @@ class ElasticsearchClient():
 
     def getTest(self, msg):
         answer = []
-        filter=['hits.hits', 'error']
-        query = {'query': {'term': {'scenarioId': msg['msg']['scenarioId']}}}
+        indexes = self.manageIndex + ',' + msg['appId']
+        filter=['responses.hits.hits', 'error']
+        query = ('{"index": "' + self.manageIndex + '"}\n'
+                    '{"query": {"exists": {"field": "scenarios.' + msg['scenarioId'] + '"}}}\n'
+                    '{"index": "' + msg['appId'] + '"}\n'
+                    '{"query": {"term": {"scenarioId": "' + msg['scenarioId'] + '"}}}\n'
+                )
 
-        result = self.db.search(index=msg['msg']['appId'], body=query, sort='timestamp', filter_path=filter, request_cache=False, size=1000)
+        result = self.db.msearch(index=indexes, body=query, filter_path=filter)
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
-        for item in result['hits']['hits']:
+        manage = result['responses'][0]['hits']['hits'][0]['_source']['scenarios'][msg['scenarioId']]
+        for item in result['responses'][1]['hits']['hits']:
             item['_source']['_id'] = item['_id']
             answer.append(item['_source'])
 
-        return answer
+        return (manage, answer)
 
     def getApp(self, msg):
         answer = []

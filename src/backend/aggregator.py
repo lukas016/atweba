@@ -48,11 +48,11 @@ class Aggregator(Thread):
     def action_setRegressTest(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.setRegressTest(msg['msg'])})
 
-    def action_setResultId(self, msg):
-        self.server.sendMsg(msg['type'], {'status': self.db.setLastResultId(msg['msg'])})
+    def action_setTestId(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.setLastTestId(msg['msg'])})
 
-    def action_createResult(self, msg):
-        self.server.sendMsg(msg['type'], {'status': self.db.createResult(msg['msg'])})
+    def action_createTest(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.createTest(msg['msg'])})
 
     def action_deleteApp(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.deleteApp(msg['msg'])})
@@ -67,7 +67,8 @@ class Aggregator(Thread):
         self.server.sendMsg(msg['type'], {'status': True, 'data': result})
 
     def action_runTest(self, msg):
-        scenario = self.db.getTest(msg)
+        manage, scenario = self.db.getTest(msg['msg'])
+        msg['msg']['manage'] = manage
         msg['msg']['scenario'] = scenario
         result = self.modules['testmanager'].sendCommand(msg['type'], msg['msg'])
         self.server.sendMsg(msg['type'], result)

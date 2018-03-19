@@ -7,8 +7,11 @@ from os import environ, makedirs, path
 import errno
 from pprint import pprint
 class seleniumClient():
-    def __init__(self, agg, scenario):
-        self.scenario = scenario
+    def __init__(self, agg, msg):
+        self.scenario = msg['scenario']
+        self.manage = msg['manage']
+        self.appId = msg['appId']
+        self.scenarioId = self.scenario[0]['scenarioId']
         self.aggClient = agg
         self.baseImgDir = './screenshot'
 
@@ -29,9 +32,9 @@ class seleniumClient():
 
     def initScreenShotDir(self):
         imgDir = self.baseImgDir + '/' + \
-                    self.scenario[0]['appId'] + '/' + \
-                    self.scenario[0]['scenarioId'] + '/' + \
-                    str(self.resultId)
+                    self.appId + '/' + \
+                    self.scenarioId + '/' + \
+                    str(self.testId)
         try:
             makedirs(imgDir)
         except OSError as exc:
@@ -48,34 +51,32 @@ class seleniumClient():
 
     def setRegressTest(self):
         response = self.aggClient.sendCommand('setRegressTest',
-                {'appId': self.scenario[0]['appId'],
-                'scenarioId': self.scenario[0]['scenarioId'],
+                {'appId': self.appId,
+                'scenarioId': self.scenarioId,
                 'testId': 0})
 
         if not response['status']:
             raise Exception(response['error'])
 
-    def setResultId(self):
-        lastResultId = 0
-        appId = self.scenario[0]['appId']
-        _id = self.scenario[0]['scenarioId']
-        if 'lastResultId' in self.scenario[0]:
-            lastResultId = self.scenario[0]['lastResultId'] + 1
+    def setTestId(self):
+        currentTestId = 0
+        if 'lastTestId' in self.manage:
+            currentTestId = self.manage['lastTestId'] + 1
         else:
             self.setRegressTest()
 
-        response = self.aggClient.sendCommand('setResultId',
-                {'appId': appId, 'scenarioId': _id, 'testId': lastResultId})
+        response = self.aggClient.sendCommand('setTestId',
+                {'appId': self.appId, 'scenarioId': self.scenarioId, 'testId': currentTestId})
         if not response['status']:
             raise Exception(response['error'])
 
-        self.resultId = lastResultId
+        self.testId = currentTestId
 
     def run(self):
         self.initDisplay()
         self.initDriver()
         self.scenario.sort(key=lambda x: x['timestamp'])
-        self.setResultId()
+        self.setTestId()
         self.initScreenShotDir()
         try:
             self.processScenario()
@@ -112,10 +113,10 @@ class seleniumClient():
     def saveScreenShot(self, event):
         image = self.screenshotDir + '/' + str(event['timestamp'])
         self.driver.get_screenshot_as_file(image)
-        self.aggClient.sendCommand('createResult', {'appId': event['appId'],
-                'scenarioId': event['scenarioId'],
+        self.aggClient.sendCommand('createTest', {'appId': self.appId,
+                'scenarioId': self.scenarioId,
                 'image': image,
-                'resultId': self.resultId})
+                'testId': self.testId})
 
     def processScenario(self):
         for event in self.scenario:
