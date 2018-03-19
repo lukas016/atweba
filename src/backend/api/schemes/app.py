@@ -35,6 +35,16 @@ class App(ObjectType):
         else:
             raise GraphQLError(response['error'])
 
+    def setRegressTest(self, aggClient, argv):
+        response = aggClient.sendCommand('setRegressTest',
+                {'appId': argv['appId'],
+                'scenarioId': argv['scenarioId'],
+                'testId': argv['testId']})
+        if response['status']:
+            return response
+        else:
+            raise GraphQLError(response['error'])
+
 class createApp(Mutation):
     class Arguments:
         id = String(required=True)

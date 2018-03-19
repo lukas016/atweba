@@ -44,26 +44,26 @@ class ElasticsearchClient():
 
         return True
 
+    def deleteRegressTest(self, msg):
+        id = msg['appId']
+        query = {'script': 'ctx._source.regressId.remove("' + msg['scenarioId'] + '")'}
+
+        self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=id, body=query)
+
     def delete(self, type, msg): pass
     def update(self, type, msg): pass
 
     def setLastResultId(self, msg):
-        index = msg['appId']
-        id = msg['_id']
-        del msg['appId']
-        del msg['_id']
-        query = {'doc': msg}
+        query = {'doc': { 'scenarios': { msg['scenarioId']: { 'lastTestId': msg['testId']}}}}
 
-        result = self.db.update(index=index, doc_type='tweet', id=id, body=query)
+        result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'], body=query)
 
         return result['_shards']['failed'] == 0
 
     def setRegressTest(self, msg):
-        id = msg['_id']
-        del msg['_id']
-        query = {'doc': msg}
+        query = {'doc': {'scenarios': {msg['scenarioId']: {'regressTestId': msg['testId']}}}}
 
-        result = self.db.update(index=self.manageIndex, doc_type='_doc', id=id, body=query)
+        result = self.db.update(index=self.manageIndex, doc_type='_doc', id=msg['appId'], body=query)
 
         return result['_shards']['failed'] == 0
 
