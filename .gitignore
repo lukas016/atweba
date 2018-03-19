@@ -5,6 +5,7 @@ src/backend/lib
 src/backend/pip-selfcheck.json
 src/backend/selenium
 src/backend/screenshot
+src/backend/share
 **/__pycache__
 src/frontend/build
 src/client/eventHandler/build
