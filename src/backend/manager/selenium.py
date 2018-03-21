@@ -62,10 +62,11 @@ class seleniumClient():
 
     def setTestId(self):
         currentTestId = 0
-        if 'lastTestId' in self.manage:
-            currentTestId = self.manage['lastTestId'] + 1
-        else:
+        if self.manage is None:
             self.setRegressTest()
+            self.manage = {'regressTest': 0, 'latestTestId': 0}
+        else:
+            currentTestId = self.manage['lastTestId'] + 1
 
         response = self.aggClient.sendCommand('setTestId',
                 {'appId': self.appId, 'scenarioId': self.scenarioId, 'testId': currentTestId})

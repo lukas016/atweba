@@ -115,7 +115,11 @@ class ElasticsearchClient():
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
-        manage = result['responses'][0]['hits']['hits'][0]['_source']['scenarios'][msg['scenarioId']]
+        manage = None
+        pprint(result['responses'][0]['hits']['total'])
+        if result['responses'][0]['hits']['total'] != 0:
+            manage = result['responses'][0]['hits']['hits'][0]['_source']['scenarios'][msg['scenarioId']]
+
         for item in result['responses'][1]['hits']['hits']:
             item['_source']['_id'] = item['_id']
             answer.append(item['_source'])
