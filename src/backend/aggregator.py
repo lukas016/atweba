@@ -66,6 +66,13 @@ class Aggregator(Thread):
         result = self.db.getScenarios(msg['msg'])
         self.server.sendMsg(msg['type'], {'status': True, 'data': result})
 
+    def action_getResult(self, msg):
+        result = self.db.getResult(msg['msg'])
+        self.server.sendMsg(msg['type'], {'status': True, 'data': result})
+
+    def action_setImgScore(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.setImgScore(msg['msg'])})
+
     def action_runTest(self, msg):
         manage, scenario = self.db.getTest(msg['msg'])
         msg['msg']['manage'] = manage

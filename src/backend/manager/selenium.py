@@ -132,6 +132,7 @@ class seleniumClient():
 #            sleep(1)
 
     def analyse(self):
+        sleep(5)
         if self.testId == self.manage['regressTestId']:
            return
 
@@ -140,16 +141,38 @@ class seleniumClient():
                      self.scenarioId + '/' + \
                      str(self.manage['regressTestId'])
 
-        for event in self.scenario:
-            self.analyseScreenshot(event['timestamp'], regressDir)
+        pprint(self.testId)
+        testIds = {'currentTest': self.testId, 'regressTest': self.manage['regressTestId']}
+        tests = {}
+        for key, value in testIds.items():
+            response = self.aggClient.sendCommand('getResult', {'appId': self.appId, 'scenarioId': self.scenarioId,
+                    'testId': value})
+            if not response['status']:
+                raise Exception(response['error'])
+
+            tests[key] = response['data']
+
+
+        if len(tests['currentTest']) != len(tests['regressTest']):
+            raise Exception('Results of tests have diffrent size')
+
+        tests['currentTest'].sort(key=lambda x: x['image'])
+        tests['regressTest'].sort(key=lambda x: x['image'])
+
+        for current, regress in zip(tests['currentTest'], tests['regressTest']):
+            self.analyseScreenshot(current, regress)
 
     def loadImg(self, pathFile):
         return cv2.cvtColor(cv2.imread(pathFile), cv2.COLOR_BGR2GRAY)
 
-    def analyseScreenshot(self, timestamp, regressDir):
-        file = str(timestamp) + '.png'
-        currentImg = self.loadImg(self.screenshotDir + '/' + file)
-        regressImg = self.loadImg(regressDir + '/' + file)
+    def analyseScreenshot(self, current, regress):
+        pprint(current)
+        pprint(regress)
+        currentImg = self.loadImg(current['image'])
+        regressImg = self.loadImg(regress['image'])
 
         (score, diff) = compare_ssim(regressImg, currentImg, full=True)
-        print("SSIM: {}".format(score))
+        msg = {'appId': self.appId, 'scenarioId': self.scenarioId,
+                'id': current['id'], 'score': score, 'regressTestId': self.manage['regressTestId']}
+
+        response = self.aggClient.sendCommand('setImgScore', msg)

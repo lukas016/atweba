@@ -75,6 +75,32 @@ class ElasticsearchClient():
 
         return result['_shards']['failed'] == 0
 
+    def getResult(self, msg):
+        index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
+        filter = ['hits.hits', 'error']
+        result = self.db.search(index=index, filter_path=filter,
+                body={'query': {'term': {'testId': msg['testId']}}})
+
+        if 'error' in result:
+            raise RuntimeError(result['error']['reason'])
+
+        answer = []
+        for item in result['hits']['hits']:
+            tmp = {'id': item['_id']}
+            for key, value  in item['_source'].items():
+                tmp[key] = value
+            answer.append(tmp)
+
+        return answer
+
+    def setImgScore(self, msg):
+        index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
+        id = msg['id']
+        query = {'doc': {'score': msg['score'], 'regressTestId': msg['regressTestId']}}
+        result = self.db.update(index=index, doc_type='result', id=id, body=query)
+
+        return result['_shards']['failed'] == 0
+
     def getTest(self, msg):
         answer = []
         indexes = self.manageIndex + ',' + msg['appId']
