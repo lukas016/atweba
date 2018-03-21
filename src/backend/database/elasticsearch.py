@@ -104,7 +104,7 @@ class ElasticsearchClient():
     def getTest(self, msg):
         answer = []
         indexes = self.manageIndex + ',' + msg['appId']
-        filter=['responses.hits.hits', 'error']
+        filter=['responses.hits', 'error']
         query = ('{"index": "' + self.manageIndex + '"}\n'
                     '{"query": {"exists": {"field": "scenarios.' + msg['scenarioId'] + '"}}}\n'
                     '{"index": "' + msg['appId'] + '"}\n'
