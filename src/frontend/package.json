@@ -12,6 +12,7 @@
     "react-dom": "^16.2.0",
     "react-intl": "^2.4.0",
     "react-scripts": "^1.1.1",
+    "react-table": "^6.8.0",
     "react-toastify": "^3.3.4",
     "semantic-ui-css": "^2.2.14",
     "semantic-ui-react": "^0.78.2"
