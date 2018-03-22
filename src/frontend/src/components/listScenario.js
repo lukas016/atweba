@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Icon, Loader, Table, Popup } from 'semantic-ui-react';
+import { Button, Divider, Grid,  Header, Icon, List, Loader, Table, Popup, Search } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
@@ -37,12 +37,26 @@ class scenarioList extends Component {
             <Loader active={this.props.getAllScenarios.loading} inverted>
                 Loading list of applications
             </Loader>
-            <Table basic='very' celled inverted selectable>
+            <Grid columns={2} celled inverted doubling>
+                <Grid.Column width={4}>
+                    <List animated size='small' celled inverted>
+                        {Rows.map(({scenarioId, events}) => (
+                            <List.Item>
+                                <List.Content>
+                                <List.Header>{scenarioId}</List.Header>
+                                Count of Events: {events}
+                                </List.Content>
+                            </List.Item>
+                        ))}
+                    </List>
+                </Grid.Column>
+                <Grid.Column width={12}>
+                <Table basic='very' inverted selectable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>UUID</Table.HeaderCell>
-                        <Table.HeaderCell>Count of events</Table.HeaderCell>
-                        <Table.HeaderCell>State</Table.HeaderCell>
+                        <Table.HeaderCell textAlign='center'>Count of events</Table.HeaderCell>
+                        <Table.HeaderCell textAlign='center'>State</Table.HeaderCell>
                         <Table.HeaderCell>Action</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -70,6 +84,8 @@ class scenarioList extends Component {
                     ))}
                 </ReactCSSTransitionGroup>
             </Table>
+            </Grid.Column>
+            </Grid>
             </div>
         )
     }

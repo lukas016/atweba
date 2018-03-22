@@ -1,13 +1,20 @@
 .main .header {
     background: rgba(19, 18, 24, 1);
-    display: block;
-    height: 47px;
+    display: inline-block;
+    position: relative;
+    height: 30px !important;
 }
 
 .main .body {
     display: block;
     position: relative;
     right: 0;
-    top: 50;
+    top: 0;
     left: 0;
+    margin-bottom: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+.header h3 {
+    background: None !important;
 }
