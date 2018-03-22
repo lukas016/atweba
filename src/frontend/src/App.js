@@ -12,11 +12,12 @@ class App extends Component {
         this.changeRightBar = this.rightBarChange.bind(this);
         this.changeCreateApp = this.createAppChange.bind(this);
         this.showScenarios = this.changeScenarioId.bind(this);
+        this.bodyTitle = 'List of Applications'
         this.scenarioId = null
         this.state = {
             rightBar: false,
             createScenario: false,
-            bodyContent: ListApp
+            bodyContent: ListApp,
         }
     }
 
@@ -47,8 +48,10 @@ class App extends Component {
         switch (this.state.bodyContent) {
             case ListApp:
             default:
+                this.bodyTitle = 'List of Applications'
                 return <ListApp showScenarios={this.showScenarios}/>
             case ListScenario:
+                this.bodyTitle = 'List of scenarios for ' + this.scenarioId
                 return <ListScenario id={this.scenarioId} />
         }
     }
@@ -62,7 +65,7 @@ class App extends Component {
 
         return (
             <div className='main'>
-                <Header rightBar={this.changeRightBar} createApp={this.changeCreateApp} />
+                <Header rightBar={this.changeRightBar} createApp={this.changeCreateApp} title={this.bodyTitle}/>
                 {createApp}
                 <div className='body'>
                     {body}

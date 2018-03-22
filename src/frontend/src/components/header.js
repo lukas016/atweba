@@ -1,8 +1,8 @@
 import React from 'react';
-import { Menu, Popup } from 'semantic-ui-react';
+import { Header as Title, Menu, Popup } from 'semantic-ui-react';
 import '../css/header.css';
 
-const Header = ({rightBar, createApp}) => (
+const Header = ({rightBar, createApp, title}) => (
     <div className='header'>
     <Menu inverted size='large' icon fixed='top' >
         <Popup
@@ -14,6 +14,7 @@ const Header = ({rightBar, createApp}) => (
                     ></Menu.Item>}
             content='Show menu'
             size='mini' inverted />
+        <Title as='h3' inverted color='black' attached='bottom' content={title} textAlign='center' />
         <Popup
             trigger={<Menu.Item
                     link
