@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Divider, Grid,  Header, Icon, List, Loader, Table, Popup, Search } from 'semantic-ui-react';
+import { Loader } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import { toast } from 'react-toastify';
 import '../css/list.css';
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+import '../css/react-table.css'
+import { semanticFilter } from './simpleComponents.js'
 
 const queries = {
     getAllScenarios: gql`
@@ -37,55 +41,18 @@ class scenarioList extends Component {
             <Loader active={this.props.getAllScenarios.loading} inverted>
                 Loading list of applications
             </Loader>
-            <Grid columns={2} celled inverted doubling>
-                <Grid.Column width={4}>
-                    <List animated size='small' celled inverted>
-                        {Rows.map(({scenarioId, events}) => (
-                            <List.Item>
-                                <List.Content>
-                                <List.Header>{scenarioId}</List.Header>
-                                Count of Events: {events}
-                                </List.Content>
-                            </List.Item>
-                        ))}
-                    </List>
-                </Grid.Column>
-                <Grid.Column width={12}>
-                <Table basic='very' inverted selectable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>UUID</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Count of events</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>State</Table.HeaderCell>
-                        <Table.HeaderCell>Action</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <ReactCSSTransitionGroup
-                    transitionName='effect'
-                    transitionAppear={true}
-                    transitionAppearTimeout={500}
-                    transitionEnterTimeout={700}
-                    transitionLeaveTimeout={500}
-                    component={Table.Body}>
-                    {Rows.map(({scenarioId, events}) => (
-                        <Table.Row key={scenarioId}>
-                            <Table.Cell>
-                                {scenarioId}
-                            </Table.Cell>
-                            <Table.Cell textAlign='center'>
-                                {events}
-                            </Table.Cell>
-                            <Table.Cell textAlign='center'>
-                                <Icon name='checkmark' color='green' circular inverted />
-                            </Table.Cell>
-                            <Table.Cell>
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </ReactCSSTransitionGroup>
-            </Table>
-            </Grid.Column>
-            </Grid>
+            <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
+                    data={Rows}
+                    columns = {[
+                            {Header: 'UUID', accessor: 'scenarioId',
+                                filterMethod: (filter, row) =>
+                                    row[filter.id].startsWith(filter.value) &&
+                                    row[filter.id].endsWith(filter.value),
+                                Filter: semanticFilter},
+                            {Header: 'Count of Events', accessor: 'events',
+                                Filter: (input) => semanticFilter(input, 'number')}
+                    ]}
+            />
             </div>
         )
     }
