@@ -1,0 +1,42 @@
+.ReactTable {
+    margin-top: 10px;
+}
+
+.ReactTable div[role='row'] {
+    color: #fff;
+}
+.ReactTable {
+    border: None;
+}
+
+.ReactTable .rt-tbody,
+.ReactTable .-pagination,
+.ReactTable div[role='rowgroup'],
+.ReactTable div[role='row'],
+.ReactTable div[role='columnheader'],
+.ReactTable div[role='gridcell'] {
+    border-color: #000 !important;
+}
+
+.ReactTable .-filters {
+    border-bottom: #000 3px solid !important;
+}
+
+.ReactTable .-sort-asc {
+    box-shadow: inset 0 3px 0 0 rgb(0, 230, 0) !important;
+}
+
+.ReactTable .-sort-desc {
+    box-shadow: inset 0 -3px 0 0 rgb(0, 230, 0) !important;
+}
+
+.ReactTable .-header .rt-resizable-header-content {
+    font-weight: bold !important;
+    font-size: 18px !important;
+}
+
+.ReactTable div[role='columnheader'] input,
+.ReactTable div[role='columnheader'] .input {
+    height: 34px !important;
+    width: 100%;
+}
