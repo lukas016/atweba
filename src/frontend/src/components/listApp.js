@@ -6,6 +6,9 @@ import { FormattedDate } from 'react-intl';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import { toast } from 'react-toastify';
 import '../css/list.css';
+import { semanticFilter } from './simpleComponents.js'
+import '../css/react-table.css'
+import ReactTable from 'react-table'
 
 const queries = {
     getAllApp: gql`
@@ -76,15 +79,7 @@ class appList extends Component {
         if (!this.props.getAllApp.loading &&
                 Array.isArray(this.props.getAllApp.app)) {
             Rows = this.props.getAllApp.app.slice();
-            Rows.sort(function(a, b) {
-                let A = a.domain.toLowerCase();
-                let B = b.domain.toLowerCase();
-                if (A < B) return -1;
-                if (A > B) return 1;
-                let idA = a.id.toLowerCase();
-                let idB = b.id.toLowerCase();
-                return (idA < idB) ? -1 : (idA > idB) ? 1 : 0
-            })
+
             if (!('applications' in this.state)) {
                 let applications = {}
                 Rows.map(({id}) => (
@@ -98,70 +93,21 @@ class appList extends Component {
             <Loader active={this.props.getAllApp.loading} inverted>
                 Loading list of applications
             </Loader>
-            <Table basic='very' celled inverted selectable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Domain</Table.HeaderCell>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>State</Table.HeaderCell>
-                        <Table.HeaderCell>Created</Table.HeaderCell>
-                        <Table.HeaderCell>Action</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <ReactCSSTransitionGroup
-                    transitionName='effect'
-                    transitionAppear={true}
-                    transitionAppearTimeout={500}
-                    transitionEnterTimeout={700}
-                    transitionLeaveTimeout={500}
-                    component={Table.Body}>
-                    {Rows.map(({id, domain, created}) => (
-                        <Table.Row key={id}>
-                            <Table.Cell className='domain' >
-                                <Icon name='world' />
-                                {domain}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {id}
-                            </Table.Cell>
-                            <Table.Cell textAlign='center'>
-                                <Icon name='checkmark' color='green' circular inverted />
-                            </Table.Cell>
-                            <Table.Cell>
-                                {this.formatDate(created)}
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Popup inverted
-                                    trigger={
-                                        <Button icon inverted compact circular color='green'
-                                                loading={this.state.applications[id].indexOf('client') !== -1}
-                                                onClick={() => this.generateClientUrl(id)}>
-                                            <Icon name='file code outline' size='large' />
-                                        </Button>}
-                                    content='Generate script into testing page'
-                                />
-                                <Popup inverted
-                                    trigger={
-                                        <Button icon compact inverted circular color='violet'
-                                            onClick={() => this.props.showScenarios(id)}>
-                                            <Icon name='file text' size='large' />
-                                        </Button>}
-                                    content='Tests'
-                                />
-                                <Popup inverted
-                                    trigger={
-                                        <Button icon compact color='red' floated='right' size='large'
-                                                loading={this.state.applications[id].indexOf('delete') !== -1}
-                                                onClick={() => this.deleteApp(id)}>
-                                            Delete
-                                        </Button>}
-                                    content='Delete application'
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </ReactCSSTransitionGroup>
-            </Table></div>)
+            <ReactTable filterable defaultSorted={[{id: 'created', desc: true}]}
+                    data={Rows}
+                    columns = {[
+                            {Header: 'Domain', accessor: 'domain',
+                                filterMethod: (filter, row) =>
+                                    row[filter.id].startsWith(filter.value) &&
+                                    row[filter.id].endsWith(filter.value),
+                                Filter: semanticFilter},
+                            {Header: 'Name', accessor: 'id',
+                                Filter: (input) => semanticFilter(input, 'number')},
+                            {Header: 'Name', accessor: 'created',
+                                Filter: (input) => semanticFilter(input, 'date')}
+                    ]}
+            />
+            </div>)
     }
 };
 
