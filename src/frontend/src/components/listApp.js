@@ -6,9 +6,15 @@ import { FormattedDate } from 'react-intl';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import { toast } from 'react-toastify';
 import '../css/list.css';
-import { semanticFilter } from './simpleComponents.js'
+import { semanticFilter, semanticDateRangeFilter } from './simpleComponents.js'
 import '../css/react-table.css'
 import ReactTable from 'react-table'
+
+const formatDate = (seconds) => (
+    <div style={{textAlign: 'center'}}>
+        <FormattedDate value={new Date(0).setSeconds(seconds)} day='numeric' month='numeric' year='numeric'/>
+    </div>
+)
 
 const queries = {
     getAllApp: gql`
@@ -26,13 +32,7 @@ const queries = {
     `};
 
 class appList extends Component {
-    state = { }
-
-    formatDate(seconds) {
-        let date = new Date(0);
-        date.setSeconds(seconds)
-        return (<FormattedDate value={date} day='numeric' month='numeric' year='numeric'/>);
-    }
+    state = { startDate: 0, endDate: 0 }
 
     disableLoading(id, operation) {
         let stateId = this.state.applications
@@ -102,9 +102,67 @@ class appList extends Component {
                                     row[filter.id].endsWith(filter.value),
                                 Filter: semanticFilter},
                             {Header: 'Name', accessor: 'id',
-                                Filter: (input) => semanticFilter(input, 'number')},
-                            {Header: 'Name', accessor: 'created',
-                                Filter: (input) => semanticFilter(input, 'date')}
+                                Filter: semanticFilter},
+                            {Header: 'Created', accessor: 'created',
+                                filterMethod: (filter, row ) => {
+                                    if (filter.value[1] == 'start')
+                                        this.state.startDate = filter.value[0]
+                                    else
+                                        this.state.endDate = filter.value[0]
+
+                                    let oneDaySec = 86400
+                                    let startSec = new Date(this.state.startDate).getTime() / 1000;
+                                    let endSec = new Date(this.state.endDate).getTime() / 1000 + oneDaySec;
+                                    if (startSec > endSec)
+                                        return false
+
+                                    return row[filter.id] > startSec && row[filter.id] < endSec},
+                                    Filter: x => semanticDateRangeFilter(x, this),
+                                Cell: row => formatDate(row.value),
+                                width: 303},
+                            {Header: 'State',
+                                Filter: ({ filter, onChange }) =>
+                                    <select
+                                        onChange={event => onChange(event.target.value)}
+                                        value={filter ? filter.value : ''}>
+                                        <option value="true">Correct</option>
+                                        <option value="false">Failed</option>
+                                    </select>,
+                                Cell: row => (<div style={{textAlign: 'center'}}><Icon name='checkmark' color='green' circular inverted /></div>),
+                                minWidth: 100, maxWidth: 200, width: 100},
+                            {Header: 'Actions',
+                                filterable: false,
+                                sortable: false,
+                                Cell: row => (
+                                    <div>
+                                    <Popup inverted
+                                        trigger={
+                                            <Button icon inverted compact circular color='green'
+                                                    loading={this.state.applications[row.original.id].indexOf('client') !== -1}
+                                                    onClick={() => this.generateClientUrl(row.original.id)}>
+                                                <Icon name='file code outline' size='large' />
+                                            </Button>}
+                                        content='Generate script into testing page'
+                                    />
+                                    <Popup inverted
+                                        trigger={
+                                            <Button icon compact inverted circular color='violet'
+                                                onClick={() => this.props.showScenarios(row.original.id)}>
+                                                <Icon name='file text' size='large' />
+                                            </Button>}
+                                        content='Tests'
+                                    />
+                                    <Popup inverted
+                                        trigger={
+                                            <Button icon compact color='red' floated='right' size='large'
+                                                    loading={this.state.applications[row.original.id].indexOf('delete') !== -1}
+                                                    onClick={() => this.deleteApp(row.original.id)}>
+                                                Delete
+                                            </Button>}
+                                        content='Delete application'
+                                    />
+                                    </div>)
+                            }
                     ]}
             />
             </div>)
