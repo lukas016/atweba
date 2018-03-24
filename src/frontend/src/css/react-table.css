@@ -40,3 +40,7 @@
     height: 34px !important;
     width: 100%;
 }
+
+.ReactTable .dateRange {
+    width: 50% !important;
+}
