@@ -4,7 +4,7 @@
     top: 50%;
     left: 50%;
     width: 264px;
-    height: 190px;
+    height: 195px;
     margin-top: -95px;
     padding: 1px;
     margin-left: -132px;
@@ -17,8 +17,11 @@
 .createScenario .header {
     background: #000 !important;
     border: none !important;
-    color: #fff;
     border-bottom: 2px solid #fff !important;
+    color: #fff !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    width: 100%;
 }
 
 .createScenario .form {

@@ -57,7 +57,7 @@ class createApp extends Component {
                 transitionEnterTimeout={700}
                 transitionLeaveTimeout={500}
                 component="div" className='createScenario'>
-            <Header as='h2' size='large' textAlign='center' attached='top'>
+            <Header as='h2' size='medium' textAlign='center'>
                 Create application
             </Header>
             <div className='form'>
