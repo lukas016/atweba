@@ -5,6 +5,7 @@ import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
 import { ListApp } from './components/listApp.js';
 import { ListScenario } from './components/listScenario.js';
+import './css/main.css'
 
 class App extends Component {
     constructor(props) {

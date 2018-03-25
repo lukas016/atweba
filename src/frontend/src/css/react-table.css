@@ -2,8 +2,10 @@
     margin-top: 10px;
 }
 
+.ReactTable .-pageInfo,
+.ReactTable .-btn,
 .ReactTable div[role='row'] {
-    color: #fff;
+    color: #fff !important;
 }
 .ReactTable {
     border: None;
