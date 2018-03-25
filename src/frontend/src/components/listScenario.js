@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Loader } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
-import { FormattedDate } from 'react-intl';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import { toast } from 'react-toastify';
 import '../css/list.css';
 import ReactTable from 'react-table'

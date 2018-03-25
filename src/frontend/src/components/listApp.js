@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Icon, Loader, Table, Popup } from 'semantic-ui-react';
+import { Button, Icon, Loader, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 import { toast } from 'react-toastify';
 import '../css/list.css';
 import { semanticFilter, semanticDateRangeFilter } from './simpleComponents.js'
@@ -102,7 +101,7 @@ class appList extends Component {
                                 Filter: semanticFilter},
                             {Header: 'Created', accessor: 'created',
                                 filterMethod: (filter, row ) => {
-                                    if (filter.value[1] == 'start')
+                                    if (filter.value[1] === 'start')
                                         this.state.startDate = filter.value[0]
                                     else
                                         this.state.endDate = filter.value[0]
