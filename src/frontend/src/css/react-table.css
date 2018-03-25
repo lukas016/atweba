@@ -30,6 +30,11 @@
     box-shadow: inset 0 -3px 0 0 rgb(0, 230, 0) !important;
 }
 
+.ReactTable div[role='gridcell'] {
+    height: 44px !important;
+    line-height: 30px !important;
+}
+
 .ReactTable .-header .rt-resizable-header-content {
     font-weight: bold !important;
     font-size: 18px !important;

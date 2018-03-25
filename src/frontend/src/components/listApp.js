@@ -96,7 +96,8 @@ class appList extends Component {
                                 filterMethod: (filter, row) =>
                                     row[filter.id].startsWith(filter.value) &&
                                     row[filter.id].endsWith(filter.value),
-                                Filter: semanticFilter},
+                                Filter: semanticFilter,
+                                minWidth: 200, maxWidth: 400},
                             {Header: 'Name', accessor: 'id',
                                 Filter: semanticFilter},
                             {Header: 'Created', accessor: 'created',
@@ -133,27 +134,24 @@ class appList extends Component {
                                     <div>
                                     <Popup inverted
                                         trigger={
-                                            <Button icon inverted compact circular color='green'
-                                                    loading={this.state.applications[row.original.id].indexOf('client') !== -1}
+                                            <Button icon='file code outline' color='green' compact inverted circular
+                                                    loading={this.state.applications[row.original.id] && this.state.applications[row.original.id].indexOf('client') !== -1}
                                                     onClick={() => this.generateClientUrl(row.original.id)}>
-                                                <Icon name='file code outline' size='large' />
                                             </Button>}
                                         content='Generate script into testing page'
                                     />
                                     <Popup inverted
                                         trigger={
-                                            <Button icon compact inverted circular color='violet'
+                                            <Button icon='file text' compact inverted circular color='violet'
                                                 onClick={() => this.props.showScenarios(row.original.id)}>
-                                                <Icon name='file text' size='large' />
                                             </Button>}
                                         content='Tests'
                                     />
                                     <Popup inverted
                                         trigger={
-                                            <Button icon compact color='red' floated='right' size='large'
-                                                    loading={this.state.applications[row.original.id].indexOf('delete') !== -1}
+                                            <Button icon='delete' compact color='red' floated='right' circular
+                                                    loading={this.state.applications[row.original.id] && this.state.applications[row.original.id].indexOf('delete') !== -1}
                                                     onClick={() => this.deleteApp(row.original.id)}>
-                                                Delete
                                             </Button>}
                                         content='Delete application'
                                     />
