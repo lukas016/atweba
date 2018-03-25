@@ -80,13 +80,9 @@ class appList extends Component {
                 Array.isArray(this.props.getAllApp.app)) {
             Rows = this.props.getAllApp.app.slice();
 
-            if (!('applications' in this.state)) {
-                let applications = {}
-                Rows.map(({id}) => (
-                    applications[id] = []
-                ))
-                this.state.applications = applications
-            }
+            let applications = {}
+            Rows.map(({id}) => applications[id] = [])
+            this.state.applications = applications
         }
         return(
             <div style={{padding: '10px'}}>
