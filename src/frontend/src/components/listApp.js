@@ -96,7 +96,7 @@ class appList extends Component {
                                     row[filter.id].startsWith(filter.value) &&
                                     row[filter.id].endsWith(filter.value),
                                 Filter: semanticFilter,
-                                minWidth: 200, maxWidth: 400},
+                                minWidth: 200, maxWidth: 600},
                             {Header: 'Name', accessor: 'id',
                                 Filter: semanticFilter},
                             {Header: 'Created', accessor: 'created',
@@ -115,7 +115,7 @@ class appList extends Component {
                                     return row[filter.id] > startSec && row[filter.id] < endSec},
                                     Filter: x => semanticDateRangeFilter(x, this),
                                 Cell: row => formatDate(row.value),
-                                width: 303},
+                                width: 305},
                             {Header: 'State',
                                 Filter: ({ filter, onChange }) =>
                                     <select
@@ -129,6 +129,7 @@ class appList extends Component {
                             {Header: 'Actions',
                                 filterable: false,
                                 sortable: false,
+                                maxWidth: 160,
                                 Cell: row => (
                                     <div>
                                     <Popup inverted
