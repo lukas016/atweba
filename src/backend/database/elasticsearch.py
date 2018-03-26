@@ -33,6 +33,7 @@ class ElasticsearchClient():
 
         del msg['id']
         result = self.db.index(index=self.manageIndex, doc_type=self.manageDocType, id=id, body=msg);
+        self.db.indices.create(index=id)
         return result['_shards']['failed'] == 0
 
     def deleteApp(self, msg):
