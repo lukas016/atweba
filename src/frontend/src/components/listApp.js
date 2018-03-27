@@ -84,7 +84,7 @@ class appList extends Component {
             this.state.applications = applications
         }
         return(
-            <div style={{padding: '10px'}}>
+            <div>
             <Loader active={this.props.getAllApp.loading} inverted>
                 Loading list of applications
             </Loader>

@@ -52,3 +52,11 @@ body #root {
     width: 100%;
     overflow-y: auto;
 }
+
+.tabular .item {
+    color: #fff !important;
+}
+
+.tabular .active {
+    color: #000 !important;
+}

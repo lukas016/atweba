@@ -5,6 +5,7 @@ import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
 import { ListApp } from './components/listApp.js';
 import { ListScenario } from './components/listScenario.js';
+import { Tab } from 'semantic-ui-react'
 import './css/main.css'
 
 class App extends Component {
@@ -19,6 +20,12 @@ class App extends Component {
             rightBar: false,
             createScenario: false,
             bodyContent: ListApp,
+            panes: [
+                {
+                    menuItem: { key: 'apps', icon: 'browser', content: 'Applications'},
+                    render: () => <Tab.Pane inverted><ListApp showScenarios={this.showScenarios}/></Tab.Pane>
+                },
+            ]
         }
     }
 
@@ -35,25 +42,15 @@ class App extends Component {
     }
 
     changeScenarioId(id) {
-        this.scenarioId = id
-        this.changeBody(ListScenario)
+        this.bodyTitle = `List of scenarios for ${id}`
+        let tabes = [this.state.panes[0], this.generateScenarioTab(id)]
+        this.setState({ panes: tabes })
     }
 
-    changeBody(name) {
-        this.setState({
-            bodyContent: name
-        })
-    }
-
-    getBody() {
-        switch (this.state.bodyContent) {
-            case ListApp:
-            default:
-                this.bodyTitle = 'List of Applications'
-                return <ListApp showScenarios={this.showScenarios}/>
-            case ListScenario:
-                this.bodyTitle = 'List of scenarios for ' + this.scenarioId
-                return <ListScenario id={this.scenarioId} />
+    generateScenarioTab(id) {
+        return {
+            menuItem: {'key': 'scenarios', icon: 'list', content: `Scenarios for ${id}`},
+            render: () => <Tab.Pane inverted><ListScenario id={id} /></Tab.Pane>
         }
     }
 
@@ -62,15 +59,11 @@ class App extends Component {
         if (this.state.createApp)
             createApp = <CreateApp changeFormState={this.changeCreateApp}/>;
 
-        let body = this.getBody();
-
         return (
             <div className='main'>
-                <Header rightBar={this.changeRightBar} createApp={this.changeCreateApp} title={this.bodyTitle}/>
+                <Header createApp={this.changeCreateApp} />
                 {createApp}
-                <div className='body'>
-                    {body}
-                </div>
+                <Tab panes={this.state.panes} />
                 <ToastContainer autoclose={20000} />
             </div>
         );
