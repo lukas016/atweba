@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Loader } from 'semantic-ui-react';
+import { Button, Loader, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -15,7 +15,11 @@ const queries = {
             scenario(scenarioId: $scenarioId) {
                 scenarioId
                 events
-        }}`
+        }}`,
+    runTest: gql`
+        query runTest($appId: ID!, $scenarioId: ID!) {
+            runTest(appId: $appId, scenarioId: $scenarioId)
+        }`
 }
 
 class scenarioList extends Component {
@@ -26,6 +30,23 @@ class scenarioList extends Component {
         let index = stateId[id].indexOf(operation)
         stateId[id].splice(index, 1)
         this.setState({ applications: {...stateId} })
+    }
+
+
+    runTest(scenarioId) {
+        const client = this.props.client.query
+        console.log(scenarioId)
+        client({query: queries.runTest, variables: { appId: this.props.id, scenarioId: scenarioId }})
+                .then(({data}) => {
+                    toast.success(`Scenario ${scenarioId} \nis running`, {
+                                className: {
+                                'background': '#2ba04d',
+                                'fontWeight': 'bold',
+                                'color': 'white',
+                                }
+                            });
+                })
+                .catch(() => { return })
     }
 
     render() {
@@ -48,7 +69,34 @@ class scenarioList extends Component {
                                     row[filter.id].endsWith(filter.value),
                                 Filter: semanticFilter},
                             {Header: 'Count of Events', accessor: 'events',
-                                Filter: (input) => semanticFilter(input, 'number')}
+                                Filter: (input) => semanticFilter(input, 'number')},
+                            {Header: 'Actions',
+                                filterable: false,
+                                sortable: false,
+                                maxWidth: 160,
+                                Cell: row => (
+                                    <div>
+                                    <Popup inverted
+                                        trigger={
+                                            <Button icon='play' color='green' compact inverted circular
+                                                onClick={() => this.runTest(row.original.scenarioId)}>
+                                            </Button>}
+                                        content='Run scenario'
+                                    />
+                                    <Popup inverted
+                                        trigger={
+                                            <Button icon='file text' compact inverted circular color='violet'>
+                                            </Button>}
+                                        content='Tests'
+                                    />
+                                    <Popup inverted
+                                        trigger={
+                                            <Button icon='delete' compact color='red' floated='right' circular>
+                                            </Button>}
+                                        content='Delete scenario'
+                                    />
+                                    </div>)
+                            }
                     ]}
             />
             </div>
