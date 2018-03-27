@@ -18,9 +18,10 @@ class App extends Component {
         this.state = {
             createScenario: false,
             bodyContent: ListApp,
+            activeIndex: 0,
             panes: [
                 {
-                    menuItem: { key: 'apps', icon: 'browser', content: 'Applications'},
+                    menuItem: {key: 'apps', icon: 'browser', content: 'Applications'},
                     render: () => <Tab.Pane inverted><ListApp showScenarios={this.showScenarios}/></Tab.Pane>
                 },
             ]
@@ -33,10 +34,12 @@ class App extends Component {
         });
     }
 
+    handleTabChange = (e, { activeIndex }) => this.setState({ activeIndex })
+
     changeScenarioId(id) {
         this.bodyTitle = `List of scenarios for ${id}`
-        let tabes = [this.state.panes[0], this.generateScenarioTab(id)]
-        this.setState({ panes: tabes })
+        let tabs = [this.state.panes[0], this.generateScenarioTab(id)]
+        this.setState({ panes: tabs, activeIndex: tabs.length - 1})
     }
 
     generateScenarioTab(id) {
@@ -55,7 +58,7 @@ class App extends Component {
             <div className='main'>
                 <Header createApp={this.changeCreateApp} />
                 {createApp}
-                <Tab panes={this.state.panes} />
+                <Tab panes={this.state.panes} activeIndex={this.state.activeIndex} onTabChange={this.handleTabChange} />
                 <ToastContainer autoclose={20000} />
             </div>
         );
