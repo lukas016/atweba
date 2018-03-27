@@ -11,13 +11,11 @@ import './css/main.css'
 class App extends Component {
     constructor(props) {
         super(props);
-        this.changeRightBar = this.rightBarChange.bind(this);
         this.changeCreateApp = this.createAppChange.bind(this);
         this.showScenarios = this.changeScenarioId.bind(this);
         this.bodyTitle = 'List of Applications'
         this.scenarioId = null
         this.state = {
-            rightBar: false,
             createScenario: false,
             bodyContent: ListApp,
             panes: [
@@ -27,12 +25,6 @@ class App extends Component {
                 },
             ]
         }
-    }
-
-    rightBarChange() {
-        this.setState({
-            rightBar: !this.state.rightBar
-        });
     }
 
     createAppChange() {
