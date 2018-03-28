@@ -13,8 +13,11 @@ const queries = {
     getAllScenarios: gql`
         query scenario($scenarioId: ID!) {
             scenario(scenarioId: $scenarioId) {
+                name
                 scenarioId
                 events
+                lastTestId
+                regressTestId
         }}`,
     runTest: gql`
         query runTest($appId: ID!, $scenarioId: ID!) {
@@ -63,13 +66,28 @@ class scenarioList extends Component {
             <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
                     data={Rows}
                     columns = {[
+                            {Header: 'Name', accessor: 'name',
+                                filterMethod: (filter, row) =>
+                                    row[filter.id].startsWith(filter.value) &&
+                                    row[filter.id].endsWith(filter.value),
+                                Filter: semanticFilter},
                             {Header: 'UUID', accessor: 'scenarioId',
                                 filterMethod: (filter, row) =>
                                     row[filter.id].startsWith(filter.value) &&
                                     row[filter.id].endsWith(filter.value),
                                 Filter: semanticFilter},
-                            {Header: 'Count of Events', accessor: 'events',
-                                Filter: (input) => semanticFilter(input, 'number')},
+                            {Header: 'Count of Events', accessor: 'events', width: 150,
+                                Filter: (input) => semanticFilter(input, 'number'),
+                                Cell: ({original}) => <div style={{textAlign: 'center'}}>{original.events}</div>
+                            },
+                            {Header: 'Count of Tests', accessor: 'lastTestId',
+                                filterable: false, width: 150,
+                                Cell: ({original}) => <div style={{textAlign: 'center'}}>{original.lastTestId}</div>
+                            },
+                            {Header: 'ID of Regress Test', accessor: 'regressTestId',
+                                sortable: false, filterable: false, width: 180,
+                                Cell: ({original}) => <div style={{textAlign: 'center'}}>{original.regressTestId}</div>
+                            },
                             {Header: 'Actions',
                                 filterable: false,
                                 sortable: false,

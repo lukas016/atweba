@@ -146,14 +146,27 @@ class ElasticsearchClient():
 
     def getScenarios(self, msg):
         answer = []
-        filter=['aggregations.scenarios', 'error']
-        query = {'size': 0, 'aggs': {'scenarios': {'terms': {'field': 'scenarioId.keyword'}}}}
+        indexes = '{},{}'.format(self.manageIndex, msg['scenarioId'])
+        filter=['responses.aggregations.scenarios', 'responses.hits', 'error']
+        query = ('{"index": "' + self.manageIndex + '"}\n'
+                    '{"query": {"term": {"_id": "' + msg['scenarioId'] + '"}}}\n'
+                    '{"index": "' + msg['scenarioId'] + '"}\n'
+                    '{"size": 0, "aggs": {"scenarios": {"terms": {"field": "scenarioId.keyword"}}}}\n'
+                )
 
-        result = self.db.search(index=msg['scenarioId'], body=query, filter_path=filter, request_cache=False, size=100)
+        result = self.db.msearch(index=indexes, body=query, filter_path=filter)
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
-        for item in result['aggregations']['scenarios']['buckets']:
-            answer.append({'scenarioId': item['key'], 'events': item['doc_count']})
+        testInfoIter = result['responses'][0]['hits']['hits'][0]['_source']['scenarios']
+        bucketIter = result['responses'][1]['aggregations']['scenarios']['buckets']
+        noExistInfo = {'lastTestId': -1, 'regressTestId': -1, 'name': ''}
+        for item in bucketIter:
+            tmpObj = {'scenarioId': item['key'], 'events': item['doc_count']}
+            tmpObj.update(noExistInfo)
+            if item['key'] in testInfoIter:
+                tmpObj.update(testInfoIter[item['key']])
+
+            answer.append(tmpObj)
 
         return answer
