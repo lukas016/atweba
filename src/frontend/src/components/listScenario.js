@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Loader, Popup } from 'semantic-ui-react';
+import { Button, Input, Loader, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -26,7 +26,7 @@ const queries = {
 }
 
 class scenarioList extends Component {
-    state = { }
+    state = { apps: {} }
 
     disableLoading(id, operation) {
         let stateId = this.state.applications
@@ -52,12 +52,28 @@ class scenarioList extends Component {
                 .catch(() => { return })
     }
 
+    setName = (e, { name, value }) => {
+        this.props.getAllScenarios.stopPolling()
+        let app = this.state.apps
+        app[name].timeout ? clearTimeout(app[name].timeout) : null
+        app[name] = {name: value, timeout: setTimeout(this.saveName, 5000)}
+        this.setState({apps: {...app}})
+    }
+
+    saveName = (e, x) => {
+        this.props.getAllScenarios.startPolling(5000)
+    }
+
     render() {
         let Rows = []
         if (!this.props.getAllScenarios.loading &&
-                Array.isArray(this.props.getAllScenarios.scenario))
+                Array.isArray(this.props.getAllScenarios.scenario)) {
             Rows = this.props.getAllScenarios.scenario
 
+            let app = this.state.apps
+            Rows.map(({scenarioId, name}) => this.state.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
+            this.state.apps = app
+        }
         return(
             <div style={{padding: '10px'}}>
             <Loader active={this.props.getAllScenarios.loading} inverted>
@@ -70,7 +86,13 @@ class scenarioList extends Component {
                                 filterMethod: (filter, row) =>
                                     row[filter.id].startsWith(filter.value) &&
                                     row[filter.id].endsWith(filter.value),
-                                Filter: semanticFilter},
+                                Filter: semanticFilter,
+                                Cell: ({original}) => <Input transparent focus
+                                        value={this.state.apps[original.scenarioId].name ? this.state.apps[original.scenarioId].name : ''}
+                                        name={original.scenarioId}
+                                        onChange={this.setName}
+                                        />
+                            },
                             {Header: 'UUID', accessor: 'scenarioId',
                                 filterMethod: (filter, row) =>
                                     row[filter.id].startsWith(filter.value) &&

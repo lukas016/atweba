@@ -38,10 +38,15 @@
     font-size: 18px !important;
 }
 
+.ReactTable div[role='gridcell'] .input input,
 .ReactTable div[role='columnheader'] input,
 .ReactTable div[role='columnheader'] .input {
     height: 34px !important;
     width: 100%;
+}
+
+.ReactTable div[role='gridcell'] .input input {
+    color: #fff !important;
 }
 
 .ReactTable .dateRange {
