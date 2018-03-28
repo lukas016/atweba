@@ -1,7 +1,7 @@
 from graphene import Field, List, ObjectType, Schema, String, ID, Int
 from .schemes.event import Event, createEvent
 from .schemes.app import App, createApp, generateClientScript
-from .schemes.scenario import Scenario
+from .schemes.scenario import Scenario, setScenarioName
 from .schemes.result import Result
 from pprint import pprint
 
@@ -41,5 +41,6 @@ class Query(ObjectType):
 class Mutation(ObjectType):
     create_event = createEvent.Field()
     create_app = createApp.Field()
+    set_scenario_name = setScenarioName.Field()
 
 schema = Schema(query=Query, mutation=Mutation)

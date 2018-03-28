@@ -22,7 +22,12 @@ const queries = {
     runTest: gql`
         query runTest($appId: ID!, $scenarioId: ID!) {
             runTest(appId: $appId, scenarioId: $scenarioId)
-        }`
+        }`,
+    setScenarioName: gql`
+        mutation setScenarioName($appId: ID!, $scenarioId: ID!, $name: String!) {
+            setScenarioName(appId: $appId, scenarioId: $scenarioId, name: $name) {
+                ok
+        }}`,
 }
 
 class scenarioList extends Component {
@@ -56,11 +61,13 @@ class scenarioList extends Component {
         this.props.getAllScenarios.stopPolling()
         let app = this.state.apps
         app[name].timeout ? clearTimeout(app[name].timeout) : null
-        app[name] = {name: value, timeout: setTimeout(this.saveName, 5000)}
+        app[name] = {name: value, timeout: setTimeout(this.saveName(name, value), 5000)}
         this.setState({apps: {...app}})
     }
 
-    saveName = (e, x) => {
+    saveName = (scenario, name) => {
+        const client = this.props.client.mutate
+        client({mutation: queries.setScenarioName, variables: { appId: this.props.id, scenarioId: scenario, name: name }})
         this.props.getAllScenarios.startPolling(5000)
     }
 

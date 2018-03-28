@@ -1,4 +1,4 @@
-from graphene import  ObjectType, String, Int
+from graphene import Mutation, ObjectType, String, Int, ID, Boolean
 from graphene.types.datetime import Date
 from graphql import GraphQLError
 from pprint import pprint
@@ -19,3 +19,18 @@ class Scenario(ObjectType):
         else:
             raise GraphQLError(response['error'])
 
+class setScenarioName(Mutation):
+    class Arguments:
+        appId = ID(required=True, description="Scenario identifier")
+        scenarioId = ID(required=True, description="Scenario identifier")
+        name = String(required=True)
+
+    ok = Boolean()
+
+    def mutate(self, info, **argv):
+        response = info.context['aggClient'].sendCommand('setScenarioName', argv)
+        if response['status']:
+            ok = True
+        else:
+            raise GraphQLError(response['error'])
+        return setScenarioName(ok=ok)

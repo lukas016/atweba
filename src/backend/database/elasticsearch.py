@@ -68,6 +68,13 @@ class ElasticsearchClient():
 
         return result['_shards']['failed'] == 0
 
+    def setScenarioName(self, msg):
+        query = {'doc': {'scenarios': {msg['scenarioId']: {'name': msg['name']}}}}
+
+        result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'], body=query)
+
+        return result['_shards']['failed'] == 0
+
     def createTest(self, msg):
         id = 'result-' + msg['appId'] + '-' + msg['scenarioId']
         del msg['appId']
