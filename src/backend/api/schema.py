@@ -15,7 +15,8 @@ class Query(ObjectType):
     setRegressTest = String(required=True, appId=ID(required=True), scenarioId=ID(required=True),
             testId=Int(required=True))
     getResult = List(Result, appId=ID(required=True), scenarioId=ID(required=True),
-            testId=Int(required=True))
+            testId=Int(required=False))
+    getResultAgg = List(Result, appId=ID(required=True), scenarioId=ID(required=True))
 
     def resolve_app(self, info, **argv):
         return App().get(info.context['aggClient'], argv)
@@ -37,6 +38,9 @@ class Query(ObjectType):
 
     def resolve_getResult(self, info, **argv):
         return Result().get(info.context['aggClient'], argv)
+
+    def resolve_getResultAgg(self, info, **argv):
+        return Result().getAgg(info.context['aggClient'], argv)
 
 class Mutation(ObjectType):
     create_event = createEvent.Field()

@@ -70,6 +70,9 @@ class Aggregator(Thread):
         result = self.db.getResult(msg['msg'])
         self.server.sendMsg(msg['type'], {'status': True, 'data': result})
 
+    def action_getResultAgg(self, msg):
+        self.server.sendMsg(msg['type'], {'status': True, 'data': self.db.getResultAgg(msg['msg'])})
+
     def action_setImgScore(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.setImgScore(msg['msg'])})
 

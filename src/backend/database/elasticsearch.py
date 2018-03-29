@@ -83,11 +83,31 @@ class ElasticsearchClient():
 
         return result['_shards']['failed'] == 0
 
+    def getResultAgg(self, msg):
+        index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
+        filter = ['aggregations.results', 'error']
+        result = self.db.search(index=index, filter_path=filter,
+                body={'size': 0, 'aggs': {'results': {'terms': {'field': 'testId'}}}})
+
+        if 'error' in result:
+            raise RuntimeError(result['error']['reason'])
+
+        answer = []
+        for item in result['aggregations']['results']['buckets']:
+            answer.append({'testId': item['key'], 'events': item['doc_count']})
+
+        return answer
+
     def getResult(self, msg):
         index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
         filter = ['hits.hits', 'error']
+        if 'testId' in msg:
+            query = {'query': {'term': {'testId': msg['testId']}}}
+        else:
+            query = {'query': {'match_all': {}}}
+
         result = self.db.search(index=index, filter_path=filter,
-                body={'query': {'term': {'testId': msg['testId']}}})
+                body=query)
 
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
