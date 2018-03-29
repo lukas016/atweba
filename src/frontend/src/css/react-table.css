@@ -49,6 +49,10 @@
     color: #fff !important;
 }
 
+.ReactTable .rt-expander::after {
+    border-top: 7px solid #fff !important;
+}
+
 .ReactTable .dateRange {
     width: 50% !important;
 }

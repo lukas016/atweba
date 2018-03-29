@@ -8,6 +8,7 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../css/react-table.css'
 import { semanticFilter } from './simpleComponents.js'
+import { ListResult } from './listResult.js'
 
 const queries = {
     getAllScenarios: gql`
@@ -31,7 +32,7 @@ const queries = {
 }
 
 class scenarioList extends Component {
-    state = { apps: {} }
+    state = { apps: {}, rows: [] }
 
     disableLoading(id, operation) {
         let stateId = this.state.applications
@@ -71,23 +72,25 @@ class scenarioList extends Component {
         this.props.getAllScenarios.startPolling(5000)
     }
 
-    render() {
-        let Rows = []
-        if (!this.props.getAllScenarios.loading &&
-                Array.isArray(this.props.getAllScenarios.scenario)) {
-            Rows = this.props.getAllScenarios.scenario
+    componentWillReceiveProps(newProps){
+        let app = this.state.apps
+        console.log("TU")
+        const Rows = newProps.getAllScenarios.scenario
+        Rows.map(({scenarioId, name}) => this.state.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
+        this.setState({rows: [...newProps.getAllScenarios.scenario], apps: {...app}})
+    }
 
-            let app = this.state.apps
-            Rows.map(({scenarioId, name}) => this.state.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
-            this.state.apps = app
-        }
+    render() {
+        const { rows } = this.state
+
         return(
             <div style={{padding: '10px'}}>
             <Loader active={this.props.getAllScenarios.loading} inverted>
                 Loading list of applications
             </Loader>
             <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
-                    data={Rows}
+                    data={rows}
+                    SubComponent = {({ original }) => (<ListResult appId={this.props.id} scenarioId={original.scenarioId} />)}
                     columns = {[
                             {Header: 'Name', accessor: 'name',
                                 filterMethod: (filter, row) =>
