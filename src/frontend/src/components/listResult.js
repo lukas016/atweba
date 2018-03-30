@@ -75,6 +75,14 @@ class resultList extends Component {
                                 {original.events}
                             </div>
                     },
+                    {Header: 'Actions',
+                        Cell: ({original}) =>
+                            <Button icon='copy' onClick={() => this.props.showComparator(this.props.appId,
+                                    this.props.scenarioId,
+                                    this.props.scenarioName,
+                                    original.testId,
+                                    this.state.regressTest)} />
+                    }
                  ]} />
         )
     }

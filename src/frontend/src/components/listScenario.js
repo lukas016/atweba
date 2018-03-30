@@ -96,7 +96,11 @@ class scenarioList extends Component {
                     loading = {this.props.getAllScenarios.loading}
                     expanded = {this.state.expanded}
                     onExpandedChange = {expanded => this.setState({expanded})}
-                    SubComponent = {({ original }) => (<ListResult appId={this.props.id} scenarioId={original.scenarioId} regressTestId={original.regressTestId} />)}
+                    SubComponent = {({ original }) => (<ListResult appId={this.props.id}
+                            scenarioId={original.scenarioId}
+                            scenarioName={original.name}
+                            regressTestId={original.regressTestId}
+                            showComparator={this.props.showComparator} />)}
                     columns = {[
                             {Header: 'Name', accessor: 'name',
                                 filterMethod: (filter, row) =>

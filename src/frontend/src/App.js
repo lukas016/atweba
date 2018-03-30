@@ -5,6 +5,7 @@ import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
 import { ListApp } from './components/listApp.js';
 import { ListScenario } from './components/listScenario.js';
+import Comparator from './components/comparator.js'
 import { Tab } from 'semantic-ui-react'
 import './css/main.css'
 
@@ -13,6 +14,7 @@ class App extends Component {
         super(props);
         this.changeCreateApp = this.createAppChange.bind(this);
         this.showScenarios = this.changeScenarioId.bind(this);
+        this.showComparator = this.addComparatorTab.bind(this)
         this.bodyTitle = 'List of Applications'
         this.scenarioId = null
         this.state = {
@@ -22,7 +24,7 @@ class App extends Component {
             panes: [
                 {
                     menuItem: {key: 'apps', icon: 'browser', content: 'Applications'},
-                    render: () => <Tab.Pane inverted><ListApp showScenarios={this.showScenarios}/></Tab.Pane>
+                    render: () => <Tab.Pane inverted><ListApp showScenarios={this.showScenarios} /></Tab.Pane>
                 },
             ]
         }
@@ -42,10 +44,23 @@ class App extends Component {
         this.setState({ panes: tabs, activeIndex: tabs.length - 1})
     }
 
+    addComparatorTab = (appId, scenarioId, scenarioName, testId, regressTestId) => {
+        console.log(appId, scenarioId)
+        let tabs = this.state.panes.slice(0, 2)
+        tabs.push({
+                menuItem: {'key': 'comparator', icon: 'copy', content: `Comparator for ${appId}:${scenarioName}`},
+                render: () => <Tab.Pane inverted>
+                                    <Comparator appId={appId} scenarioId={scenarioId}
+                                            testId={testId} regressTestId={regressTestId} before='test' after='test' />
+                                </Tab.Pane>})
+        this.setState({ panes: tabs, activeIndex: tabs.length - 1})
+    }
+
+
     generateScenarioTab(id) {
         return {
             menuItem: {'key': 'scenarios', icon: 'list', content: `Scenarios for ${id}`},
-            render: () => <Tab.Pane inverted><ListScenario id={id} /></Tab.Pane>
+            render: () => <Tab.Pane inverted><ListScenario id={id} showComparator={this.showComparator} /></Tab.Pane>
         }
     }
 
