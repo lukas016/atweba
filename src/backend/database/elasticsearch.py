@@ -87,7 +87,7 @@ class ElasticsearchClient():
         index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
         filter = ['aggregations.results', 'error']
         result = self.db.search(index=index, filter_path=filter,
-                body={'size': 0, 'aggs': {'results': {'terms': {'field': 'testId'}}}})
+                body={'size': 0, 'aggs': {'results': {'terms': {'field': 'testId', 'size': 10000}}}})
 
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
