@@ -34,7 +34,7 @@ const queries = {
 class scenarioList extends Component {
     constructor(props) {
         super(props)
-        this.state = { apps: {}, rows: [] }
+        this.state = { apps: {}, rows: [], expanded: {} }
     }
 
     disableLoading(id, operation) {
@@ -94,7 +94,9 @@ class scenarioList extends Component {
             <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
                     data={rows}
                     loading = {this.props.getAllScenarios.loading}
-                    SubComponent = {({ original }) => (<ListResult appId={this.props.id} scenarioId={original.scenarioId} />)}
+                    expanded = {this.state.expanded}
+                    onExpandedChange = {expanded => this.setState({expanded})}
+                    SubComponent = {({ original }) => (<ListResult appId={this.props.id} scenarioId={original.scenarioId} regressTestId={original.regressTestId} />)}
                     columns = {[
                             {Header: 'Name', accessor: 'name',
                                 filterMethod: (filter, row) =>
@@ -119,10 +121,6 @@ class scenarioList extends Component {
                             {Header: 'Count of Tests', accessor: 'lastTestId',
                                 filterable: false, width: 150,
                                 Cell: ({original}) => <div style={{textAlign: 'center'}}>{original.lastTestId}</div>
-                            },
-                            {Header: 'ID of Regress Test', accessor: 'regressTestId',
-                                sortable: false, filterable: false, width: 180,
-                                Cell: ({original}) => <div style={{textAlign: 'center'}}>{original.regressTestId}</div>
                             },
                             {Header: 'Actions',
                                 filterable: false,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Popup } from 'semantic-ui-react';
+import { Button, Checkbox, Input, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -17,10 +17,19 @@ const queries = {
                 events
             }
         }`,
+    setRegressTest: gql`
+        mutation setRegressTest($appId: ID!, $scenarioId: ID!, $testId: Int!) {
+            setRegressTest(appId: $appId, scenarioId: $scenarioId, testId: $testId) {
+                status
+            }
+        }`,
 }
 
 class resultList extends Component {
-    state = { apps: {}, rows: [] }
+    constructor(props) {
+        super(props)
+        this.state = { apps: {}, rows: [], regressTest: props.regressTestId }
+    }
 
     disableLoading(id, operation) {
         let stateId = this.state.applications
@@ -29,8 +38,15 @@ class resultList extends Component {
         this.setState({ applications: {...stateId} })
     }
 
-    componentWillReceiveProps(newProps) {
-        this.setState({rows: [...newProps.getResultAgg.getResultAgg]})
+    setRegressTest = (testId) => {
+        const client = this.props.client.mutate
+        client({mutation: queries.setRegressTest,
+            variables: { appId: this.props.appId, scenarioId: this.props.scenarioId, testId: testId }})
+            .then(({data}) => {
+                if (data.setRegressTest.status === true) {
+                    this.setState({regressTest: testId})
+                }
+            })
     }
 
     render() {
@@ -41,15 +57,32 @@ class resultList extends Component {
                  defaultSorted={[{id: 'testId', asc: true}]}
                  data = {rows}
                  loading = {this.props.getResultAgg.loading}
+                 pageSize = {10}
                  columns = {[
-                     {Header: 'Test id', accessor: 'testId'},
-                    {Header: 'Count of Events', accessor: 'events'},
+                     {
+                         width: 75,
+                         Cell: ({original}) =>
+                            <Checkbox toggle checked={original.testId === this.state.regressTest ? true : false} onChange={() => this.setRegressTest(original.testId)} />,
+                     },
+                     {Header: 'Test id', accessor: 'testId',
+                        Cell: ({original}) =>
+                            <div style={{textAlign: 'center'}} className={original.testId === this.state.regressTest ? 'regressTest' : ''}>
+                                {original.testId}
+                            </div>},
+                    {Header: 'Count of Events', accessor: 'events',
+                        Cell: ({original}) =>
+                            <div style={{textAlign: 'center'}} className={original.testId === this.state.regressTest ? 'regressTest' : ''}>
+                                {original.events}
+                            </div>
+                    },
                  ]} />
         )
     }
 };
 
 export const
-        ListResult = graphql(queries.getResultAgg, { name: 'getResultAgg',
-                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId }})}
+        ListResult = compose(
+                withApollo,
+                graphql(queries.getResultAgg, { name: 'getResultAgg',
+                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId }})})
                 )(resultList);
