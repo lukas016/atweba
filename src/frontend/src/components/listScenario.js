@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Loader, Popup } from 'semantic-ui-react';
+import { Button, Input, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -84,12 +84,9 @@ class scenarioList extends Component {
         const { rows } = this.state
 
         return(
-            <div style={{padding: '10px'}}>
-            <Loader active={this.props.getAllScenarios.loading} inverted>
-                Loading list of applications
-            </Loader>
             <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
                     data={rows}
+                    loading = {this.props.getAllScenarios.loading}
                     SubComponent = {({ original }) => (<ListResult appId={this.props.id} scenarioId={original.scenarioId} />)}
                     columns = {[
                             {Header: 'Name', accessor: 'name',
@@ -149,7 +146,6 @@ class scenarioList extends Component {
                             }
                     ]}
             />
-            </div>
         )
     }
 };

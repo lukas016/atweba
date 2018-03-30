@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Loader, Popup } from 'semantic-ui-react';
+import { Button, Input, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -36,18 +36,14 @@ class resultList extends Component {
     render() {
         const { rows } = this.state
         return(
-            <div style={{padding: 20}}>
-            <Loader active={this.props.getResultAgg.loading} inverted>
-                Loading list of results
-            </Loader>
             <ReactTable
                  defaultSorted={[{id: 'testId', asc: true}]}
                  data = {rows}
+                 loading = {this.props.getResultAgg.loading}
                  columns = {[
                      {Header: 'Test id', accessor: 'testId'},
                     {Header: 'Count of Events', accessor: 'events'},
                  ]} />
-            </div>
         )
     }
 };

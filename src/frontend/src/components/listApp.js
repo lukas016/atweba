@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon, Loader, Popup } from 'semantic-ui-react';
+import { Button, Icon, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
@@ -84,12 +84,9 @@ class appList extends Component {
             this.state.applications = applications
         }
         return(
-            <div>
-            <Loader active={this.props.getAllApp.loading} inverted>
-                Loading list of applications
-            </Loader>
             <ReactTable filterable defaultSorted={[{id: 'created', desc: true}]}
                     data={Rows}
+                    loading = {this.props.getAllApp.loading}
                     columns = {[
                             {Header: 'Domain', accessor: 'domain',
                                 filterMethod: (filter, row) =>
@@ -159,7 +156,7 @@ class appList extends Component {
                             }
                     ]}
             />
-            </div>)
+            )
     }
 };
 

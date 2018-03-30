@@ -56,3 +56,7 @@
 .ReactTable .dateRange {
     width: 50% !important;
 }
+
+.ReactTable .ReactTable {
+    padding: 20px;
+}
