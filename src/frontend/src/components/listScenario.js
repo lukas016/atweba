@@ -32,7 +32,10 @@ const queries = {
 }
 
 class scenarioList extends Component {
-    state = { apps: {}, rows: [] }
+    constructor(props) {
+        super(props)
+        this.state = { apps: {}, rows: [] }
+    }
 
     disableLoading(id, operation) {
         let stateId = this.state.applications
@@ -77,11 +80,15 @@ class scenarioList extends Component {
         console.log("TU")
         const Rows = newProps.getAllScenarios.scenario
         Rows.map(({scenarioId, name}) => this.state.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
-        this.setState({rows: [...newProps.getAllScenarios.scenario], apps: {...app}})
+        this.apps = app
+        this.setState({rows: [...newProps.getAllScenarios.scenario]})
     }
 
     render() {
-        const { rows } = this.state
+        let app = []
+        let rows = this.props.getAllScenarios.loading ? [] : this.props.getAllScenarios.scenario
+        rows.map(({scenarioId, name}) =>  app[scenarioId] = {name: name})
+        this.apps = app
 
         return(
             <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
@@ -95,7 +102,7 @@ class scenarioList extends Component {
                                     row[filter.id].endsWith(filter.value),
                                 Filter: semanticFilter,
                                 Cell: ({original}) => <Input transparent focus
-                                        value={this.state.apps[original.scenarioId].name ? this.state.apps[original.scenarioId].name : ''}
+                                        value={this.apps[original.scenarioId].name ? this.apps[original.scenarioId].name : ''}
                                         name={original.scenarioId}
                                         onChange={this.setName}
                                         />

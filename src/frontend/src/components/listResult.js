@@ -34,7 +34,8 @@ class resultList extends Component {
     }
 
     render() {
-        const { rows } = this.state
+        const rows = this.props.getResultAgg.getResultAgg
+
         return(
             <ReactTable
                  defaultSorted={[{id: 'testId', asc: true}]}
