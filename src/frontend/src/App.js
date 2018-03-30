@@ -58,7 +58,7 @@ class App extends Component {
             <div className='main'>
                 <Header createApp={this.changeCreateApp} />
                 {createApp}
-                <Tab panes={this.state.panes} activeIndex={this.state.activeIndex} onTabChange={this.handleTabChange} />
+                <Tab panes={this.state.panes} activeIndex={this.state.activeIndex} onTabChange={this.handleTabChange} className='body'/>
                 <ToastContainer autoclose={20000} />
             </div>
         );

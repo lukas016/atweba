@@ -50,7 +50,7 @@ body #root {
     right: 0;
     height: 100%;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: auto !important;
 }
 
 .tabular .item {
@@ -59,4 +59,8 @@ body #root {
 
 .tabular .active {
     color: #000 !important;
+}
+
+.main .body .tab {
+    margin-bottom: 40px !important;
 }
