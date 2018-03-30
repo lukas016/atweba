@@ -31,17 +31,7 @@ class App(ObjectType):
         response = aggClient.sendCommand('deleteApp', argv)
         pprint(response)
         if response['status']:
-            return response
-        else:
-            raise GraphQLError(response['error'])
-
-    def setRegressTest(self, aggClient, argv):
-        response = aggClient.sendCommand('setRegressTest',
-                {'appId': argv['appId'],
-                'scenarioId': argv['scenarioId'],
-                'testId': argv['testId']})
-        if response['status']:
-            return response
+            return response['status']
         else:
             raise GraphQLError(response['error'])
 

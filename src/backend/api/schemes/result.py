@@ -45,3 +45,17 @@ class Result(ObjectType):
             return self.generateResultAgg(response['data'])
         else:
             raise GraphQLError(response['error'])
+
+class setRegressTest(Mutation):
+    class Arguments:
+        appId = ID(required=True, description="Scenario identifier")
+        scenarioId = ID(required=True, description="Scenario identifier")
+        testId = Int(required=True)
+
+    status = Boolean()
+
+    def mutate(self, info, **argv):
+        response = info.context['aggClient'].sendCommand('setRegressTest', argv)
+        if not response['status']:
+            raise GraphQLError(response['error'])
+        return setRegressTest(status=response['status'])
