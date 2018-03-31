@@ -1,50 +1,33 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Input, Popup } from 'semantic-ui-react';
-import { compose, graphql, withApollo } from 'react-apollo';
-import gql from 'graphql-tag';
-import { toast } from 'react-toastify';
-import '../css/list.css';
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
-import '../css/react-table.css'
-import { semanticFilter } from './simpleComponents.js'
+import { Button, Input, Select } from 'semantic-ui-react';
 import ImageDiff from 'react-image-diff'
+import '../css/comparator.css'
 
-const queries = {
-    getResult: gql`
-        query getResult($appId: ID!, $scenarioId: ID!, $testId: Int!) {
-            getResult(appId: $appId, scenarioId: $scenarioId, testId: $testId) {
-                id
-                image
-                score
-            }
-        }`,
-}
+class Comparator extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {range: 0.5, type: 'difference'}
+        this.type = ['fade', 'difference', 'swipe'].map(x => ({key: x, text: x, value: x}))
+    }
 
-class comparator extends Component {
+    changeRange = (e, {value}) => this.setState({range: parseFloat(value)})
+
+    changeType = (e, {value}) => this.setState({type: value})
 
     render() {
-        let before, after
-        console.log(this.props)
-        if (!this.props.testResult.loading)
-            after = 'http://127.0.0.1:5900' + this.props.testResult.getResult[0].image.substr('/screenshot'.length + 1)
-
-        if (!this.props.regressResult.loading)
-            before = 'http://127.0.0.1:5900' + this.props.regressResult.getResult[0].image.substr('/screenshot'.length + 1)
-
-        if (!(before && after))
-            return null
-
-        return(
-            <ImageDiff before={before} after={after} type='fade' value={.5} />
+        const {range, type} = this.state
+        return (
+            <div>
+                <div className='controlPanel'>
+                    <Select placeholder='Type of diff image' options={this.type}
+                        onChange={this.changeType}/>
+                    <Input disabled={type === 'difference'} type='range' min={0} max={1} value={range} step={0.01}
+                        onChange={this.changeRange}/>{range}
+                </div>
+            <ImageDiff before={this.props.before} after={this.props.after} type={type} value={range} />
+            </div>
         )
     }
 };
 
-export const Comparator = compose(graphql(queries.getResult, { name: 'testResult',
-                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId,
-                            testId: props.testId }})}),
-                graphql(queries.getResult, { name: 'regressResult',
-                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId,
-                            testId: props.regressTestId }})})
-        )(comparator)
+export default Comparator
