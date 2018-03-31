@@ -5,7 +5,7 @@ import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
 import { ListApp } from './components/listApp.js';
 import { ListScenario } from './components/listScenario.js';
-import { Comparator } from './components/comparator.js'
+import { ShowResult } from './components/showResult.js'
 import { Tab } from 'semantic-ui-react'
 import './css/main.css'
 
@@ -50,8 +50,8 @@ class App extends Component {
         tabs.push({
                 menuItem: {'key': 'comparator', icon: 'copy', content: `Comparator for ${appId}:${scenarioName}`},
                 render: () => <Tab.Pane inverted>
-                                    <Comparator appId={appId} scenarioId={scenarioId}
-                                            testId={testId} regressTestId={regressTestId} before='test' after='test' />
+                                    <ShowResult appId={appId} scenarioId={scenarioId}
+                                            testId={testId} regressTestId={regressTestId} />
                                 </Tab.Pane>})
         this.setState({ panes: tabs, activeIndex: tabs.length - 1})
     }

@@ -1,0 +1,56 @@
+.showResult {
+    display: flex;
+    justify-content: initial;
+}
+
+.showResult .eventList {
+    display: inline-block;
+    width: 300px;
+    position: relative;
+    z-index: 1
+}
+
+.showResult .comparatorWrapper {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    top: 0px;
+    width: auto;
+    z-index: 0;
+}
+
+.showResult .comparatorWrapper > div {
+    display: block;
+    position: relative;
+    width: auto !important;
+    overflow-y: hidden !important;
+    overflow-x: auto;
+    padding: 10px;
+}
+
+.controlPanel {
+    display: block;
+    position: fixed;
+    height: 50px !important;
+    width: 400px;
+    line-height: 50px !important;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5)
+}
+
+.controlPanel div[role='listbox'] {
+    margin-right: 10px !important;
+}
+
+.controlPanel input {
+    margin-right: 10px !important;
+}
+
+.controlPanel + div {
+    position: relative !important;
+    top: 50px !important;
+    left: 0px !important;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
