@@ -5,9 +5,13 @@
 
 .showResult .eventList {
     display: inline-block;
-    width: 300px;
+    width: 330px;
     position: relative;
     z-index: 1
+}
+
+.eventList .step {
+    background-color: rgba(230, 230, 230, 1) !important;
 }
 
 .showResult .comparatorWrapper {
