@@ -79,6 +79,9 @@ class ZeroClient():
         return self.recvMsg()['msg']
 
     def sendMsg(self, type, msg):
+        while self.socketSrv.getsockopt(zmq.EVENTS) != zmq.POLLOUT:
+            sleep(0.05)
+
         msgObject = {
                 'from': self.__name,
                 'to': self.__serverAddr,
