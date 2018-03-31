@@ -15,6 +15,7 @@ class Query(ObjectType):
     getResult = List(Result, appId=ID(required=True), scenarioId=ID(required=True),
             testId=Int(required=False))
     getResultAgg = List(Result, appId=ID(required=True), scenarioId=ID(required=True))
+    getTest = List(Event, appId=ID(required=True), scenarioId=ID(required=True))
 
     def resolve_app(self, info, **argv):
         return App().get(info.context['aggClient'], argv)
@@ -36,6 +37,9 @@ class Query(ObjectType):
 
     def resolve_getResultAgg(self, info, **argv):
         return Result().getAgg(info.context['aggClient'], argv)
+
+    def resolve_getTest(self, info, **argv):
+        return Event().getTest(info.context['aggClient'], argv)
 
 class Mutation(ObjectType):
     create_event = createEvent.Field()

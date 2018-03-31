@@ -10,6 +10,22 @@ class Event(ObjectType):
     url = String(required=True)
     content = String(required=False)
 
+    def getTest(self, aggClient, argv):
+        response = aggClient.sendCommand('getTest', argv)
+        answer = []
+        if response['status']:
+            for item in response['data']:
+                tmpObj = Event(item['scenarioId'], item['type'], item['path'], item['timestamp'],
+                                item['locator'], item['url'])
+                if 'content' in item:
+                    tmpObj.content = item['content']
+
+                answer.append(tmpObj)
+        else:
+            raise GraphQLError(response['error'])
+
+        return answer
+
 class createEvent(Mutation):
     class Arguments:
         appId = ID(required=True, description="Scenario identifier")

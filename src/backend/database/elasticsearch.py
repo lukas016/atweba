@@ -119,6 +119,7 @@ class ElasticsearchClient():
                 tmp[key] = value
             answer.append(tmp)
 
+        answer.sort(key=lambda x: x['id'])
         return answer
 
     def setImgScore(self, msg):
@@ -152,6 +153,7 @@ class ElasticsearchClient():
             item['_source']['_id'] = item['_id']
             answer.append(item['_source'])
 
+        answer.sort(key=lambda x: x['timestamp'])
         return (manage, answer)
 
     def getApp(self, msg):
