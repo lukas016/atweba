@@ -5,7 +5,7 @@ import { CreateApp } from './components/form.js';
 import { ToastContainer } from 'react-toastify';
 import { ListApp } from './components/listApp.js';
 import { ListScenario } from './components/listScenario.js';
-import Comparator from './components/comparator.js'
+import { Comparator } from './components/comparator.js'
 import { Tab } from 'semantic-ui-react'
 import './css/main.css'
 

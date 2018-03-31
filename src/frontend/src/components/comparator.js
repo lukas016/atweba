@@ -8,8 +8,6 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../css/react-table.css'
 import { semanticFilter } from './simpleComponents.js'
-import Script from 'react-load-script'
-import PropTypes from 'prop-types'
 import ImageDiff from 'react-image-diff'
 
 const queries = {
@@ -23,20 +21,30 @@ const queries = {
         }`,
 }
 
-class Comparator extends Component {
+class comparator extends Component {
 
     render() {
         let before, after
+        console.log(this.props)
         if (!this.props.testResult.loading)
-            this.props.after = 'http://127.0.0.1:5900' + this.props.testResult.getResult[0].image.substr('/screenshot'.length + 1)
+            after = 'http://127.0.0.1:5900' + this.props.testResult.getResult[0].image.substr('/screenshot'.length + 1)
 
         if (!this.props.regressResult.loading)
-            this.props.before = 'http://127.0.0.1:5900' + this.props.regressResult.getResult[0].image.substr('/screenshot'.length + 1)
+            before = 'http://127.0.0.1:5900' + this.props.regressResult.getResult[0].image.substr('/screenshot'.length + 1)
+
+        if (!(before && after))
+            return null
 
         return(
-            <ImageDiff before='test' after='test' type='difference' value={.5} />
+            <ImageDiff before={before} after={after} type='fade' value={.5} />
         )
     }
 };
 
-export default Comparator
+export const Comparator = compose(graphql(queries.getResult, { name: 'testResult',
+                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId,
+                            testId: props.testId }})}),
+                graphql(queries.getResult, { name: 'regressResult',
+                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId,
+                            testId: props.regressTestId }})})
+        )(comparator)
