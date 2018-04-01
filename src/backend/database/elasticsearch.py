@@ -1,12 +1,27 @@
 from elasticsearch import Elasticsearch
+import json
 from pprint import pprint
 from time import time
+from database.schemes.mapping import mappingApp, mappingEvent
 
 class ElasticsearchClient():
     def __init__(self, host="127.0.0.1", port=9200, ssl=False):
         self.db = self.connect(host, port, ssl)
         self.manageIndex = 'manage'
-        self.manageDocType = '_doc'
+        self.manageDocType = 'app'
+        self.eventDocType = 'event'
+        try:
+            self.initManageIndex()
+        except:
+            assert('Cannot init manage index in database')
+
+    def initManageIndex(self):
+        if self.db.indices.exists(index=self.manageIndex):
+            return
+
+        self.db.indices.create(index=self.manageIndex)
+
+        self.db.indices.put_mapping(index=self.manageIndex, doc_type=self.manageDocType, body=mappingApp)
 
     def connect(self, host, port, ssl):
         return Elasticsearch(['{}:{}'.format(host, port)],
@@ -33,7 +48,10 @@ class ElasticsearchClient():
 
         del msg['id']
         result = self.db.index(index=self.manageIndex, doc_type=self.manageDocType, id=id, body=msg);
+
         self.db.indices.create(index=id)
+        self.db.indices.put_mapping(index=id, doc_type=self.eventDocType, body=mappingEvent)
+
         return result['_shards']['failed'] == 0
 
     def deleteApp(self, msg):
