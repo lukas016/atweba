@@ -32,7 +32,7 @@ class ElasticsearchClient():
         appId = msg['appId']
         self.existApp(appId, False)
 
-        result = self.db.index(index=appId, doc_type='tweet', body=msg)
+        result = self.db.index(index=appId, doc_type=self.eventDocType, body=msg)
         return result['_shards']['failed'] == 0
 
     def existApp(self, appId, noexist=True):
