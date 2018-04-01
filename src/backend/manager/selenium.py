@@ -172,7 +172,7 @@ class seleniumClient():
         currentImg = self.loadImg(current['image'])
         regressImg = self.loadImg(regress['image'])
 
-        (score, diff) = compare_ssim(regressImg, currentImg, full=True)
+        score = compare_ssim(regressImg, currentImg, full=False)
         msg = {'appId': self.appId, 'scenarioId': self.scenarioId,
                 'id': current['id'], 'score': score, 'regressTestId': self.manage['regressTestId']}
 
