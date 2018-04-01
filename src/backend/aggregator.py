@@ -41,7 +41,6 @@ class Aggregator(Thread):
 
     def action_createApp(self, msg):
         msgObject = msg['msg']
-        msgObject['lastTest'] = 0
         result = self.db.createApp(msgObject)
         self.server.sendMsg(msg['type'], {'status': True})
 
