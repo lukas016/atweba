@@ -54,7 +54,7 @@ class resultList extends Component {
 
         return(
             <ReactTable
-                 defaultSorted={[{id: 'testId', asc: true}]}
+                 defaultSorted={[{id: 'testId', desc: true}]}
                  data = {rows}
                  loading = {this.props.getResultAgg.loading}
                  pageSize = {10}
