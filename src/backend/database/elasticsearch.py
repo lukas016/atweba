@@ -205,7 +205,10 @@ class ElasticsearchClient():
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
-        testInfoIter = result['responses'][0]['hits']['hits'][0]['_source']['scenarios']
+        testInfoIter = []
+        if 'scenarios' in result['responses'][0]['hits']['hits'][0]['_source']:
+            testInfoIter = result['responses'][0]['hits']['hits'][0]['_source']['scenarios']
+
         bucketIter = result['responses'][1]['aggregations']['scenarios']['buckets']
         noExistInfo = {'lastTestId': -1, 'regressTestId': -1, 'name': ''}
         for item in bucketIter:
