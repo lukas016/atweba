@@ -14,6 +14,23 @@
     background-color: rgba(230, 230, 230, 1) !important;
 }
 
+.eventList .scoreSame,
+.eventList .scoreSame .description {
+    background-color: green !important;
+    color: #fff !important;
+}
+
+.eventList .scoreDiffrent,
+.eventList .scoreDiffrent .description {
+    background-color: red !important;
+    color: #fff !important;
+}
+
+.eventList .active {
+    box-shadow: 0px 0px 5px 1px #fff !important;
+    z-index: 10;
+}
+
 .showResult .comparatorWrapper {
     display: block;
     position: relative;

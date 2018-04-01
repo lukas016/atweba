@@ -57,7 +57,18 @@ class showResult extends Component {
         return <Comparator before={before} after={after} />
     }
 
-    getScore = (index) => {
+    getScore = (index) => this.props.testResult.getResult[index].score
+
+    getScoreClass = (index) => {
+        if (this.props.testResult.loading)
+            return ''
+
+        switch (this.props.testResult.getResult[index].score) {
+            case 1.0:
+                return 'scoreSame'
+            default:
+                return 'scoreDiffrent'
+        }
     }
 
     generateSteps = () => {
@@ -65,12 +76,12 @@ class showResult extends Component {
         const tmpPointer = this
         for (let index in this.props.getTest.getTest) {
             const {locator, url, timestamp, path, type} = this.props.getTest.getTest[index]
-            steps.push(<Step key={index} active={index === tmpPointer.state.active}
+            steps.push(<Step key={index} active={index === tmpPointer.state.active} className={tmpPointer.getScoreClass(index)}
                     onClick={() => tmpPointer.changeComparator(index)}>
                         <Icon name={tmpPointer.getIconName(type)} size='small' />
                         <Step.Content>
                             <Step.Description>
-                                Score: {tmpPointer.getScore(index)}
+                                Score: {tmpPointer.getScore(index)}<br/>
                                 Locator: {locator}<br/>
                                 URL: {url}<br/>
                                 timestamp: {timestamp}<br/>
