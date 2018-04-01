@@ -103,6 +103,9 @@ class ElasticsearchClient():
 
     def getResultAgg(self, msg):
         index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
+        if not self.db.indices.exists(index=index):
+            return []
+
         filter = ['aggregations.results', 'error']
         result = self.db.search(index=index, filter_path=filter,
                 body={'size': 0, 'aggs': {'results': {'terms': {'field': 'testId', 'size': 10000}}}})
