@@ -34,7 +34,8 @@ const queries = {
 class scenarioList extends Component {
     constructor(props) {
         super(props)
-        this.state = { apps: {}, rows: [], expanded: {} }
+        this.state = { expanded: {} }
+        this.apps = {}
     }
 
     disableLoading(id, operation) {
@@ -63,32 +64,24 @@ class scenarioList extends Component {
 
     setName = (e, { name, value }) => {
         this.props.getAllScenarios.stopPolling()
-        let app = this.state.apps
+        let app = this.apps
         app[name].timeout ? clearTimeout(app[name].timeout) : null
         app[name] = {name: value, timeout: setTimeout(this.saveName(name, value), 5000)}
-        this.setState({apps: {...app}})
+        this.forceUpdate()
     }
 
     saveName = (scenario, name) => {
         const client = this.props.client.mutate
         client({mutation: queries.setScenarioName, variables: { appId: this.props.id, scenarioId: scenario, name: name }})
-        this.props.getAllScenarios.startPolling(5000)
-    }
-
-    componentWillReceiveProps(newProps){
-        let app = this.state.apps
-        console.log("TU")
-        const Rows = newProps.getAllScenarios.scenario
-        Rows.map(({scenarioId, name}) => this.state.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
-        this.apps = app
-        this.setState({rows: [...newProps.getAllScenarios.scenario]})
+            .then(({data}) => this.props.getAllScenarios.startPolling(5000)
+        )
     }
 
     render() {
-        let app = []
-        let rows = this.props.getAllScenarios.loading ? [] : this.props.getAllScenarios.scenario
-        rows.map(({scenarioId, name}) =>  app[scenarioId] = {name: name})
-        this.apps = app
+        let app = this.apps
+        const rows = this.props.getAllScenarios.loading ? [] : this.props.getAllScenarios.scenario
+        rows.map(({scenarioId, name}) => this.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
+        this.apps = {...app}
 
         return(
             <ReactTable filterable defaultSorted={[{id: 'uuid', desc: true}]}
