@@ -7,13 +7,13 @@ from os import environ, makedirs, path
 import errno
 from pprint import pprint
 class seleniumClient():
-    def __init__(self, agg, msg):
+    def __init__(self, agg, msg, baseImgDir):
         self.scenario = msg['scenario']
         self.manage = msg['manage']
         self.appId = msg['appId']
         self.scenarioId = self.scenario[0]['scenarioId']
         self.aggClient = agg
-        self.baseImgDir = './screenshot'
+        self.baseImgDir = baseImgDir
 
     def initDisplay(self):
         if (environ['DISPLAY'] == ''):
