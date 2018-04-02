@@ -80,8 +80,11 @@ class ElasticsearchClient():
         return result['_shards']['failed'] == 0
 
     def setTestState(self, msg):
-        result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'],
-                body={'doc': {'scenarios': {msg['scenarioId']: {'state': msg['state']}}}})
+        query = {'doc': {'scenarios': {msg['scenarioId']: {'state': msg['state']}}}}
+        if msg['testId'] != 0:
+            query['doc']['scenarios'][msg['scenarioId']]['tests'] = {msg['testId']: {'state': msg['state']}}
+
+        result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'], body=query)
 
         return result['_shards']['failed'] == 0
 
@@ -89,6 +92,13 @@ class ElasticsearchClient():
         query = {'doc': {'scenarios': {msg['scenarioId']: {'regressTestId': msg['testId']}}}}
 
         result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'], body=query)
+
+        return result['_shards']['failed'] == 0
+
+    def setRegressTestForTest(self, msg):
+        result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'],
+                body={'doc': {'scenarios': {msg['scenarioId']: {'tests': {msg['testId']:
+                    {'regressTestId': msg['regressTestId']}}}}}})
 
         return result['_shards']['failed'] == 0
 
@@ -108,20 +118,30 @@ class ElasticsearchClient():
         return result['_shards']['failed'] == 0
 
     def getResultAgg(self, msg):
-        index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
-        if not self.db.indices.exists(index=index):
-            return []
+        resultIndex = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
+        indexes = '{},{}'.format(self.manageIndex, resultIndex)
 
-        filter = ['aggregations.results', 'error']
-        result = self.db.search(index=index, filter_path=filter,
-                body={'size': 0, 'aggs': {'results': {'terms': {'field': 'testId', 'size': 10000}}}})
+        query = ('{"index": "' + self.manageIndex + '"}\n'
+                    '{"query": {"term": {"_id": "' + msg['appId'] + '"}}}\n'
+                    '{"index": "' + resultIndex + '"}\n'
+                    '{"size": 0, "aggs": {"results": {"terms": {"field": "testId", "size": 10000}}}}\n'
+                )
+        filter = ['responses.hits.hits', 'responses.aggregations.results', 'error']
+        result = self.db.msearch(index=indexes, filter_path=filter, body=query)
 
         if 'error' in result:
             raise RuntimeError(result['error']['reason'])
 
         answer = []
-        for item in result['aggregations']['results']['buckets']:
-            answer.append({'testId': item['key'], 'events': item['doc_count']})
+        if not 'scenarios' in result['responses'][0]['hits']['hits'][0]['_source']:
+            return answer
+
+        generalInfo = result['responses'][0]['hits']['hits'][0]['_source']['scenarios'][msg['scenarioId']]['tests']
+        bucketIter = result['responses'][1]['aggregations']['results']['buckets']
+        for item in bucketIter:
+            testInfo = generalInfo[str(item['key'])]
+            answer.append({'testId': item['key'], 'events': item['doc_count'], 'regressTestId':
+                testInfo['regressTestId'], 'state': testInfo['state']})
 
         return answer
 

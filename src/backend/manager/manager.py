@@ -98,9 +98,9 @@ class Test(Thread):
         self.manage = result['data']['manage']
         self.scenario = result['data']['scenario']
 
-    def setState(self, state):
+    def setState(self, state, testId=0):
         self.aggClient.sendCommand('setTestState',
-                {'appId': self.appId, 'scenarioId': self.scenarioId, 'state': state.value})
+                {'appId': self.appId, 'scenarioId': self.scenarioId, 'testId': testId, 'state': state.value})
 
     def run(self):
         self.setState(testState.INITIALIZE)
@@ -109,9 +109,9 @@ class Test(Thread):
             self.setState(testState.TESTING)
             test = seleniumClient(self.aggClient, self.appId, self.scenarioId, self.manage, self.scenario, self.baseImgDir)
             currentId, regressId = test.run()
-            self.setState(testState.ANALYZE)
+            self.setState(testState.ANALYZE, currentId)
             sleep(5)
             analyze = analyzeScreenshot(self.aggClient, self.appId, self.scenarioId, regressId, currentId)
-            self.setState(analyze.analyze())
+            self.setState(analyze.analyze(), currentId)
         except RuntimeError as e:
             self.setState(e.value)

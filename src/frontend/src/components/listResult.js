@@ -15,6 +15,8 @@ const queries = {
             getResultAgg(appId: $appId, scenarioId: $scenarioId) {
                 testId
                 events
+                regressTestId
+                state
             }
         }`,
     setRegressTest: gql`
@@ -75,13 +77,19 @@ class resultList extends Component {
                                 {original.events}
                             </div>
                     },
+                    {Header: 'Regress Test', accessor: 'regressTestId',
+                        Cell: ({original}) =>
+                            <div style={{textAlign: 'center'}} className={original.testId === this.state.regressTest ? 'regressTest' : ''}>
+                                {original.regressTestId}
+                            </div>
+                    },
                     {Header: 'Actions',
                         Cell: ({original}) =>
                             <Button icon='copy' onClick={() => this.props.showComparator(this.props.appId,
                                     this.props.scenarioId,
                                     this.props.scenarioName,
                                     original.testId,
-                                    this.state.regressTest)} />
+                                    original.regressTestId)} />
                     }
                  ]} />
         )

@@ -12,6 +12,8 @@ class Result(ObjectType):
     image = String(required=True)
     score = Float()
     events = Int()
+    regressTestId = Int()
+    state = Int()
 
     def generateResult(self, data):
         result = []
@@ -27,7 +29,8 @@ class Result(ObjectType):
     def generateResultAgg(self, data):
         result = []
         for item in data:
-            result.append(Result(testId=item['testId'], events=item['events']))
+            result.append(Result(testId=item['testId'], events=item['events'], regressTestId=item['regressTestId'],
+                    state=item['state']))
 
         return result
 

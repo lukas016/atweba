@@ -47,6 +47,9 @@ class Aggregator(Thread):
     def action_setRegressTest(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.setRegressTest(msg['msg'])})
 
+    def action_setRegressTestForTest(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.setRegressTestForTest(msg['msg'])})
+
     def action_setTestId(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.setLastTestId(msg['msg'])})
 

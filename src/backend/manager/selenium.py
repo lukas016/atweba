@@ -73,12 +73,18 @@ class seleniumClient():
 
         self.testId = currentTestId
 
+    def setRegressTestForTest(self):
+        self.aggClient.sendCommand('setRegressTestForTest',
+                {'appId': self.appId, 'scenarioId': self.scenarioId,
+                    'testId': self.testId, 'regressTestId': self.manage['regressTestId']})
+
     def run(self):
         self.initDisplay()
         self.initDriver()
         self.scenario.sort(key=lambda x: x['timestamp'])
         self.setTestId()
         self.initScreenShotDir()
+        self.setRegressTestForTest()
         try:
             self.processScenario()
         except:
