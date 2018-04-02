@@ -7,11 +7,11 @@ from os import environ, makedirs, path
 import errno
 from pprint import pprint
 class seleniumClient():
-    def __init__(self, agg, msg, baseImgDir):
-        self.scenario = msg['scenario']
-        self.manage = msg['manage']
-        self.appId = msg['appId']
-        self.scenarioId = self.scenario[0]['scenarioId']
+    def __init__(self, agg, appId, scenarioId, manage, scenario, baseImgDir):
+        self.scenario = scenario
+        self.manage = manage
+        self.appId = appId
+        self.scenarioId = scenarioId
         self.aggClient = agg
         self.baseImgDir = baseImgDir
 
@@ -128,6 +128,3 @@ class seleniumClient():
                     action.perform()
                 except: pass
             self.saveScreenShot(event)
-#            sleep(1)
-
-

@@ -35,7 +35,7 @@ class TestManager(Thread):
             self.server.sendMsg(msg['type'], {'status': False, 'error': str(e)})
 
     def action_runTest(self, msg):
-        scenarioId = msg['msg']['scenario'][0]['scenarioId']
+        scenarioId = msg['msg']['scenarioId']
         if self.existThread(scenarioId):
             self.testQueue.append(msg['msg'])
             self.server.sendMsg(msg['type'], {'status': True, 'data': 'waiting'})
@@ -54,7 +54,7 @@ class TestManager(Thread):
     def checkQueue(self):
         newQueue = []
         for item in self.testQueue:
-            scenarioId = msg['scenario'][0]['scenarioId']
+            scenarioId = item['scenarioId']
             if self.existThread(scenarioId):
                 newQueue.append(item)
             else:
@@ -72,10 +72,10 @@ class TestManager(Thread):
             try:
                 msg = self.server.recvMsg()
                 self.selectAction(msg)
+            except UserWarning:
                 if self.testQueue:
                     self.checkQueue()
-            except UserWarning:
-                pass
+
         self.logger.info('Stopped (run: %s)' % self.run)
 
 class Test(Thread):
@@ -85,21 +85,29 @@ class Test(Thread):
     def init(self, msg):
         self.baseImgDir = './screenshot'
         self.appId = msg['appId']
-        self.scenarioId = msg['scenario'][0]['scenarioId']
-        self.msg = msg
-        print(testState.TESTING)
+        self.scenarioId = msg['scenarioId']
         self.initZeroClient()
         self.logger = logging.getLogger('{}-{}'.format(self.name, self.scenarioId))
         self.logger.info('Initialized')
+
+    def getTest(self):
+        result = self.aggClient.sendCommand('getTestInternal',  {'appId': self.appId, 'scenarioId': self.scenarioId})
+        if not result['status']:
+            raise RuntimeError(testState.FAILED)
+
+        self.manage = result['data']['manage']
+        self.scenario = result['data']['scenario']
 
     def setState(self, state):
         self.aggClient.sendCommand('setTestState',
                 {'appId': self.appId, 'scenarioId': self.scenarioId, 'state': state.value})
 
     def run(self):
-        self.setState(testState.TESTING)
+        self.setState(testState.INITIALIZE)
         try:
-            test = seleniumClient(self.aggClient, self.msg, self.baseImgDir)
+            self.getTest()
+            self.setState(testState.TESTING)
+            test = seleniumClient(self.aggClient, self.appId, self.scenarioId, self.manage, self.scenario, self.baseImgDir)
             currentId, regressId = test.run()
             self.setState(testState.ANALYZE)
             sleep(5)

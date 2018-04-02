@@ -8,5 +8,6 @@ class testState(Enum):
     FAILED = auto()
 
     #TestState code 100-199
-    TESTING = 100
+    INITIALIZE = 100
+    TESTING = auto()
     ANALYZE = auto()
