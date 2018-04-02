@@ -100,5 +100,6 @@ export const
         ListResult = compose(
                 withApollo,
                 graphql(queries.getResultAgg, { name: 'getResultAgg',
-                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId }})})
+                    options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId },
+                        pollInterval: 7300 })})
                 )(resultList);
