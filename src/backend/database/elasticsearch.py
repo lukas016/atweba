@@ -63,12 +63,6 @@ class ElasticsearchClient():
 
         return True
 
-    def deleteRegressTest(self, msg):
-        id = msg['appId']
-        query = {'script': 'ctx._source.regressId.remove("' + msg['scenarioId'] + '")'}
-
-        self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=id, body=query)
-
     def delete(self, type, msg): pass
     def update(self, type, msg): pass
 
