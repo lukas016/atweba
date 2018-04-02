@@ -9,6 +9,7 @@ import 'react-table/react-table.css'
 import '../css/react-table.css'
 import { semanticFilter } from './simpleComponents.js'
 import { ListResult } from './listResult.js'
+import { STATE } from '../constants/state.js'
 
 const queries = {
     getAllScenarios: gql`

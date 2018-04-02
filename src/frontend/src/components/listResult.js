@@ -8,6 +8,7 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../css/react-table.css'
 import { semanticFilter } from './simpleComponents.js'
+import { STATE } from '../constants/state.js'
 
 const queries = {
     getResultAgg: gql`
@@ -68,18 +69,18 @@ class resultList extends Component {
                      },
                      {Header: 'Test id', accessor: 'testId',
                         Cell: ({original}) =>
-                            <div style={{textAlign: 'center'}} className={original.testId === this.state.regressTest ? 'regressTest' : ''}>
+                            <div style={{textAlign: 'center'}} className={STATE(original.state)} >
                                 {original.testId}
                             </div>},
                     {Header: 'Count of Events', accessor: 'events',
                         Cell: ({original}) =>
-                            <div style={{textAlign: 'center'}} className={original.testId === this.state.regressTest ? 'regressTest' : ''}>
+                            <div style={{textAlign: 'center'}} className={STATE(original.state)} >
                                 {original.events}
                             </div>
                     },
                     {Header: 'Regress Test', accessor: 'regressTestId',
                         Cell: ({original}) =>
-                            <div style={{textAlign: 'center'}} className={original.testId === this.state.regressTest ? 'regressTest' : ''}>
+                            <div style={{textAlign: 'center'}} className={STATE(original.state)} >
                                 {original.regressTestId}
                             </div>
                     },
