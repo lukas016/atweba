@@ -79,6 +79,12 @@ class ElasticsearchClient():
 
         return result['_shards']['failed'] == 0
 
+    def setTestState(self, msg):
+        result = self.db.update(index=self.manageIndex, doc_type=self.manageDocType, id=msg['appId'],
+                body={'doc': {'scenarios': {msg['scenarioId']: {'state': msg['state']}}}})
+
+        return result['_shards']['failed'] == 0
+
     def setRegressTest(self, msg):
         query = {'doc': {'scenarios': {msg['scenarioId']: {'regressTestId': msg['testId']}}}}
 

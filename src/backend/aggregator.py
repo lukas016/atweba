@@ -50,6 +50,9 @@ class Aggregator(Thread):
     def action_setTestId(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.setLastTestId(msg['msg'])})
 
+    def action_setTestState(self, msg):
+        self.server.sendMsg(msg['type'], {'status': self.db.setTestState(msg['msg'])})
+
     def action_createTest(self, msg):
         self.server.sendMsg(msg['type'], {'status': self.db.createTest(msg['msg'])})
 
