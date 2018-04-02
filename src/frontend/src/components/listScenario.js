@@ -21,9 +21,10 @@ const queries = {
                 regressTestId
         }}`,
     runTest: gql`
-        query runTest($appId: ID!, $scenarioId: ID!) {
-            runTest(appId: $appId, scenarioId: $scenarioId)
-        }`,
+        mutation runTest($appId: ID!, $scenarioId: ID!) {
+            runTest(appId: $appId, scenarioId: $scenarioId) {
+                message
+        }}`,
     setScenarioName: gql`
         mutation setScenarioName($appId: ID!, $scenarioId: ID!, $name: String!) {
             setScenarioName(appId: $appId, scenarioId: $scenarioId, name: $name) {
@@ -47,11 +48,10 @@ class scenarioList extends Component {
 
 
     runTest(scenarioId) {
-        const client = this.props.client.query
-        console.log(scenarioId)
-        client({query: queries.runTest, variables: { appId: this.props.id, scenarioId: scenarioId }})
+        const client = this.props.client.mutate
+        client({mutation: queries.runTest, variables: { appId: this.props.id, scenarioId: scenarioId }})
                 .then(({data}) => {
-                    toast.success(`Scenario ${scenarioId} \nis running`, {
+                    toast.success(`Scenario ${scenarioId} is ${data.runTest.message}`, {
                                 className: {
                                 'background': '#2ba04d',
                                 'fontWeight': 'bold',

@@ -34,3 +34,18 @@ class setScenarioName(Mutation):
         else:
             raise GraphQLError(response['error'])
         return setScenarioName(ok=ok)
+
+class runTest(Mutation):
+    class Arguments:
+        appId = ID(required=True, description="Scenario identifier")
+        scenarioId = ID(required=True, description="Scenario identifier")
+
+    message = String()
+
+    def mutate(self, info, **argv):
+        response = info.context['aggClient'].sendCommand('runTest', argv)
+        if response['status']:
+            message = response['data']
+        else:
+            raise GraphQLError(response['error'])
+        return runTest(message=message)

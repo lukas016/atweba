@@ -1,7 +1,7 @@
 from graphene import Field, List, ObjectType, Schema, String, ID, Int
 from .schemes.event import Event, createEvent
 from .schemes.app import App, createApp, generateClientScript
-from .schemes.scenario import Scenario, setScenarioName
+from .schemes.scenario import Scenario, setScenarioName, runTest
 from .schemes.result import Result, setRegressTest
 from pprint import pprint
 
@@ -10,7 +10,6 @@ class Query(ObjectType):
     app = List(App, id=String())
     scenario = List(Scenario, scenarioId=ID(required=True))
     generateClientUrl = String(required=True, id=String(required=True))
-    runTest = String(appId=ID(required=True), scenarioId=ID(required=True))
     deleteApp = String(required=True, id=ID(required=True))
     getResult = List(Result, appId=ID(required=True), scenarioId=ID(required=True),
             testId=Int(required=False))
@@ -46,5 +45,6 @@ class Mutation(ObjectType):
     create_app = createApp.Field()
     set_scenario_name = setScenarioName.Field()
     set_regress_test = setRegressTest.Field()
+    run_test = runTest.Field()
 
 schema = Schema(query=Query, mutation=Mutation)
