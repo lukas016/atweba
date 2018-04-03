@@ -9,6 +9,10 @@ class Event(ObjectType):
     locator = String(required=True)
     url = String(required=True)
     content = String(required=False)
+    screenX = Int(required=True)
+    screenY = Int(required=True)
+    pageTime = Float(required=True)
+
 
     def getTest(self, aggClient, argv):
         response = aggClient.sendCommand('getTest', argv)
@@ -16,7 +20,7 @@ class Event(ObjectType):
         if response['status']:
             for item in response['data']:
                 tmpObj = Event(item['scenarioId'], item['type'], item['path'], item['timestamp'],
-                                item['locator'], item['url'])
+                                item['locator'], item['url'], item['screenX'], item['screenY'], item['pageTime'])
                 if 'content' in item:
                     tmpObj.content = item['content']
 
@@ -36,6 +40,9 @@ class createEvent(Mutation):
         locator = String(required=True)
         url = String(required=True)
         content = String(required=False)
+        screenX = Int(required=True)
+        screenY = Int(required=True)
+        pageTime = Float(required=True)
 
     ok = Boolean()
 
