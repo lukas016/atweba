@@ -8,7 +8,7 @@ apiServer = Flask(__name__)
 AutoIndex(apiServer, getcwd() + '/screenshot')
 #GraphQL
 apiServer.add_url_rule('/graphqlTesting',
-        view_func=GraphQLView.as_view('graphql',
+        view_func=GraphQLView.as_view('graphqlTesting',
             schema=schema, graphiql=True, context={'aggClient': ZeroClient('apiServer')}))
 
 @apiServer.route('/ui/<path:path>')

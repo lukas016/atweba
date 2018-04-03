@@ -15,7 +15,7 @@ import { HttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
-const apiAddr = new HttpLink({uri: '/graphql'})
+const apiAddr = new HttpLink({uri: '/graphqlTesting'})
 
 const errorLink = onError(({networkError, graphQLErrors}) => {
     const errorNotify = {
