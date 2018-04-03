@@ -53,8 +53,8 @@ class Api {
         msg.scenarioId = this.scenarioId()
         msg.timestamp = new Date().getTime() / 1000
         msg.url = window.location.href
-        msg.screenX = event.screenX
-        msg.screenY = event.screenY
+        msg.screenX = window.outerWidth
+        msg.screenY = window.outerHeight
         msg.pageTime = event.timeStamp
         msg.path = this.generatePath(event)
         msg.locator = OptimalSelect.select(event.target)
