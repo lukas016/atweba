@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from time import sleep
+from time import sleep, time
 from pyvirtualdisplay import Display
 from os import environ, makedirs, path
 import errno
@@ -28,6 +28,7 @@ class seleniumClient():
 
     def initDriver(self):
         self.driver = webdriver.Chrome()
+        self.driver.set_window_position(0, 0)
         self.driver.get(self.scenario[0]['url'])
 
     def initScreenShotDir(self):
@@ -57,6 +58,10 @@ class seleniumClient():
 
         if not response['status']:
             raise Exception(response['error'])
+
+    def updateWindowSize(self, screenX, screenY):
+        self.driver.set_window_position(0, 0)
+        self.driver.set_window_size(screenX, screenY)
 
     def setTestId(self):
         currentTestId = 1
@@ -118,19 +123,36 @@ class seleniumClient():
         action = ActionChains(self.driver)
         return action
 
-    def saveScreenShot(self, event):
+    def saveScreenShot(self, event, performTime):
         image = self.screenshotDir + '/' + str(event['timestamp']) + '.png'
         self.driver.get_screenshot_as_file(image)
         self.aggClient.sendCommand('createTest', {'appId': self.appId,
                 'scenarioId': self.scenarioId,
                 'image': image,
+                'performTime': performTime,
                 'testId': self.testId})
 
     def processScenario(self):
+        pageTime = 0
+        sleepTime = -1
+        parformTime = 0
+        startTime = 0
         for event in self.scenario:
+            if (sleepTime > 0):
+                sleep(sleepTime)
+                sleepTime = 0
+
             action = self.selectAction(event)
             if not action is None:
                 try:
+                    self.updateWindowSize(event['screenX'], event['screenY'])
+                    startTime = time() * 1000
                     action.perform()
+
                 except: pass
-            self.saveScreenShot(event)
+                endTime = time() * 1000
+                performTime = endTime - startTime
+                pageTime = pageTime + performTime
+                sleepTime = (event['pageTime'] - pageTime) / 1000
+
+            self.saveScreenShot(event, performTime)
