@@ -27,7 +27,7 @@ class EventRegistrator {
 
   loadOptimalSelect() {
     let imported = document.createElement('script');
-    imported.src = 'https://raw.githubusercontent.com/Autarc/optimal-select/master/dist/optimal-select.min.js'
+    imported.src = 'https://cdnjs.cloudflare.com/ajax/libs/optimal-select/4.0.1/optimal-select.min.js'
     document.head.appendChild(imported);
   }
 }
