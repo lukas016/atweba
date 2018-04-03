@@ -7,7 +7,7 @@ from os import getcwd
 apiServer = Flask(__name__)
 AutoIndex(apiServer, getcwd() + '/screenshot')
 #GraphQL
-apiServer.add_url_rule('/graphql',
+apiServer.add_url_rule('/graphqlTesting',
         view_func=GraphQLView.as_view('graphql',
             schema=schema, graphiql=True, context={'aggClient': ZeroClient('apiServer')}))
 
