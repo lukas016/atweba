@@ -59,6 +59,15 @@ mappingEvent = {
         'timestamp': {
             'type': 'float'
         },
+        'pageTime': {
+            'type': 'float'
+        },
+        'screenX': {
+            'type': 'short'
+        },
+        'screenY': {
+            'type': 'short'
+        },
         'type': {
             'type': 'text',
             'fields': {
