@@ -1,7 +1,6 @@
 class Api {
     constructor(appId) {
-        this.serverAddr = "http://127.0.0.1:5900"
-        this.url = "/graphql"
+        this.url = "/graphqlTesting"
         this.disabled = false
         this.appId = appId
         this.uuid = require('uuid/v4')
@@ -41,14 +40,32 @@ class Api {
         }
     }
 
-    send(msg) {
-        if (this.disabled) return
-        this.socket.open("POST", this.serverAddr + this.url)
-        this.socket.setRequestHeader("Content-Type", "application/json")
+    generatePath(event) {
+        let path = Array()
+        for (let index = event.path.length-2; index >= 0; index--)
+            path.push(event.path[index].nodeName)
+
+        return path
+    }
+
+    setGeneralInfo(event, msg) {
         msg.appId = this.appId
         msg.scenarioId = this.scenarioId()
         msg.timestamp = new Date().getTime() / 1000
         msg.url = window.location.href
+        msg.screenX = event.screenX
+        msg.screenY = event.screenY
+        msg.pageTime = event.timeStamp
+        msg.path = this.generatePath(event)
+        msg.locator = OptimalSelect.select(event.target)
+    }
+
+    send(event, msg) {
+        if (this.disabled || !'type' in msg) return
+        this.setGeneralInfo(event, msg)
+        console.log(msg)
+        this.socket.open("POST", this.url)
+        this.socket.setRequestHeader("Content-Type", "application/json")
         let msgString = JSON.stringify(msg)
                 .replace(/\"([^(\")"]+)\":/g,"$1:")
                 .substr(1)
