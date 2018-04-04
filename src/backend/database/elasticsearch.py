@@ -143,7 +143,7 @@ class ElasticsearchClient():
         index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
         filter = ['hits.hits', 'error']
         if 'testId' in msg:
-            query = {'query': {'term': {'testId': msg['testId']}}}
+            query = {'query': {'terms': {'testId': msg['testId']}}}
         else:
             query = {'query': {'match_all': {}}}
 

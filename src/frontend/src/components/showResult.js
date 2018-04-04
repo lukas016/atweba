@@ -7,7 +7,7 @@ import '../css/comparator.css'
 
 const queries = {
     getResult: gql`
-        query getResult($appId: ID!, $scenarioId: ID!, $testId: Int!) {
+        query getResult($appId: ID!, $scenarioId: ID!, $testId: [Int!]) {
             getResult(appId: $appId, scenarioId: $scenarioId, testId: $testId) {
                 id
                 image
@@ -116,10 +116,10 @@ class showResult extends Component {
 
 export const ShowResult = compose(graphql(queries.getResult, { name: 'testResult',
                     options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId,
-                            testId: props.testId }})}),
+                            testId: [props.testId] }})}),
                 graphql(queries.getResult, { name: 'regressResult',
                     options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId,
-                            testId: props.regressTestId }})}),
+                            testId: [props.regressTestId] }})}),
                 graphql(queries.getTest, { name: 'getTest',
                     options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId }})}),
         )(showResult)

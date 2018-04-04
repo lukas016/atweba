@@ -14,6 +14,7 @@ class Result(ObjectType):
     events = Int()
     regressTestId = Int()
     state = Int()
+    performTime = Float()
 
     def generateResult(self, data):
         result = []
@@ -29,8 +30,7 @@ class Result(ObjectType):
     def generateResultAgg(self, data):
         result = []
         for item in data:
-            result.append(Result(testId=item['testId'], events=item['events'], regressTestId=item['regressTestId'],
-                    state=item['state']))
+            result.append(Result(**item))
 
         return result
 

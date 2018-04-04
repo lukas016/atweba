@@ -12,7 +12,7 @@ class Query(ObjectType):
     generateClientUrl = String(required=True, id=String(required=True))
     deleteApp = String(required=True, id=ID(required=True))
     getResult = List(Result, appId=ID(required=True), scenarioId=ID(required=True),
-            testId=Int(required=False))
+            testId=List(Int))
     getResultAgg = List(Result, appId=ID(required=True), scenarioId=ID(required=True))
     getTest = List(Event, appId=ID(required=True), scenarioId=ID(required=True))
 
