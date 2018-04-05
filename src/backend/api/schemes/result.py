@@ -19,11 +19,7 @@ class Result(ObjectType):
     def generateResult(self, data):
         result = []
         for it in data:
-            tmp = Result(it['id'], it['testId'], it['image'])
-            if 'score' in it:
-                tmp.score = it['score']
-
-            result.append(tmp)
+            result.append(Result(**it))
 
         return result
 
