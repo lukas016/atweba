@@ -124,19 +124,19 @@ class scenarioList extends Component {
                                 filterable: false,
                                 sortable: false,
                                 maxWidth: 160,
-                                Cell: row => (
+                                Cell: ({ original }) => (
                                     <div>
                                     <Popup inverted
                                         trigger={
                                             <Button icon='play' color='green' compact inverted circular
-                                                onClick={() => this.runTest(row.original.scenarioId)}>
+                                                onClick={() => this.runTest(original.scenarioId)}>
                                             </Button>}
                                         content='Run scenario'
                                     />
                                     <Popup inverted
-                                        trigger={
-                                            <Button icon='file text' compact inverted circular color='violet'>
-                                            </Button>}
+                                        trigger={<Button icon='line graph' compact inverted circular color='violet'
+                                                onClick={() => this.props.showTimeGraph(this.props.id, original.scenarioId)} />
+                                            }
                                         content='Tests'
                                     />
                                     <Popup inverted

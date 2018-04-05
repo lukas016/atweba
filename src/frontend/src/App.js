@@ -8,6 +8,7 @@ import { ListScenario } from './components/listScenario.js';
 import { ShowResult } from './components/showResult.js'
 import { Tab } from 'semantic-ui-react'
 import './css/main.css'
+import { TimeGraph } from './components/timeGraph.js'
 
 class App extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class App extends Component {
         this.changeCreateApp = this.createAppChange.bind(this);
         this.showScenarios = this.changeScenarioId.bind(this);
         this.showComparator = this.addComparatorTab.bind(this)
+        this.showTimeGraph = this.addTimeGraphTab.bind(this)
         this.bodyTitle = 'List of Applications'
         this.scenarioId = null
         this.state = {
@@ -44,6 +46,16 @@ class App extends Component {
         this.setState({ panes: tabs, activeIndex: tabs.length - 1})
     }
 
+    addTimeGraphTab = (appId, scenarioId) => {
+        let tabs = this.state.panes.slice(0, 2)
+            console.log(appId, scenarioId)
+        tabs.push({
+                menuItem: {key: 'timeGraph', icon: 'line graph', content: 'Time graph'},
+                render: () => <Tab.Pane inverted><TimeGraph appId={appId} scenarioId={scenarioId} /></Tab.Pane>,
+        })
+        this.setState({ panes: tabs, activeIndex: tabs.length - 1 })
+    }
+
     addComparatorTab = (appId, scenarioId, scenarioName, testId, regressTestId) => {
         console.log(appId, scenarioId)
         let tabs = this.state.panes.slice(0, 2)
@@ -60,7 +72,7 @@ class App extends Component {
     generateScenarioTab(id) {
         return {
             menuItem: {'key': 'scenarios', icon: 'list', content: `Scenarios for ${id}`},
-            render: () => <Tab.Pane inverted><ListScenario id={id} showComparator={this.showComparator} /></Tab.Pane>
+            render: () => <Tab.Pane inverted><ListScenario id={id} showComparator={this.showComparator} showTimeGraph={this.showTimeGraph} /></Tab.Pane>
         }
     }
 
