@@ -1,0 +1,33 @@
+.showGraph {
+    display: flex;
+    justify-content: initial;
+}
+
+.showGraph .testList {
+    display: inline-block;
+    width: 185px;
+    position: relative;
+    z-index: 1
+}
+
+.showGraph .graphWrapper {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0 !important;
+    width: 100%;
+    z-index: 0;
+}
+
+.recharts-cartesian-axis-tick text {
+    fill: #fff !important;
+}
+
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick line {
+    stroke: #fff !important;
+}
