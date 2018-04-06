@@ -70,14 +70,18 @@ class timeGraph extends Component {
 
     updateGraph = (testId, results = []) => {
         let { graph, lines } = this.state
+        const events = this.props.getTest.getTest
+
+        console.log(events.length)
+        if (graph.length === 0)
+            for (let i = 0; i < events.length; i++)
+                graph.push({name: `${events[i].type}: ${events[i].locator}`})
+
+        console.log(graph.length)
 
         if (!this.existData(testId))
-            for(let i = 0, length = graph.length; i < results.length; i++) {
-                if (length === 0)
-                    graph.push({name: results[i].id})
-
-                graph[i][testId] = results[i].performTime
-            }
+            for(let i = 0; i < results.length; i++)
+                graph[i][testId] = parseFloat(results[i].performTime.toFixed(3))
 
         const index = lines.indexOf(lines.find(x => x.key === String(testId)))
         if (index !== -1)
@@ -90,7 +94,7 @@ class timeGraph extends Component {
 
     generateGraph = () => {
         const { graph, lines } = this.state
-        if (graph.length === 0)
+        if (graph.length === 0 || this.props.getTest.getTest.length === 0)
             return null
 
         return (<ResponsiveContainer>
@@ -142,5 +146,7 @@ class timeGraph extends Component {
 export const TimeGraph = compose(
             withApollo,
             graphql(queries.getResultAgg, { name: 'getResultAgg',
+                options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId }})}),
+            graphql(queries.getTest, { name: 'getTest',
                 options: (props) => ({ variables: { appId: props.appId, scenarioId: props.scenarioId }})}),
         )(timeGraph)
