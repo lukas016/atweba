@@ -7,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } f
 import { Checkbox } from 'semantic-ui-react';
 import '../css/react-table.css'
 import '../css/graph.css'
+import tinycolor from 'tinycolor2'
 
 const queries = {
     getResult: gql`
@@ -23,6 +24,13 @@ const queries = {
                 events
                 regressTestId
                 state
+            }
+        }`,
+    getTest: gql`
+        query getTest($appId: ID!, $scenarioId: ID!) {
+            getTest(appId: $appId, scenarioId: $scenarioId) {
+                locator
+                type
             }
         }`,
 }
@@ -49,6 +57,17 @@ class timeGraph extends Component {
                 return true
         }))
 
+    generateColor = () => {
+        let color
+
+        do {
+            color = tinycolor('#'+(Math.random()*0xFFFFFF<<0).toString(16))
+        } while(color.isDark())
+        console.log(color.getOriginalInput())
+
+        return color.getOriginalInput()
+    }
+
     updateGraph = (testId, results = []) => {
         let { graph, lines } = this.state
 
@@ -64,7 +83,7 @@ class timeGraph extends Component {
         if (index !== -1)
             lines.splice(index, 1)
         else
-            lines.push(<Line type="monotone" key={testId} dataKey={testId} stroke={'#'+(Math.random()*0xFFFFFF<<0).toString(16)} />)
+            lines.push(<Line type="monotone" key={testId} dataKey={testId} stroke={this.generateColor()} />)
 
         this.setState({graph: [...graph], lines: [...lines]})
     }

@@ -31,3 +31,7 @@
 .recharts-cartesian-axis-tick line {
     stroke: #fff !important;
 }
+
+.recharts-default-tooltip {
+    background-color: #000 !important;
+}
