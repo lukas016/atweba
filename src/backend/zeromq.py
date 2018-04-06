@@ -1,5 +1,6 @@
 import zmq
 import logging
+from threading import Lock
 from json import dumps
 from time import sleep
 
@@ -55,6 +56,7 @@ class ZeroClient():
         self.logger = logging.getLogger(self.__name)
         self.socketSrv = zmq.Context().instance().socket(zmq.REQ)
         self.socketSrv.connect('inproc://%s' % self.__serverAddr)
+        self.sendMsgMutex = Lock()
 
     def registerMsg(self):
         self.sendMsg('registerModule', {})
@@ -75,13 +77,13 @@ class ZeroClient():
             raise Exception('communication', 'Cannot register module')
 
     def sendCommand(self, type, msg):
-        self.sendMsg(type, msg)
-        return self.recvMsg()['msg']
+        with self.sendMsgMutex:
+            self.sendMsg(type, msg)
+            result = self.recvMsg()['msg']
+
+        return result
 
     def sendMsg(self, type, msg):
-        while self.socketSrv.getsockopt(zmq.EVENTS) != zmq.POLLOUT:
-            sleep(0.05)
-
         msgObject = {
                 'from': self.__name,
                 'to': self.__serverAddr,
