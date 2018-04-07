@@ -9,13 +9,13 @@ class Scenario(ObjectType):
     lastTestId = Int()
     regressTestId = Int()
     name = String()
+    state = Int()
 
     def get(self, aggClient, argv):
         response = aggClient.sendCommand('getScenarios', argv)
         pprint(response)
         if response['status']:
-            return map(lambda x : Scenario(x['scenarioId'], x['events'], x['lastTestId'], x['regressTestId'], x['name']),
-                    response['data'])
+            return map(lambda x : Scenario(**x), response['data'])
         else:
             raise GraphQLError(response['error'])
 
