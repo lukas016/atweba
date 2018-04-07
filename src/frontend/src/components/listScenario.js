@@ -82,7 +82,7 @@ class scenarioList extends Component {
 
     render() {
         let app = this.apps
-        const rows = this.props.getAllScenarios.loading ? [] : this.props.getAllScenarios.scenario
+        const rows = this.props.getAllScenarios.loading || !this.props.getAllScenarios.scenario ? [] : this.props.getAllScenarios.scenario
         rows.map(({scenarioId, name}) => this.apps[scenarioId] ? '' : app[scenarioId] = {name: name})
         this.apps = {...app}
 
