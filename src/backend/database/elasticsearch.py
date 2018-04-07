@@ -59,6 +59,7 @@ class ElasticsearchClient():
         self.existApp(id, False)
 
         self.db.indices.delete(index=id, ignore=[400, 404])
+        self.db.indices.delete(index='result-{}-*'.format(id), expand_wildcards='all', ignore=[400, 404])
         self.db.delete(index=self.manageIndex, doc_type=self.manageDocType, id=id);
 
         return True
