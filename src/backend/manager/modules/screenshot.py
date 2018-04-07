@@ -24,7 +24,7 @@ class analyzeScreenshot():
         events = {'current': [], 'regress': []}
         for key, value in tests.items():
             response = self.agg.sendCommand('getResult', {'appId': self.appId, 'scenarioId': self.scenarioId,
-                    'testId': value})
+                    'testId': [value]})
             if not response['status']:
                 raise RuntimeError(testState.FAILED)
 
