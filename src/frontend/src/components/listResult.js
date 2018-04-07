@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Input, Popup } from 'semantic-ui-react';
+import { Button, Checkbox, Input, Icon, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -8,7 +8,7 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../css/react-table.css'
 import { semanticFilter } from './simpleComponents.js'
-import { STATE } from '../constants/state.js'
+import { STATE, ICON_STATE, COLOR_STATE, CLASS_STATE } from '../constants/state.js'
 
 const queries = {
     getResultAgg: gql`
@@ -69,21 +69,27 @@ class resultList extends Component {
                      },
                      {Header: 'Test id', accessor: 'testId',
                         Cell: ({original}) =>
-                            <div style={{textAlign: 'center'}} className={STATE(original.state)} >
+                            <div style={{textAlign: 'center'}} >
                                 {original.testId}
                             </div>},
                     {Header: 'Count of Events', accessor: 'events',
                         Cell: ({original}) =>
-                            <div style={{textAlign: 'center'}} className={STATE(original.state)} >
+                            <div style={{textAlign: 'center'}} >
                                 {original.events}
                             </div>
                     },
                     {Header: 'Regress Test', accessor: 'regressTestId',
                         Cell: ({original}) =>
-                            <div style={{textAlign: 'center'}} className={STATE(original.state)} >
+                            <div style={{textAlign: 'center'}} >
                                 {original.regressTestId}
                             </div>
                     },
+                    {Header: 'State',
+                        sortable: false,
+                        Cell: ({ original }) => (<div style={{textAlign: 'center'}}>
+                                <Icon name={ICON_STATE(original.state)} color={COLOR_STATE(original.state)} className={CLASS_STATE(original.state)}
+                                circular inverted /></div>),
+                        minWidth: 100, maxWidth: 200, width: 100},
                     {Header: 'Actions',
                         Cell: ({original}) =>
                             <Button icon='copy' onClick={() => this.props.showComparator(this.props.appId,

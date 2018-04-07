@@ -60,17 +60,3 @@
 .ReactTable .ReactTable {
     padding: 20px;
 }
-
-.ReactTable .stateOK {
-    background-color: #32ba32 !important;
-    box-shadow: 0px 0px 10px 5px #32ba32 !important;
-    color: #000;
-}
-
-.ReactTable .stateFAILED {
-    box-shadow: 0px 0px 10px 5px red !important;
-    background-color: red !important;
-    font-weight: 900 !important;
-    font-size: 18px;
-    color: #fff;
-}

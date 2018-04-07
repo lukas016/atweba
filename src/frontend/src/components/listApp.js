@@ -113,16 +113,6 @@ class appList extends Component {
                                     Filter: x => semanticDateRangeFilter(x, this),
                                 Cell: row => formatDate(row.value),
                                 width: 305},
-                            {Header: 'State',
-                                Filter: ({ filter, onChange }) =>
-                                    <select
-                                        onChange={event => onChange(event.target.value)}
-                                        value={filter ? filter.value : ''}>
-                                        <option value="true">Correct</option>
-                                        <option value="false">Failed</option>
-                                    </select>,
-                                Cell: row => (<div style={{textAlign: 'center'}}><Icon name='checkmark' color='green' circular inverted /></div>),
-                                minWidth: 100, maxWidth: 200, width: 100},
                             {Header: 'Actions',
                                 filterable: false,
                                 sortable: false,

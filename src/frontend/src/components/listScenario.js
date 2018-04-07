@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Popup } from 'semantic-ui-react';
+import { Button, Icon, Input, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
@@ -7,9 +7,10 @@ import '../css/list.css';
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../css/react-table.css'
+import '../css/state.css'
 import { semanticFilter } from './simpleComponents.js'
 import { ListResult } from './listResult.js'
-import { STATE } from '../constants/state.js'
+import { STATE, ICON_STATE, COLOR_STATE, CLASS_STATE } from '../constants/state.js'
 
 const queries = {
     getAllScenarios: gql`
@@ -20,6 +21,7 @@ const queries = {
                 events
                 lastTestId
                 regressTestId
+                state
         }}`,
     runTest: gql`
         mutation runTest($appId: ID!, $scenarioId: ID!) {
@@ -120,6 +122,12 @@ class scenarioList extends Component {
                                 filterable: false, width: 150,
                                 Cell: ({original}) => <div style={{textAlign: 'center'}}>{original.lastTestId}</div>
                             },
+                            {Header: 'State',
+                                sortable: false,
+                                Cell: ({ original }) => (<div style={{textAlign: 'center'}}>
+                                        <Icon name={ICON_STATE(original.state)} color={COLOR_STATE(original.state)} className={CLASS_STATE(original.state)}
+                                        circular inverted /></div>),
+                                minWidth: 100, maxWidth: 200, width: 100},
                             {Header: 'Actions',
                                 filterable: false,
                                 sortable: false,
