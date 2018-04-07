@@ -123,23 +123,23 @@ class appList extends Component {
                                         trigger={
                                             <Button icon='file code outline' color='green' compact inverted circular
                                                     loading={this.state.applications[row.original.id] && this.state.applications[row.original.id].indexOf('client') !== -1}
-                                                    onClick={() => this.generateClientUrl(row.original.id)}>
-                                            </Button>}
+                                                    onClick={() => this.generateClientUrl(row.original.id)} />
+                                        }
                                         content='Generate script into testing page'
                                     />
                                     <Popup inverted
                                         trigger={
                                             <Button icon='file text' compact inverted circular color='violet'
-                                                onClick={() => this.props.showScenarios(row.original.id)}>
-                                            </Button>}
+                                                onClick={() => this.props.showScenarios(row.original.id)} />
+                                        }
                                         content='Tests'
                                     />
                                     <Popup inverted
                                         trigger={
-                                            <Button icon='delete' compact color='red' floated='right' circular
+                                            <Button icon='trash' compact color='red' floated='right' circular
                                                     loading={this.state.applications[row.original.id] && this.state.applications[row.original.id].indexOf('delete') !== -1}
-                                                    onClick={() => this.deleteApp(row.original.id)}>
-                                            </Button>}
+                                                    onClick={() => this.deleteApp(row.original.id)} />
+                                        }
                                         content='Delete application'
                                     />
                                     </div>)

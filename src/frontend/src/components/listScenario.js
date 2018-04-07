@@ -137,20 +137,20 @@ class scenarioList extends Component {
                                     <Popup inverted
                                         trigger={
                                             <Button icon='play' color='green' compact inverted circular
-                                                onClick={() => this.runTest(original.scenarioId)}>
-                                            </Button>}
+                                                onClick={() => this.runTest(original.scenarioId)} />
+                                        }
                                         content='Run scenario'
                                     />
                                     <Popup inverted
                                         trigger={<Button icon='line graph' compact inverted circular color='violet'
                                                 onClick={() => this.props.showTimeGraph(this.props.id, original.scenarioId)} />
-                                            }
+                                        }
                                         content='Tests'
                                     />
                                     <Popup inverted
                                         trigger={
-                                            <Button icon='delete' compact color='red' floated='right' circular>
-                                            </Button>}
+                                            <Button icon='trash' compact color='red' floated='right' circular />
+                                        }
                                         content='Delete scenario'
                                     />
                                     </div>)
