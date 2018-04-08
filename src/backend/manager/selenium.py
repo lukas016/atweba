@@ -17,7 +17,7 @@ class seleniumClient():
 
     def initDisplay(self):
         if (environ['DISPLAY'] == ''):
-            self.display = Display(visible=0, size=(1920, 1080))
+            self.display = Display(visible=0, size=(4096, 2160))
             self.display.start()
         else:
             self.display = None
