@@ -133,10 +133,18 @@ class ElasticsearchClient():
 
         generalInfo = result['responses'][0]['hits']['hits'][0]['_source']['scenarios'][msg['scenarioId']]['tests']
         bucketIter = result['responses'][1]['aggregations']['results']['buckets']
+        noExistInfo = {'regressTestId': 0, 'state': -1}
         for item in bucketIter:
             testInfo = generalInfo[str(item['key'])]
-            answer.append({'testId': item['key'], 'events': item['doc_count'], 'regressTestId':
-                testInfo['regressTestId'], 'state': testInfo['state']})
+            tmpObj = noExistInfo
+            tmpObj.update({'testId': item['key'], 'events': item['doc_count']})
+            for element in ['regressTestId', 'state']:
+                try:
+                    tmpObj[element] = testInfo[element]
+                except:
+                    pass
+
+            answer.append(tmpObj)
 
         return answer
 
