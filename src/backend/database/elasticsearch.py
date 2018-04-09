@@ -136,8 +136,8 @@ class ElasticsearchClient():
         noExistInfo = {'regressTestId': 0, 'state': -1}
         for item in bucketIter:
             testInfo = generalInfo[str(item['key'])]
-            tmpObj = noExistInfo
-            tmpObj.update({'testId': item['key'], 'events': item['doc_count']})
+            tmpObj = {'testId': item['key'], 'events': item['doc_count']}
+            tmpObj.update(noExistInfo)
             for element in ['regressTestId', 'state']:
                 try:
                     tmpObj[element] = testInfo[element]
