@@ -47,7 +47,7 @@ class appList extends Component {
         const client = this.props.client.query
         client({query: queries.generateClientUrl, variables: { id: id }})
                 .then(({data}) => {
-                    window.location.href = "http://127.0.0.1:5900" + data.generateClientUrl
+                    window.location.href = window.location.href + data.generateClientUrl
                     this.disableLoading(id, 'client')
                 })
                 .catch(() => { this.disableLoading(id, 'client') })
