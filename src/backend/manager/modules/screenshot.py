@@ -52,7 +52,7 @@ class analyzeScreenshot():
         currentImg = self.loadImg(current['image'])
         regressImg = self.loadImg(regress['image'])
 
-        score = compare_ssim(regressImg, currentImg, full=False)
+        score = round(compare_ssim(regressImg, currentImg, full=False), 4)
         print('\n')
         print(score)
         print('\n')
