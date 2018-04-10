@@ -114,4 +114,4 @@ class Test(Thread):
             analyze = analyzeScreenshot(self.aggClient, self.appId, self.scenarioId, regressId, currentId)
             self.setState(analyze.analyze(), currentId)
         except RuntimeError as e:
-            self.setState(e.value)
+            self.setState(e.args[0])
