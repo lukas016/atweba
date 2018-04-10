@@ -16,7 +16,7 @@ class seleniumClient():
         self.baseImgDir = baseImgDir
 
     def initDisplay(self):
-        if (environ['DISPLAY'] == ''):
+        if (not 'DISPLAY' in environ) or environ['DISPLAY'] == '':
             self.display = Display(visible=0, size=(4096, 2160))
             self.display.start()
         else:
