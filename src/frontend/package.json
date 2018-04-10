@@ -31,6 +31,11 @@
       "target": "http://localhost:5900/",
       "secure": false,
       "changeOrigin": true
+    },
+    "/screenshot": {
+      "target": "http://localhost:5900/",
+      "secure": false,
+      "changeOrigin": true
     }
   }
 }
