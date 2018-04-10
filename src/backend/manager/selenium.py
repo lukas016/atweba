@@ -123,6 +123,12 @@ class seleniumClient():
         action = ActionChains(self.driver)
         return action
 
+    def action_mouseover(self, event):
+        action = ActionChains(self.driver)
+        elem = self.getElementSelector(event['locator'])
+        action.move_to_element(elem)
+        return action
+
     def saveScreenShot(self, event, performTime):
         image = self.screenshotDir + '/' + str(event['timestamp']) + '.png'
         self.driver.get_screenshot_as_file(image)
