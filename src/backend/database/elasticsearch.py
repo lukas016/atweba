@@ -3,13 +3,14 @@ import json
 from pprint import pprint
 from time import time
 from database.schemes.mapping import mappingApp, mappingEvent
-
+import logging
 class ElasticsearchClient():
     def __init__(self, host="127.0.0.1", port=9200, ssl=False):
         self.db = self.connect(host, port, ssl)
         self.manageIndex = 'manage'
         self.manageDocType = 'app'
         self.eventDocType = 'event'
+        logging.getLogger('elasticsearch').setLevel(logging.CRITICAL)
         try:
             self.initManageIndex()
         except:
