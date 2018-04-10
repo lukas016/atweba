@@ -20,18 +20,21 @@ class Comparator extends Component {
         const {range, type, zoom} = this.state
 
         const styleZoom = {
-            transform: `scale(${zoom})`
+            transform: `scale(${zoom})`,
+            transformOrigin: 'top left',
         }
 
         return (
             <div>
                 <div className='controlPanel'>
-                    <Select placeholder='Type of diff image' options={this.type}
-                        onChange={this.changeType}/>
+                    <span>Type of diff</span>
+                    <span>Control diff: {range}</span>
+                    <span>Scale image: {zoom}</span><br/>
+                    <Select compact options={this.type} onChange={this.changeType}/>
                     <Input disabled={type === 'difference'} type='range' min={0} max={1} value={range} step={0.01}
-                        onChange={this.changeRange}/>{range}
+                        onChange={this.changeRange}/>
                     <Input type='range' min={0.25} max={1.5} value={zoom} step={0.01}
-                        onChange={this.changeZoom}/>{zoom}
+                        onChange={this.changeZoom}/>
                 </div>
             <div style={styleZoom}>
             <ImageDiff before={this.props.before} after={this.props.after} type={type} value={range} />
