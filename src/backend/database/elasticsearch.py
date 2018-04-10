@@ -11,6 +11,7 @@ class ElasticsearchClient():
         self.manageDocType = 'app'
         self.eventDocType = 'event'
         logging.getLogger('elasticsearch').setLevel(logging.CRITICAL)
+        logging.getLogger('urllib3').setLevel(logging.CRITICAL)
         try:
             self.initManageIndex()
         except:
