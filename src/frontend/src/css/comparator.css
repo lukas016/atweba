@@ -14,14 +14,20 @@
     background-color: rgba(230, 230, 230, 1) !important;
 }
 
+.showResult .eventList .content {
+    width: 99% !important;
+}
+
 .eventList .scoreSame,
 .eventList .scoreSame .description {
+    width: 100% !important;
     background-color: green !important;
     color: #fff !important;
 }
 
 .eventList .scoreDiffrent,
 .eventList .scoreDiffrent .description {
+    word-wrap: break-word !important;
     background-color: red !important;
     color: #fff !important;
 }
