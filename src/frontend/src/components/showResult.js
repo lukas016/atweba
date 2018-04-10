@@ -46,14 +46,13 @@ class showResult extends Component {
     changeComparator = (timestamp) => this.setState({active: timestamp})
 
     generateComparator = () => {
-        const imageServer = 'http://127.0.0.1:5900/'
         if (this.state.active === null)
             return null
 
         console.log(this.props)
         console.log(this.state.active)
-        const after = imageServer + this.props.testResult.getResult[this.state.active].image.substr('./screenshot/'.length)
-        const before = imageServer + this.props.regressResult.getResult[this.state.active].image.substr('./screenshot/'.length)
+        const after = this.props.testResult.getResult[this.state.active].image
+        const before = this.props.regressResult.getResult[this.state.active].image
         return <Comparator before={before} after={after} />
     }
 
