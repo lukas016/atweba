@@ -5,7 +5,7 @@ from .schema import schema
 from zeromq import ZeroClient
 from os import getcwd
 apiServer = Flask(__name__)
-AutoIndex(apiServer, getcwd() + '/screenshot')
+#AutoIndex(apiServer, getcwd() + '/screenshot')
 #GraphQL
 apiServer.add_url_rule('/graphqlTesting',
         view_func=GraphQLView.as_view('graphqlTesting',
@@ -15,12 +15,12 @@ apiServer.add_url_rule('/graphqlTesting',
 def root(path):
     return send_from_directory('../../frontend/build/', path)
 
-@apiServer.route('/client/<path:path>')
-def clientTesting(path):
-    return send_from_directory('../../client/', path)
+@apiServer.route('/screenshot/<path:path>')
+def screenshotResult(path):
+    return send_from_directory('../screenshot/', path)
 
-@apiServer.route('/client/eventHandler/build/<file>')
+@apiServer.route('/client/<file>')
 def clientScript(file):
-    response = make_response(send_file('../../client/eventHandler/build/' + file))
+    response = make_response(send_file('../client/' + file))
     response.headers['Content-Disposition'] = 'attachment; filename="client.js"'
     return response
