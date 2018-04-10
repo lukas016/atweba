@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Step, Grid } from 'semantic-ui-react';
+import { Icon, Step, Grid, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import Comparator from './comparator.js'
@@ -75,19 +75,18 @@ class showResult extends Component {
         const tmpPointer = this
         for (let index in this.props.getTest.getTest) {
             const {locator, url, timestamp, path, type} = this.props.getTest.getTest[index]
-            steps.push(<Step key={index} active={index === tmpPointer.state.active} className={tmpPointer.getScoreClass(index)}
-                    onClick={() => tmpPointer.changeComparator(index)}>
-                        <Icon name={tmpPointer.getIconName(type)} size='small' />
-                        <Step.Content>
-                            <Step.Description>
-                                Score: {tmpPointer.getScore(index)}<br/>
+            steps.push(<Popup inverted hoverable position='right center'
+                        key={index}
+                        trigger={<Step key={index} active={index === tmpPointer.state.active} className={tmpPointer.getScoreClass(index)}
+                            onClick={() => tmpPointer.changeComparator(index)}>
+                                <Icon name={tmpPointer.getIconName(type)} size='mini' />
+                            </Step>}
+                        content={<div>Score: {tmpPointer.getScore(index)}<br/>
                                 Locator: {locator}<br/>
                                 URL: {url}<br/>
                                 timestamp: {timestamp}<br/>
-                                path: {path.join(' > ')}<br/>
-                            </Step.Description>
-                        </Step.Content>
-                    </Step>)
+                                path: {path.join(' > ')}<br/></div>
+                        } />)
         }
         return steps
     }
@@ -103,7 +102,7 @@ class showResult extends Component {
         return(
             <div className='showResult'>
                 <div className='eventList'>
-                    <Step.Group fluid vertical ordered items={steps} />
+                    <Step.Group fluid vertical ordered size='mini' items={steps} />
                 </div>
                 <div className='comparatorWrapper'>
                     {comparator}

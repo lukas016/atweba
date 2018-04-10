@@ -4,18 +4,22 @@
 }
 
 .showResult .eventList {
-    display: inline-block;
-    width: 330px;
-    position: relative;
-    z-index: 1
+    display: block;
+    min-width: 150px !important;
+    width: 150px !important;
+    max-height: 1080px;
+    z-index: 999 !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+div .popup {
+    box-shadow: 0px 0px 3px #999 !important;
 }
 
 .eventList .step {
+    width: 150px !important;
     background-color: rgba(230, 230, 230, 1) !important;
-}
-
-.showResult .eventList .content {
-    width: 99% !important;
 }
 
 .eventList .scoreSame,
@@ -38,13 +42,13 @@
 }
 
 .showResult .comparatorWrapper {
-    display: block;
-    position: relative;
+    display: inline-block;
+    position: relative !important;
     overflow: hidden;
-    white-space: nowrap;
+    max-height: 800px !important;
     top: 0px;
     width: auto;
-    z-index: 0;
+    z-index: 0 !important;
 }
 
 .showResult .comparatorWrapper > div {
