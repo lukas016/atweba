@@ -14,7 +14,7 @@ def initLogger(file):
 
 def initApiServer(config):
     from api.server import apiServer
-    apiServer.run(port=int(config['api']['port']), threaded=True)
+    apiServer.run(host=config['host'], port=int(config['port']), threaded=True)
 
 def startThreads(threads):
     for thread in threads:
@@ -58,6 +58,6 @@ if __name__ == '__main__':
     threads = [
             Aggregator(name="aggregator", config=config),
             TestManager(name="testmanager", config=config),
-            Thread(target=initApiServer, name="api", args=[config])]
+            Thread(target=initApiServer, name="api", args=[config['api']])]
     startThreads(threads)
     exit(joinThreads(threads))
