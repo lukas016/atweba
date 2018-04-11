@@ -45,7 +45,7 @@ class analyzeScreenshot():
         currentImg = self.loadImg(current['image'])
         regressImg = self.loadImg(regress['image'])
 
-        score = round(compare_ssim(regressImg, currentImg, full=False), 4)
+        score = round(compare_ssim(regressImg, currentImg, full=False), 2)
         self.result = self.result + score
         response = self.agg.sendCommand('setImgScore',
                     {'appId': self.appId, 'scenarioId': self.scenarioId, 'id': current['id'],
