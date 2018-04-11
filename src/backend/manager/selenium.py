@@ -165,11 +165,16 @@ class seleniumClient():
                     startTime = time() * 1000
                     action.perform()
 
-            except: pass
+            except Exception as e:
+                self.logger.warning(str(e))
+                self.saveScreenShot(event, performTime)
+                processedEvent = processedEvent + 1
+                continue
+
             endTime = time() * 1000
             performTime = endTime - startTime
             pageTime = pageTime + performTime
-            sleepTime = (event['pageTime'] - pageTime) / 1000
+            sleepTime = round((event['pageTime'] - pageTime) / 1000, 3)
             self.logger.critical(sleepTime)
 
             self.saveScreenShot(event, performTime)
