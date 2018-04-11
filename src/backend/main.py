@@ -5,12 +5,12 @@ import time
 from sys import exit
 from manager.manager import TestManager
 from threading import Thread
-import logging
+import logging.config
 from configparser import ConfigParser
 
-def initLogger():
+def initLogger(file):
     FORMAT = '%(asctime)-15s %(name)s %(levelname)s: %(message)s'
-    logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+    logging.config.fileConfig(file)
 
 def initApiServer(config):
     from api.server import apiServer
@@ -47,15 +47,15 @@ def joinThreads(threads):
                     stopThreads(threads)
                     return 1
 
-def loadConfig():
-    file = 'config.ini'
+def loadConfig(file):
     config = ConfigParser()
     config.read(file)
     return config
 
 if __name__ == '__main__':
-    initLogger()
-    config = loadConfig()
+    configFile = 'config.ini'
+    initLogger(configFile)
+    config = loadConfig(configFile)
     threads = [
             Aggregator(name="aggregator", config=config),
             TestManager(name="testmanager", config=config),
