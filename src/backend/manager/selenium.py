@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep, time
-from pyvirtualdisplay import Display
+from pyvirtualdisplay.display import Display
 from os import environ, makedirs, path
 import errno
 from pprint import pprint
