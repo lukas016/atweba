@@ -164,8 +164,10 @@ class ElasticsearchClient():
             raise RuntimeError(result['error']['reason'])
 
         answer = []
+        noExistInfo = {'score': -1, 'regressTestId': -1, 'events': -1, 'state': -1, 'performTime': -1, 'image': ''}
         for item in result['hits']['hits']:
             tmp = {'id': item['_id']}
+            tmp.update(noExistInfo)
             for key, value  in item['_source'].items():
                 tmp[key] = value
             answer.append(tmp)
