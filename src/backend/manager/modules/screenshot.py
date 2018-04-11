@@ -1,7 +1,7 @@
 from skimage.measure import compare_ssim
 import cv2
 from manager.state import testState
-from pprint import pprint
+
 class analyzeScreenshot():
     def __init__(self, aggClient, appId, scenarioId, regressTestId, testId):
         self.appId = appId
@@ -11,9 +11,6 @@ class analyzeScreenshot():
         self.result = 0
 
     def finishResult(self, eventsCount):
-        print(self.result)
-        print(eventsCount)
-        print(self.result / eventsCount)
         if self.result / eventsCount == 1.0:
             return testState.OK
         else:
@@ -30,9 +27,6 @@ class analyzeScreenshot():
 
             events[key] = response['data']
 
-        print(len(events['current']))
-        print(len(events['regress']))
-
         if len(events['current']) != len(events['regress']):
             raise RuntimeError(testState.COUNT_EVENTS)
 
@@ -48,14 +42,10 @@ class analyzeScreenshot():
         return cv2.cvtColor(cv2.imread(pathFile), cv2.COLOR_BGR2GRAY)
 
     def analyzeScreenshot(self, current, regress):
-        pprint(current)
         currentImg = self.loadImg(current['image'])
         regressImg = self.loadImg(regress['image'])
 
         score = round(compare_ssim(regressImg, currentImg, full=False), 4)
-        print('\n')
-        print(score)
-        print('\n')
         self.result = self.result + score
         response = self.agg.sendCommand('setImgScore',
                     {'appId': self.appId, 'scenarioId': self.scenarioId, 'id': current['id'],

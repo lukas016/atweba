@@ -3,7 +3,6 @@ from .schemes.event import Event, createEvent
 from .schemes.app import App, createApp, generateClientScript
 from .schemes.scenario import Scenario, setScenarioName, runTest
 from .schemes.result import Result, setRegressTest
-from pprint import pprint
 
 class Query(ObjectType):
     event = List(Event)

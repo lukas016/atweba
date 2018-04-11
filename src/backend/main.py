@@ -42,7 +42,6 @@ def joinThreads(threads):
 
         except RuntimeError as e:
             if not thread.isAlive():
-                print(e)
                 if not restartThread(thread):
                     stopThreads(threads)
                     return 1

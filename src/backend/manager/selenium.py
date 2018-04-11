@@ -5,7 +5,7 @@ from time import sleep, time
 from pyvirtualdisplay.display import Display
 from os import environ, makedirs, path
 import errno
-from pprint import pprint
+
 class seleniumClient():
     def __init__(self, agg, appId, scenarioId, manage, scenario, baseImgDir):
         self.scenario = scenario
@@ -108,7 +108,6 @@ class seleniumClient():
         elem = self.getElementSelector(event['locator'])
         action.move_to_element(elem)
         action.click(elem)
-        print(action)
         return action
 
     def action_focusout(self, event):

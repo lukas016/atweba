@@ -1,5 +1,4 @@
 from database.elasticsearch import ElasticsearchClient
-from pprint import pprint
 from abc import ABC, abstractmethod
 
 def getDatabasesType(type='elasticsearch'):

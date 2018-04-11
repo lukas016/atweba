@@ -1,6 +1,5 @@
 from threading import Thread
 from time import sleep
-from pprint import pprint
 from zeromq import ZeroClient, ZeroServer
 import logging
 from manager.selenium import seleniumClient

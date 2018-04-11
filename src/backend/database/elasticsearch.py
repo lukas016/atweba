@@ -1,6 +1,5 @@
 from elasticsearch import Elasticsearch
 import json
-from pprint import pprint
 from time import time
 from database.schemes.mapping import mappingApp, mappingEvent
 import logging
@@ -197,7 +196,6 @@ class ElasticsearchClient():
             raise RuntimeError(result['error']['reason'])
 
         manage = None
-        pprint(result['responses'][0]['hits']['total'])
         if result['responses'][0]['hits']['total'] != 0:
             manage = result['responses'][0]['hits']['hits'][0]['_source']['scenarios'][msg['scenarioId']]
 

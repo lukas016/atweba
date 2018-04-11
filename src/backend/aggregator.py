@@ -1,7 +1,6 @@
 from threading import Thread
 import time
 from json import dumps, loads
-from pprint import pprint
 import logging
 from zeromq import ZeroServer, ZeroClient
 from database.manager import createDataManager, getDatabasesType

@@ -1,7 +1,6 @@
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
 from graphene.types.datetime import Date
 from graphql import GraphQLError
-from pprint import pprint
 import os.path
 import json
 
@@ -32,7 +31,6 @@ class Result(ObjectType):
 
     def get(self, aggClient, argv):
         response = aggClient.sendCommand('getResult', argv)
-        pprint(response)
         if response['status']:
             return self.generateResult(response['data'])
         else:
