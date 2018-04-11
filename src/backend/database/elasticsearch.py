@@ -153,9 +153,9 @@ class ElasticsearchClient():
         index = 'result-{}-{}'.format(msg['appId'], msg['scenarioId'])
         filter = ['hits.hits', 'error']
         if 'testId' in msg:
-            query = {'query': {'terms': {'testId': msg['testId']}}}
+            query = {'query': {'terms': {'testId': msg['testId']}}, 'size': 10000}
         else:
-            query = {'query': {'match_all': {}}}
+            query = {'query': {'match_all': {}}, 'size': 10000}
 
         result = self.db.search(index=index, filter_path=filter,
                 body=query)
@@ -188,7 +188,7 @@ class ElasticsearchClient():
         query = ('{"index": "' + self.manageIndex + '"}\n'
                     '{"query": {"exists": {"field": "scenarios.' + msg['scenarioId'] + '"}}}\n'
                     '{"index": "' + msg['appId'] + '"}\n'
-                    '{"query": {"term": {"scenarioId": "' + msg['scenarioId'] + '"}}}\n'
+                    '{"query": {"term": {"scenarioId": "' + msg['scenarioId'] + '"}}, "size": 10000}\n'
                 )
 
         result = self.db.msearch(index=indexes, body=query, filter_path=filter)
@@ -230,7 +230,7 @@ class ElasticsearchClient():
         query = ('{"index": "' + self.manageIndex + '"}\n'
                     '{"query": {"term": {"_id": "' + msg['scenarioId'] + '"}}}\n'
                     '{"index": "' + msg['scenarioId'] + '"}\n'
-                    '{"size": 0, "aggs": {"scenarios": {"terms": {"field": "scenarioId.keyword"}}}}\n'
+                    '{"size": 0, "aggs": {"scenarios": {"terms": {"field": "scenarioId.keyword", "size": 10000}}}}\n'
                 )
 
         result = self.db.msearch(index=indexes, body=query, filter_path=filter)
