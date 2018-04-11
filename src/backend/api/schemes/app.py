@@ -50,8 +50,8 @@ class createApp(Mutation):
 
 def generateClientScript(argv):
     id = argv['id']
-    pathStart = '..'
-    urlPart =  '/client/eventHandler/build/client'
+    pathStart = './'
+    urlPart =  'client/client'
     fileFormat = '.js'
     pathBase = pathStart + urlPart
     pathTarget = pathBase + '-' + id + fileFormat
