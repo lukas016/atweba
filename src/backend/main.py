@@ -6,15 +6,15 @@ from sys import exit
 from manager.manager import TestManager
 from threading import Thread
 import logging
-
+from configparser import ConfigParser
 
 def initLogger():
     FORMAT = '%(asctime)-15s %(name)s %(levelname)s: %(message)s'
     logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
-def initApiServer():
+def initApiServer(config):
     from api.server import apiServer
-    apiServer.run(port=5900, threaded=True)
+    apiServer.run(port=int(config['api']['port']), threaded=True)
 
 def startThreads(threads):
     for thread in threads:
@@ -47,8 +47,18 @@ def joinThreads(threads):
                     stopThreads(threads)
                     return 1
 
+def loadConfig():
+    file = 'config.ini'
+    config = ConfigParser()
+    config.read(file)
+    return config
+
 if __name__ == '__main__':
     initLogger()
-    threads = [Aggregator(name="aggregator"), TestManager(name="testmanager"), Thread(target=initApiServer, name="api")]
+    config = loadConfig()
+    threads = [
+            Aggregator(name="aggregator", config=config),
+            TestManager(name="testmanager", config=config),
+            Thread(target=initApiServer, name="api", args=[config])]
     startThreads(threads)
     exit(joinThreads(threads))

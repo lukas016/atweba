@@ -17,7 +17,8 @@ class TestManager(Thread):
     def initZeroClient(self):
         self.aggClient = ZeroClient(name=self.name)
 
-    def init(self):
+    def __init__(self, name, config):
+        Thread.__init__(self, name=name)
         self.initZeroServer()
         self.initZeroClient()
         self.scenarios = {}
@@ -47,8 +48,7 @@ class TestManager(Thread):
         if not scenarioId in self.scenarios:
             self.scenarios[scenarioId] = {}
 
-        self.scenarios[scenarioId]['thread'] = Test()
-        self.scenarios[scenarioId]['thread'].init(msg)
+        self.scenarios[scenarioId]['thread'] = Test(msg)
         self.scenarios[scenarioId]['thread'].start()
 
     def checkQueue(self):
@@ -64,7 +64,6 @@ class TestManager(Thread):
 
 
     def run(self):
-        self.init()
         self.aggClient.registerMsg()
         self.server.checkConnection()
         self.aggClient.checkRegister()
@@ -82,7 +81,8 @@ class Test(Thread):
     def initZeroClient(self):
         self.aggClient = ZeroClient(name=self.name)
 
-    def init(self, msg):
+    def __init__(self, msg):
+        Thread.__init__(self)
         self.baseImgDir = './screenshot'
         self.appId = msg['appId']
         self.scenarioId = msg['scenarioId']

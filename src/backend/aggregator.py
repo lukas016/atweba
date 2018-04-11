@@ -5,6 +5,7 @@ from pprint import pprint
 import logging
 from zeromq import ZeroServer, ZeroClient
 from database.manager import createDataManager, getDatabasesType
+from configparser import ConfigParser
 
 class Aggregator(Thread):
     def initZeroServer(self):
@@ -12,9 +13,12 @@ class Aggregator(Thread):
         self.modules = {}
 
     def initDataManager(self):
-        self.db = createDataManager(getDatabasesType('elasticsearch'), host="192.168.10.40")
+        config = self.config
+        self.db = createDataManager(getDatabasesType(config['databaseType']), host=config['databaseAddr'])
 
-    def init(self):
+    def __init__(self, name, config):
+        Thread.__init__(self, name=name)
+        self.config = config['aggregator']
         self.initZeroServer()
         self.initDataManager()
         self.logger = logging.getLogger(self.name)
@@ -100,7 +104,6 @@ class Aggregator(Thread):
         self.server.sendMsg(msg['type'], self.db.updateTest(msg['msg']))
 
     def run(self):
-        self.init()
         while self.run:
             try:
                 msgObject = self.server.recvMsg()
