@@ -5,6 +5,8 @@ from time import sleep, time
 from pyvirtualdisplay.display import Display
 from os import environ, makedirs, path
 import errno
+from logging import getLogger
+from manager.state import testState
 
 class seleniumClient():
     def __init__(self, agg, appId, scenarioId, manage, scenario, baseImgDir):
@@ -57,7 +59,8 @@ class seleniumClient():
                 'testId': 1})
 
         if not response['status']:
-            raise Exception(response['error'])
+           self.logger.critical('Cannot set reggressTestId')
+           raise RuntimeError(testState.FAILED)
 
     def updateWindowSize(self, screenX, screenY):
         self.driver.set_window_position(0, 0)
@@ -74,7 +77,8 @@ class seleniumClient():
         response = self.aggClient.sendCommand('setTestId',
                 {'appId': self.appId, 'scenarioId': self.scenarioId, 'testId': currentTestId})
         if not response['status']:
-            raise Exception(response['error'])
+            self.logger.critical('Cannot set testId')
+            raise RuntimeError(testState.FAILED)
 
         self.testId = currentTestId
 
@@ -85,16 +89,22 @@ class seleniumClient():
 
     def run(self):
         self.initDisplay()
-        self.initDriver()
         self.scenario.sort(key=lambda x: x['timestamp'])
+        self.initDriver()
         self.setTestId()
         self.initScreenShotDir()
         self.setRegressTestForTest()
+        processedEvent = 0
+        self.logger.critical(len(self.scenario))
         try:
-            self.processScenario()
-        except:
-            pass
+            processedEvent = self.processScenario()
+        except Exception as e:
+            self.logger.critical(str(e))
         self.endTest()
+        if processedEvent != len(self.scenario):
+            self.logger.critical('Cannot perform all events in scenario')
+            raise RuntimeError(testState.FAILED)
+ 
         return (self.testId, self.manage['regressTestId'])
 
     def getElementSelector(self, selector):
@@ -142,22 +152,28 @@ class seleniumClient():
         sleepTime = -1
         parformTime = 0
         startTime = 0
+        processedEvent = 0;
         for event in self.scenario:
             if (sleepTime > 0):
                 sleep(sleepTime)
                 sleepTime = 0
 
-            action = self.selectAction(event)
-            if not action is None:
-                try:
+            try:
+               action = self.selectAction(event)
+               if not action is None:
                     self.updateWindowSize(event['screenX'], event['screenY'])
                     startTime = time() * 1000
                     action.perform()
 
-                except: pass
-                endTime = time() * 1000
-                performTime = endTime - startTime
-                pageTime = pageTime + performTime
-                sleepTime = (event['pageTime'] - pageTime) / 1000
+            except: pass
+            endTime = time() * 1000
+            performTime = endTime - startTime
+            pageTime = pageTime + performTime
+            sleepTime = (event['pageTime'] - pageTime) / 1000
+            self.logger.critical(sleepTime)
 
             self.saveScreenShot(event, performTime)
+            processedEvent = processedEvent + 1
+
+        self.logger.warning(processedEvent)
+        return processedEvent
