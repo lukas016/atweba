@@ -3,10 +3,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep, time
 from pyvirtualdisplay.display import Display
-from os import environ, makedirs, path
+from os import environ, makedirs, path, getcwd
 import errno
 from logging import getLogger
 from manager.state import testState
+from shutil import rmtree
 
 class seleniumClient():
     def __init__(self, agg, appId, scenarioId, manage, scenario, baseImgDir):
@@ -29,7 +30,9 @@ class seleniumClient():
             self.display.stop()
 
     def initDriver(self):
-        self.driver = webdriver.Chrome()
+        chromeOptions = webdriver.ChromeOptions()
+        chromeOptions.add_argument('--user-data-dir=' + self.generateNewProfile())
+        self.driver = webdriver.Chrome(options=chromeOptions)
         self.driver.set_window_position(0, 0)
         self.driver.get(self.scenario[0]['url'])
 
@@ -51,6 +54,7 @@ class seleniumClient():
     def endTest(self):
         self.driver.close()
         self.stopDisplay()
+        rmtree(self.generateNewProfile(), True)
 
     def setRegressTest(self):
         response = self.aggClient.sendCommand('setRegressTest',
@@ -87,16 +91,19 @@ class seleniumClient():
                 {'appId': self.appId, 'scenarioId': self.scenarioId,
                     'testId': self.testId, 'regressTestId': self.manage['regressTestId']})
 
+    def generateNewProfile(self):
+        return '{}/.browserData/{:.10}-{}'.format(getcwd(), self.scenarioId, self.testId)
+
+
     def run(self):
         self.initDisplay()
         self.scenario.sort(key=lambda x: x['timestamp'])
-        self.initDriver()
-        self.setTestId()
-        self.initScreenShotDir()
-        self.setRegressTestForTest()
-        processedEvent = 0
-        self.logger.critical(len(self.scenario))
         try:
+            self.setTestId()
+            self.initScreenShotDir()
+            self.setRegressTestForTest()
+            self.initDriver()
+            processedEvent = 0
             processedEvent = self.processScenario()
         except Exception as e:
             self.logger.critical(str(e))
