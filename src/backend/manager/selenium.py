@@ -157,7 +157,7 @@ class seleniumClient():
     def processScenario(self):
         pageTime = 0
         sleepTime = -1
-        parformTime = 0
+        performTime = 0
         startTime = 0
         processedEvent = 0;
         for event in self.scenario:
@@ -181,7 +181,7 @@ class seleniumClient():
             endTime = time() * 1000
             performTime = endTime - startTime
             pageTime = pageTime + performTime
-            sleepTime = round((event['pageTime'] - pageTime) / 1000, 3)
+            sleepTime = round((event['pageTime'] - pageTime) / 10000, 3)
             self.logger.critical(sleepTime)
 
             self.saveScreenShot(event, performTime)
