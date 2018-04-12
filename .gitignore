@@ -7,6 +7,7 @@ src/backend/selenium
 src/backend/screenshot
 src/backend/share
 src/backend/config.ini
+src/backend/.browserData
 **/__pycache__
 src/frontend/build
 src/client/eventHandler/build
