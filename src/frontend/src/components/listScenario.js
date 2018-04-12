@@ -145,7 +145,7 @@ class scenarioList extends Component {
                                         trigger={<Button icon='line graph' compact inverted circular color='violet'
                                                 onClick={() => this.props.showTimeGraph(this.props.id, original.scenarioId)} />
                                         }
-                                        content='Tests'
+                                        content='Performance chart'
                                     />
                                     <Popup inverted
                                         trigger={

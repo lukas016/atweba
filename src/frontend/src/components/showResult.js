@@ -38,6 +38,8 @@ class showResult extends Component {
                 return 'mouse pointer'
             case 'focusout':
                 return 'keyboard'
+            case 'mouseover':
+                return 'object ungroup'
             default:
                 return 'help'
         }
