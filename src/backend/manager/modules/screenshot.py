@@ -42,11 +42,12 @@ class analyzeScreenshot():
         return cv2.cvtColor(cv2.imread(pathFile), cv2.COLOR_BGR2GRAY)
 
     def analyzeScreenshot(self, current, regress):
-        currentImg = self.loadImg(current['image'])
-        regressImg = self.loadImg(regress['image'])
+        score = 1.0
+        if current['image'] != regress['image']:
+            currentImg = self.loadImg(current['image'])
+            regressImg = self.loadImg(regress['image'])
+            score = round(compare_ssim(regressImg, currentImg, full=False), 3)
 
-        score = round(compare_ssim(regressImg, currentImg, full=False), 2)
         self.result = self.result + score
-        response = self.agg.sendCommand('setImgScore',
-                    {'appId': self.appId, 'scenarioId': self.scenarioId, 'id': current['id'],
-                        'score': score, 'regressTestId': self.tests['regress']})
+        self.agg.sendCommand('setImgScore', {'appId': self.appId, 'score': score, 'id': current['id'],
+                'scenarioId': self.scenarioId, 'regressTestId': self.tests['regress']})
