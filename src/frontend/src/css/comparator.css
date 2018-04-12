@@ -44,8 +44,8 @@ div .popup {
 .showResult .comparatorWrapper {
     display: inline-block;
     position: relative !important;
-    overflow: hidden;
-    max-height: 800px !important;
+    overflow: hidden !important;
+    max-height: 1080px !important;
     top: 0px;
     width: auto;
     z-index: 0 !important;
@@ -55,9 +55,9 @@ div .popup {
     display: block;
     position: relative;
     width: auto !important;
-    overflow-y: hidden !important;
-    overflow-x: auto;
+    overflow: auto !important;
     padding: 10px;
+    max-height: 1080px !important;
 }
 
 .controlPanel {
@@ -102,6 +102,4 @@ div .popup {
 .controlPanel + div + div {
     position: relative !important;
     left: 0px !important;
-    margin-bottom: 20px;
-    overflow: hidden;
 }
