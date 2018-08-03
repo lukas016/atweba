@@ -1,7 +1,14 @@
+/**
+ * @file factory-processors.js
+ * @author Lukas Koszegy
+ * @brief Centralna sprava procesorov
+ **/
+
 import processorMouse from './processors/mouse.js';
 //import processorKeyboard from './processors/keyboard.js';
 import processorInput from './processors/input.js';
 
+// Definovanie procesorov
 const PROCESSORS =
 [
     processorMouse,
@@ -15,6 +22,7 @@ class FactoryProcessors {
         this.registerProcessor();
     }
 
+    // Dostanie procesoru na zaklade typu udalosti
     getProcessor(event) {
         for (let index in this.processors)
             if (this.processors[index].events.includes(event))
@@ -23,6 +31,7 @@ class FactoryProcessors {
         return undefined;
     }
 
+    // Nacitanie procesorov do internych struktur
     registerProcessor() {
         var events = [];
         PROCESSORS.map(element => {

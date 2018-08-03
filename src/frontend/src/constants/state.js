@@ -1,5 +1,11 @@
-const groupStates = new Object({result: {init: 0, values: ['OK', 'COUNT_EVENTS', 'FAILED']},
-        state: {init: 100, values:['INITIALIZE', 'TESTING', 'ANALYZE']}})
+/**
+ * @file state.js
+ * @author Lukas Koszegy
+ * @brief Implementacia stavov pre webove rozhranie
+ */
+
+const groupStates = {result: {init: 0, values: ['OK', 'COUNT_EVENTS', 'FAILED']},
+        state: {init: 100, values:['INITIALIZE', 'TESTING', 'ANALYZE']}}
 
 const generateState = () => {
     let result = {}

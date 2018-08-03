@@ -1,3 +1,9 @@
+/**
+ * @file form.js
+ * @author Lukas Koszegy
+ * @brief Formular pre vytvorenie aplikacie
+ */
+
 import React, { Component } from 'react';
 import { Form, Header, Button, Icon } from 'semantic-ui-react';
 import '../css/form.css';
@@ -22,6 +28,7 @@ class createApp extends Component {
         this.setState({ [name]: value });
     };
 
+    // Zaslanie registracnej spravy na server
     handleSubmit = () => {
         this.setState({ loading: true });
         console.log(this.state);

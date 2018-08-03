@@ -1,3 +1,9 @@
+/**
+ * @file header.js
+ * @author Lukas Koszegy
+ * @brief Implementacia spolocneho panela
+ */
+
 import React from 'react';
 import { Menu, Popup } from 'semantic-ui-react';
 import '../css/header.css';

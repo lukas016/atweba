@@ -1,14 +1,18 @@
+/**
+ * @file listResult.js
+ * @author Lukas Koszegy
+ * @brief Zoznam vysledkov
+ */
+
 import React, { Component } from 'react';
-import { Button, Checkbox, Input, Icon, Popup } from 'semantic-ui-react';
+import { Button, Checkbox, Icon, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
-import { toast } from 'react-toastify';
 import '../css/list.css';
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../css/react-table.css'
-import { semanticFilter } from './simpleComponents.js'
-import { STATE, ICON_STATE, COLOR_STATE, CLASS_STATE } from '../constants/state.js'
+import { ICON_STATE, COLOR_STATE, CLASS_STATE } from '../constants/state.js'
 
 const queries = {
     getResultAgg: gql`
@@ -34,6 +38,7 @@ class resultList extends Component {
         this.state = { apps: {}, rows: [], regressTest: props.regressTestId }
     }
 
+    // Zrusenie animacie nacitania
     disableLoading(id, operation) {
         let stateId = this.state.applications
         let index = stateId[id].indexOf(operation)
@@ -41,6 +46,7 @@ class resultList extends Component {
         this.setState({ applications: {...stateId} })
     }
 
+    // ZMena regresneho testu pre dalsie testy
     setRegressTest = (testId) => {
         const client = this.props.client.mutate
         client({mutation: queries.setRegressTest,
@@ -60,10 +66,10 @@ class resultList extends Component {
                  defaultSorted={[{id: 'testId', desc: true}]}
                  data = {rows}
                  loading = {this.props.getResultAgg.loading}
-                 pageSize = {10}
+                 defaultPageSize = {10}
                  columns = {[
-                     {
-                         width: 75,
+                     {Header: 'Regressive',
+                         width: 125,
                          Cell: ({original}) =>
                             <Checkbox toggle checked={original.testId === this.state.regressTest ? true : false} onChange={() => this.setRegressTest(original.testId)} />,
                      },
@@ -92,11 +98,15 @@ class resultList extends Component {
                         minWidth: 100, maxWidth: 200, width: 100},
                     {Header: 'Actions',
                         Cell: ({original}) =>
-                            <Button icon='copy' onClick={() => this.props.showComparator(this.props.appId,
-                                    this.props.scenarioId,
-                                    this.props.scenarioName,
-                                    original.testId,
-                                    original.regressTestId)} />
+                            <Popup inverted
+                                trigger={
+                                    <Button icon='copy' circular onClick={() => this.props.showComparator(this.props.appId,
+                                        this.props.scenarioId,
+                                        this.props.scenarioName,
+                                        original.testId,
+                                        original.regressTestId)} />
+                               }
+                               content='Image differ' />
                     }
                  ]} />
         )

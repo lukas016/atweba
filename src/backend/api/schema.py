@@ -1,9 +1,16 @@
+##
+# @file schema.py
+# @author Lukas Koszegy
+# @brief Tvorba sprav pre graphQL
+##
+
 from graphene import Field, List, ObjectType, Schema, String, ID, Int
 from .schemes.event import Event, createEvent
 from .schemes.app import App, createApp, generateClientScript
 from .schemes.scenario import Scenario, setScenarioName, runTest
 from .schemes.result import Result, setRegressTest
 
+# Poziadavky
 class Query(ObjectType):
     event = List(Event)
     app = List(App, id=String())
@@ -39,6 +46,7 @@ class Query(ObjectType):
     def resolve_getTest(self, info, **argv):
         return Event().getTest(info.context['aggClient'], argv)
 
+# Mutacie
 class Mutation(ObjectType):
     create_event = createEvent.Field()
     create_app = createApp.Field()

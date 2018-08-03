@@ -1,3 +1,9 @@
+##
+# @file state.py
+# @author Lukas Koszegy
+# @brief Implementacia stavov
+##
+
 from enum import Enum, unique, auto
 
 @unique

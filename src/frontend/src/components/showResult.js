@@ -1,6 +1,12 @@
+/**
+ * @file listResult.js
+ * @author Lukas Koszegy
+ * @brief Wrapper pre porovnavac obrazkov
+ */
+
 import React, { Component } from 'react';
-import { Icon, Step, Grid, Popup } from 'semantic-ui-react';
-import { compose, graphql, withApollo } from 'react-apollo';
+import { Icon, Step, Popup } from 'semantic-ui-react';
+import { compose, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Comparator from './comparator.js'
 import '../css/comparator.css'
@@ -32,6 +38,7 @@ class showResult extends Component {
         this.state = {active: null}
     }
 
+    // Konvertovanie typu na obrazok
     getIconName = (type) => {
         switch(type) {
             case 'click':
@@ -45,8 +52,10 @@ class showResult extends Component {
         }
     }
 
+    // Zmena obrazkov pre porovnavac obrazkov
     changeComparator = (timestamp) => this.setState({active: timestamp})
 
+    // Zobrazenie porovnavaca obrazkov
     generateComparator = () => {
         if (this.state.active === null)
             return null
@@ -58,8 +67,10 @@ class showResult extends Component {
         return <Comparator before={before} after={after} />
     }
 
+    // Ziskanie skore
     getScore = (index) => this.props.testResult.getResult[index].score
 
+    // Nastavenie pozadia udalosti podla skore
     getScoreClass = (index) => {
         if (this.props.testResult.loading)
             return ''
@@ -72,8 +83,9 @@ class showResult extends Component {
         }
     }
 
+    // Generovanie zoznamu vysledkov pre udalosti ako menu pre komparator
     generateSteps = () => {
-        let steps = Array()
+        let steps = []
         const tmpPointer = this
         for (let index in this.props.getTest.getTest) {
             const {locator, url, timestamp, path, type} = this.props.getTest.getTest[index]

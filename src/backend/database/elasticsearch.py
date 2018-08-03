@@ -1,3 +1,9 @@
+##
+# @file elasticsearch.py
+# @author Lukas Koszegy
+# @brief Elasticsearch klient
+##
+
 from elasticsearch import Elasticsearch
 import json
 from time import time
@@ -16,6 +22,7 @@ class ElasticsearchClient():
         except:
             assert('Cannot init manage index in database')
 
+    # Inicializacia zakladnych struktur pre prazdnu DB
     def initManageIndex(self):
         if self.db.indices.exists(index=self.manageIndex):
             return

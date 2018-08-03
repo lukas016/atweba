@@ -1,3 +1,9 @@
+/**
+ * @file index.js
+ * @author Lukas Koszegy
+ * @brief Hlavny subor weboveho rozhrania
+ */
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './css/main.css'
@@ -17,6 +23,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 
 const apiAddr = new HttpLink({uri: '/graphqlTesting'})
 
+// Notifikacia chyb
 const errorLink = onError(({networkError, graphQLErrors}) => {
     const errorNotify = {
                 'background': '#d81111',
@@ -31,6 +38,7 @@ const errorLink = onError(({networkError, graphQLErrors}) => {
     if (networkError) toast.error(`NetworkError: ${networkError}`, { className: errorNotify });
 });
 
+// Prepojneie s API
 const link = ApolloLink.from([
     errorLink,
     apiAddr,

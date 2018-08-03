@@ -1,7 +1,10 @@
 #!/bin/bash
 
+## Pre ubuntu 16.04
+
 set -e
 
+# Kontrola uzivatela (je vyzatovany root)
 function check {
     RET=0
     if [ "$USER" != "root" ]; then
@@ -11,12 +14,14 @@ function check {
     return $RET
 }
 
+# Instalacia Python3.6 (default: 3.5)
 function installPython {
     add-apt-repository ppa:jonathonf/python-3.6
     apt update
     apt install python3.6 virtualenv unzip -y
 }
 
+# Instalacia databazy a nastavenie ako sluzby
 function installElasticsearch {
     wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
     apt install apt-transport-https -y
@@ -29,6 +34,7 @@ function installElasticsearch {
     systemctl start kibana
 }
 
+# Instalacia virtualneho displeja
 function installXvfb {
     apt install xvfb
 }

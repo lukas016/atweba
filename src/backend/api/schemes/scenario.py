@@ -1,3 +1,9 @@
+##
+# @file scenario.py
+# @author Lukas Koszegy
+# @brief Abstraktny datovy typ Scenar a funkcie s nim spojene
+##
+
 from graphene import Mutation, ObjectType, String, Int, ID, Boolean
 from graphene.types.datetime import Date
 from graphql import GraphQLError
@@ -10,6 +16,7 @@ class Scenario(ObjectType):
     name = String()
     state = Int()
 
+    #Ziskanie zoznamu scenarov
     def get(self, aggClient, argv):
         response = aggClient.sendCommand('getScenarios', argv)
         if response['status']:
@@ -17,6 +24,7 @@ class Scenario(ObjectType):
         else:
             raise GraphQLError(response['error'])
 
+# Nastavenie uzivatelskeho nazvu pre scenar
 class setScenarioName(Mutation):
     class Arguments:
         appId = ID(required=True, description="Scenario identifier")
@@ -33,6 +41,7 @@ class setScenarioName(Mutation):
             raise GraphQLError(response['error'])
         return setScenarioName(ok=ok)
 
+# Spustenie testu pre scenar
 class runTest(Mutation):
     class Arguments:
         appId = ID(required=True, description="Scenario identifier")

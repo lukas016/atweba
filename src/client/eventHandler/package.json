@@ -18,5 +18,8 @@
   },
   "scripts": {
     "webpack": "webpack"
+  },
+  "devDependencies": {
+    "webpack-cli": "^2.0.14"
   }
 }

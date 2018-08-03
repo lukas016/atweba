@@ -1,3 +1,9 @@
+##
+# @file mapping.py
+# @author Lukas Koszegy
+# @brief Definicie typov dokumentov pre inicializaciu DB
+##
+
 mappingApp = {
     'properties': {
         'created': {

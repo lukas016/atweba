@@ -1,5 +1,11 @@
 #!/usr/bin/python3.6
 
+##
+# @file main.py
+# @author Lukas Koszegy
+# @brief Nacitanie konfiguracie a spustanie hlavnych modulov
+##
+
 from aggregator import Aggregator
 import time
 from sys import exit
@@ -16,12 +22,14 @@ def initApiServer(config):
     from api.server import apiServer
     apiServer.run(host=config['host'], port=int(config['port']), threaded=True)
 
+## Spustenie vlakien pomocou cyklu
 def startThreads(threads):
     for thread in threads:
         thread.daemon = True
         thread.start()
         thread.run = True
 
+## Kontrola vlakien
 def stopThreads(threads):
     for thread in threads:
         if thread.isAlive():
@@ -32,6 +40,7 @@ def restartThread(thread):
     time.sleep(5)
     return thread.isAlive()
 
+## Cakanie na ukoncenie vlakien
 def joinThreads(threads):
     for thread in threads:
         try:
@@ -55,6 +64,7 @@ if __name__ == '__main__':
     configFile = 'config.ini'
     initLogger(configFile)
     config = loadConfig(configFile)
+    #List vlakien, ktore sa maju spustit
     threads = [
             Aggregator(name="aggregator", config=config),
             TestManager(name="testmanager", config=config),

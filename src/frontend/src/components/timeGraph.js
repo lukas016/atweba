@@ -1,3 +1,9 @@
+/**
+ * @file timeGraph.js
+ * @author Lukas Koszegy
+ * @brief Implementacia komponenty Graf
+ */
+
 import React, { Component } from 'react';
 import ReactTable from 'react-table'
 import gql from 'graphql-tag';
@@ -42,21 +48,27 @@ class timeGraph extends Component {
         this.state = { graph: [], lines: [] }
     }
 
+    // Zobrazenie testu v grafe
     showTest = (testId) => {
         const client = this.props.client.query
-        if ( !this.existData(testId) )
+        if ( !this.existData(testId) ) {
+            // Nacitanie vysledkov zo servera
             client({query: queries.getResult,
                 variables: { appId: this.props.appId, scenarioId: this.props.scenarioId, testId: testId }})
                 .then(({ data }) => this.updateGraph(testId, data.getResult))
-        else
+        }
+        else {
             this.updateGraph(testId)
+        }
     }
 
+    // Kontrola ci bol test uz raz nacitany
     existData = (testId) => !this.state.graph && Object.keys(this.state.graph[0].forEach(function(key, index) {
             if (key === testId)
                 return true
         }))
 
+    // Generovanie len svetlych farieb
     generateColor = () => {
         let color
 
@@ -68,6 +80,7 @@ class timeGraph extends Component {
         return color.getOriginalInput()
     }
 
+    // Generovanie udajov o grafe
     updateGraph = (testId, results = []) => {
         let { graph, lines } = this.state
         const events = this.props.getTest.getTest
@@ -92,6 +105,7 @@ class timeGraph extends Component {
         this.setState({graph: [...graph], lines: [...lines]})
     }
 
+    // Generovanie JSX elementu s Grafom
     generateGraph = () => {
         const { graph, lines } = this.state
         if (graph.length === 0 || this.props.getTest.getTest.length === 0)
@@ -120,7 +134,7 @@ class timeGraph extends Component {
                     <ReactTable filterable defaultSorted={[{id: 'testId', desc: true}]}
                     data={rows}
                     loading = {this.props.getResultAgg.loading}
-                    pageSize = {20}
+                    defaultPageSize = {20}
                     columns = {[
                             {Header: 'Test', accessor: 'testId', width: 120,
                                 Filter: (input) => semanticFilter(input, 'number'),

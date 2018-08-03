@@ -1,5 +1,11 @@
+/**
+ * @file listApp.js
+ * @author Lukas Koszegy
+ * @brief Zoznam aplikacii
+ */
+
 import React, { Component } from 'react';
-import { Button, Icon, Popup } from 'semantic-ui-react';
+import { Button, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FormattedDate } from 'react-intl';
@@ -9,6 +15,7 @@ import { semanticFilter, semanticDateRangeFilter } from './simpleComponents.js'
 import '../css/react-table.css'
 import ReactTable from 'react-table'
 
+// Formatovanie datumu
 const formatDate = (seconds) => (
     <div style={{textAlign: 'center'}}>
         <FormattedDate value={new Date(0).setSeconds(seconds)} day='numeric' month='numeric' year='numeric'/>
@@ -33,6 +40,7 @@ const queries = {
 class appList extends Component {
     state = { startDate: 0, endDate: 0 }
 
+    // Animacia nacitavania
     disableLoading(id, operation) {
         let stateId = this.state.applications
         let index = stateId[id].indexOf(operation)
@@ -40,6 +48,7 @@ class appList extends Component {
         this.setState({ applications: {...stateId} })
     }
 
+    // Ziskanie URL klientskeho skriptu
     generateClientUrl(id) {
         let stateId = this.state.applications
         stateId[id].push('client')
@@ -53,6 +62,7 @@ class appList extends Component {
                 .catch(() => { this.disableLoading(id, 'client') })
     }
 
+    // Vymazanie aplikacie
     deleteApp(id) {
         let stateId = this.state.applications
         stateId[id].push('delete')

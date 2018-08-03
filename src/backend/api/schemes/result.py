@@ -1,3 +1,9 @@
+##
+# @file result.py
+# @author Lukas Koszegy
+# @brief Abstraktny datovy typ Vysledok a funkcie s nim spojene
+##
+
 from graphene import  Mutation, ObjectType, List, String, Int, Float, ID, Boolean
 from graphene.types.datetime import Date
 from graphql import GraphQLError
@@ -15,6 +21,7 @@ class Result(ObjectType):
     state = Int()
     performTime = Float()
 
+    # Konvertiovanie do abstraktneho typu Vysledok
     def generateResult(self, data):
         result = []
         for it in data:
@@ -22,6 +29,7 @@ class Result(ObjectType):
 
         return result
 
+    # Konvertiovanie do abstraktneho typu Vysledok s agregovanymi hodnotami
     def generateResultAgg(self, data):
         result = []
         for item in data:
@@ -29,6 +37,7 @@ class Result(ObjectType):
 
         return result
 
+    # Ziskanie vysledkov
     def get(self, aggClient, argv):
         response = aggClient.sendCommand('getResult', argv)
         if response['status']:
@@ -36,6 +45,7 @@ class Result(ObjectType):
         else:
             raise GraphQLError(response['error'])
 
+    # Ziskanie vysledkov s agregovanymi hodnotami
     def getAgg(self, aggClient, argv):
         response = aggClient.sendCommand('getResultAgg', argv)
         if response['status']:
@@ -43,6 +53,7 @@ class Result(ObjectType):
         else:
             raise GraphQLError(response['error'])
 
+# Zmena regresneho testu pre scenar
 class setRegressTest(Mutation):
     class Arguments:
         appId = ID(required=True, description="Scenario identifier")

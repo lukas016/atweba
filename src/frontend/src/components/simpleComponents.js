@@ -1,11 +1,19 @@
+/**
+ * @file simpleComponents.js
+ * @author Lukas Koszegy
+ * @brief Jednoduche komponenty pouzite v ReactTable
+ */
+
 import React from 'react'
 import { Input } from 'semantic-ui-react';
 
+// Vyhladavacie pole s ikonou
 const semanticFilter = ({filter, onChange}, type='text') => (
     <Input icon='search' type={type} value={filter ? filter.value : ''}
             onChange={event => onChange(event.target.value)} />
 )
 
+// Vyhladavacie pole v ramci rozsahu datumov
 const semanticDateRangeFilter = ({filter, onChange}, obj) => (
     <div>
         <Input name='start' className='dateRange' type='date'

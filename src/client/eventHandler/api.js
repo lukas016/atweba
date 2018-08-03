@@ -1,3 +1,9 @@
+/**
+ * @file api.js
+ * @author Lukas Koszegy
+ * @brief API implementacia
+ **/
+
 class Api {
     constructor(appId) {
         this.url = "/graphqlTesting"
@@ -17,6 +23,7 @@ class Api {
         this.initScenarioId();
     }
 
+    // Generovanie UUID pre novy scenar
     initScenarioId() {
         if (typeof(Storage) == 'undefined') {
             alert('Missing local storage. Script need local storage for correct working.')
@@ -30,6 +37,7 @@ class Api {
         document.addEventListener('keydown', function(e) { obj.endLogging(e, obj) })
     }
 
+    // Zrusenie nahravania udalosti po stlaceni CTRL+Z
     endLogging(e, obj) {
         var evtobj = window.event ? event : e
         if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
@@ -40,6 +48,7 @@ class Api {
         }
     }
 
+    // Konvertovanie atributu path na pole
     generatePath(event) {
         let path = Array()
         for (let index = event.path.length-2; index >= 0; index--)
@@ -48,6 +57,7 @@ class Api {
         return path
     }
 
+    // Pridanie obecnych informacii do spravy z procesoru
     setGeneralInfo(event, msg) {
         msg.appId = this.appId
         msg.scenarioId = this.scenarioId()
@@ -60,6 +70,7 @@ class Api {
         msg.locator = OptimalSelect.select(event.target)
     }
 
+    // Zaslanie udalosti na server
     send(event, msg) {
         if (this.disabled || !'type' in msg) return
         this.setGeneralInfo(event, msg)

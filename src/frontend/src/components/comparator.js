@@ -1,5 +1,11 @@
+/**
+ * @file comparator.js
+ * @author Lukas Koszegy
+ * @brief Porovnavac obrazkov
+ */
+
 import React, { Component } from 'react';
-import { Button, Input, Select } from 'semantic-ui-react';
+import { Input, Select } from 'semantic-ui-react';
 import ImageDiff from 'react-image-diff'
 import '../css/comparator.css'
 
@@ -10,15 +16,19 @@ class Comparator extends Component {
         this.type = ['fade', 'difference', 'swipe'].map(x => ({key: x, text: x, value: x}))
     }
 
+    // Zmena rozsahu pre porovnavacie metody
     changeRange = (e, {value}) => this.setState({range: parseFloat(value)})
 
+    // Priblizenie na obrazok
     changeZoom = (e, {value}) => this.setState({zoom: parseFloat(value)})
 
+    // Zmena metody porovnania obrazku
     changeType = (e, {value}) => this.setState({type: value})
 
     render() {
         const {range, type, zoom} = this.state
 
+        // Zmena mierky k lavemu hornemu rohu
         const styleZoom = {
             transform: `scale(${zoom})`,
             transformOrigin: 'top left',

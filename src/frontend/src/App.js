@@ -1,3 +1,9 @@
+/**
+ * @file App.js
+ * @author Lukas Koszegy
+ * @brief Hlavny JSX element
+ */
+
 import React, { Component } from 'react';
 import Header from './components/header';
 //import RightBar from './components/right-bar';
@@ -32,20 +38,24 @@ class App extends Component {
         }
     }
 
+    // Zobrazenie formulara pre vytvorenie aplikacie
     createAppChange() {
         this.setState({
             createApp: !this.state.createApp
         });
     }
 
+    // Zmena aktivnej zalozky
     handleTabChange = (e, { activeIndex }) => this.setState({ activeIndex })
 
+    // Prepnutie na scenara
     changeScenarioId(id) {
         this.bodyTitle = `List of scenarios for ${id}`
         let tabs = [this.state.panes[0], this.generateScenarioTab(id)]
         this.setState({ panes: tabs, activeIndex: tabs.length - 1})
     }
 
+    // Zobrazenie Grafu
     addTimeGraphTab = (appId, scenarioId) => {
         let tabs = this.state.panes.slice(0, 2)
             console.log(appId, scenarioId)
@@ -56,6 +66,7 @@ class App extends Component {
         this.setState({ panes: tabs, activeIndex: tabs.length - 1 })
     }
 
+    // Zobrazenie porovnava obrazkov
     addComparatorTab = (appId, scenarioId, scenarioName, testId, regressTestId) => {
         console.log(appId, scenarioId)
         let tabs = this.state.panes.slice(0, 2)
@@ -68,7 +79,7 @@ class App extends Component {
         this.setState({ panes: tabs, activeIndex: tabs.length - 1})
     }
 
-
+    // Vygenerovanie zalozky so scenarmi pre aplikaciu
     generateScenarioTab(id) {
         return {
             menuItem: {'key': 'scenarios', icon: 'list', content: `Scenarios for ${id}`},

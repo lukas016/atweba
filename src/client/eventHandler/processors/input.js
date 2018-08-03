@@ -1,3 +1,9 @@
+/**
+ * @file input.js
+ * @author Lukas Koszegy
+ * @brief Procesor pre spracovanie formularov
+ **/
+
 class processorInput {
     get events() { return ["focusout"] };
     parse() {

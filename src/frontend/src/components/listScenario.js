@@ -1,3 +1,9 @@
+/**
+ * @file listScenario.js
+ * @author Lukas Koszegy
+ * @brief Zoznam scenarov
+ */
+
 import React, { Component } from 'react';
 import { Button, Icon, Input, Popup } from 'semantic-ui-react';
 import { compose, graphql, withApollo } from 'react-apollo';
@@ -10,7 +16,7 @@ import '../css/react-table.css'
 import '../css/state.css'
 import { semanticFilter } from './simpleComponents.js'
 import { ListResult } from './listResult.js'
-import { STATE, ICON_STATE, COLOR_STATE, CLASS_STATE } from '../constants/state.js'
+import { ICON_STATE, COLOR_STATE, CLASS_STATE } from '../constants/state.js'
 
 const queries = {
     getAllScenarios: gql`
@@ -42,6 +48,7 @@ class scenarioList extends Component {
         this.apps = {}
     }
 
+    // >Zrusenie animacie nacitania
     disableLoading(id, operation) {
         let stateId = this.state.applications
         let index = stateId[id].indexOf(operation)
@@ -49,7 +56,7 @@ class scenarioList extends Component {
         this.setState({ applications: {...stateId} })
     }
 
-
+    // Spustenie testu cez webove rozhranie
     runTest(scenarioId) {
         const client = this.props.client.mutate
         client({mutation: queries.runTest, variables: { appId: this.props.id, scenarioId: scenarioId }})
@@ -65,6 +72,7 @@ class scenarioList extends Component {
                 .catch(() => { return })
     }
 
+    // Nastavenie uzivatelskeho mena pre scenar
     setName = (e, { name, value }) => {
         this.props.getAllScenarios.stopPolling()
         let app = this.apps
@@ -73,6 +81,7 @@ class scenarioList extends Component {
         this.forceUpdate()
     }
 
+    // Ulozenie uzivatelskeho mena do DB
     saveName = (scenario, name) => {
         const client = this.props.client.mutate
         client({mutation: queries.setScenarioName, variables: { appId: this.props.id, scenarioId: scenario, name: name }})

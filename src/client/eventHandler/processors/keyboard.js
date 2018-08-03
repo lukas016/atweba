@@ -1,3 +1,9 @@
+/**
+ * @file keyboard.js
+ * @author Lukas Koszegy
+ * @brief Testovaci procesor pre spracovanie stlacenia klavesnice (Nepouzity)
+ **/
+
 class processorKeyboard {
     get events() { return ["keypress"] };
     parse() {
