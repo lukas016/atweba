@@ -1,0 +1,17 @@
+# /lib/systemd/system/atweba.service
+#
+# Replace string #REPLACE_WITH_CORRECT_PATH with path of application
+[Unit]
+Description=ATWebA backend service
+
+[Service]
+User=atweba
+Group=atweba
+
+Environment="PATH=#REPLACE_WITH_CORRECT_PATH/src/backend/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+WorkingDirectory=#REPLACE_WITH_CORRECT_PATH/src/backend
+ExecStart=#REPLACE_WITH_CORRECT_PATH/src/backend/bin/python3.6 #REPLACE_WITH_CORRECT_PATH/src/backend/main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

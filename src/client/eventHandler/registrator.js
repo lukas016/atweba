@@ -4,7 +4,6 @@ import Api from './api.js';
 class EventRegistrator {
   constructor(eventsList) {
     this.factory = new FactoryProcessors();
-    this.db = openDatabase('handler', '1.0', 'TestDB', 2048);
     this.recentlyLogged = {};
     this.api = new Api('replace-with-scenario-id');
     this.loadOptimalSelect();
